@@ -7,25 +7,25 @@ Master checklist of all content to be written. Each file should contain **detail
 ## 01 — DSA
 
 ### Topic Guides (language-agnostic concepts)
-- [ ] `01-dsa/topics/arrays-and-strings.md`
-- [ ] `01-dsa/topics/linked-lists.md`
-- [ ] `01-dsa/topics/stacks-and-queues.md`
-- [ ] `01-dsa/topics/trees-and-graphs.md`
-- [ ] `01-dsa/topics/heaps-and-priority-queues.md`
-- [ ] `01-dsa/topics/hash-maps-and-sets.md`
-- [ ] `01-dsa/topics/sorting-and-searching.md`
-- [ ] `01-dsa/topics/recursion-and-backtracking.md`
-- [ ] `01-dsa/topics/dynamic-programming.md`
-- [ ] `01-dsa/topics/greedy-algorithms.md`
-- [ ] `01-dsa/topics/sliding-window-two-pointers.md`
-- [ ] `01-dsa/topics/bit-manipulation.md`
-- [ ] `01-dsa/topics/intervals.md`
-- [ ] `01-dsa/topics/tries-and-advanced.md`
+- [x] `01-dsa/topics/arrays-and-strings.md`
+- [x] `01-dsa/topics/linked-lists.md`
+- [x] `01-dsa/topics/stacks-and-queues.md`
+- [x] `01-dsa/topics/trees-and-graphs.md`
+- [x] `01-dsa/topics/heaps-and-priority-queues.md`
+- [x] `01-dsa/topics/hash-maps-and-sets.md`
+- [x] `01-dsa/topics/sorting-and-searching.md`
+- [x] `01-dsa/topics/recursion-and-backtracking.md`
+- [x] `01-dsa/topics/dynamic-programming.md`
+- [x] `01-dsa/topics/greedy-algorithms.md`
+- [x] `01-dsa/topics/sliding-window-two-pointers.md`
+- [x] `01-dsa/topics/bit-manipulation.md`
+- [x] `01-dsa/topics/intervals.md`
+- [x] `01-dsa/topics/tries-and-advanced.md`
 
 ### Language-Specific Solutions
-- [ ] `01-dsa/cpp/` — C++ implementations with STL patterns
-- [ ] `01-dsa/java/` — Java implementations with Collections patterns
-- [ ] `01-dsa/python/` — Python implementations with stdlib patterns
+- [x] `01-dsa/cpp/` — C++ implementations with STL patterns
+- [x] `01-dsa/java/` — Java implementations with Collections patterns
+- [x] `01-dsa/python/` — Python implementations with stdlib patterns
 
 ---
 
