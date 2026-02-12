@@ -22,21 +22,25 @@ Quick-reference guides for your interview language, covering **every data struct
 
 | # | Topic | Key Patterns |
 |---|-------|-------------|
-| 1 | [Arrays & Strings](topics/arrays-and-strings.md) | Two pointers, prefix sums, kadane's |
-| 2 | [Linked Lists](topics/linked-lists.md) | Fast/slow pointers, reversal |
-| 3 | [Stacks](topics/stacks.md) | Monotonic stack, matching, expression eval, min/max |
-| 4 | [Queues & Deques](topics/queues.md) | BFS, monotonic deque, sliding window max |
-| 5 | [Trees & Graphs](topics/trees-and-graphs.md) | DFS, BFS, topological sort |
-| 6 | [Heaps & Priority Queues](topics/heaps-and-priority-queues.md) | Top-K, merge K sorted |
-| 7 | [Hash Maps & Sets](topics/hash-maps-and-sets.md) | Frequency count, grouping |
-| 8 | [Sorting & Searching](topics/sorting-and-searching.md) | Binary search variations |
-| 9 | [Recursion & Backtracking](topics/recursion-and-backtracking.md) | Permutations, subsets, N-queens |
-| 10 | [Dynamic Programming](topics/dynamic-programming.md) | Memoization, tabulation, state machines |
-| 11 | [Greedy Algorithms](topics/greedy-algorithms.md) | Interval scheduling, Huffman |
-| 12 | [Sliding Window & Two Pointers](topics/sliding-window-two-pointers.md) | Fixed/variable window |
-| 13 | [Bit Manipulation](topics/bit-manipulation.md) | XOR tricks, bit masks |
-| 14 | [Intervals](topics/intervals.md) | Merge, insert, overlap |
-| 15 | [Tries & Advanced](topics/tries-and-advanced.md) | Prefix trees, segment trees |
+| 1 | [Arrays & Strings](topics/01-arrays-and-strings.md) | Two pointers, prefix sums, kadane's |
+| 2 | [Linked Lists](topics/02-linked-lists.md) | Fast/slow pointers, reversal |
+| 3 | [Stacks](topics/03-stacks.md) | Monotonic stack, matching, expression eval, min/max |
+| 4 | [Queues & Deques](topics/04-queues.md) | BFS, monotonic deque, sliding window max |
+| 5 | [Trees](topics/05-trees.md) | DFS traversals, BFS level-order, BST, LCA, construction |
+| 6 | [Graphs](topics/06-graphs.md) | DFS/BFS, topological sort, Union-Find, Dijkstra, MST, SCC |
+| 7 | [Heaps & Priority Queues](topics/07-heaps-and-priority-queues.md) | Top-K, merge K sorted |
+| 8 | [Hash Maps & Sets](topics/08-hash-maps-and-sets.md) | Frequency count, grouping |
+| 9 | [Sorting & Searching](topics/09-sorting-and-searching.md) | Binary search variations |
+| 10 | [Recursion & Backtracking](topics/10-recursion-and-backtracking.md) | Permutations, subsets, N-queens |
+| 11 | [Dynamic Programming](topics/11-dynamic-programming.md) | Memoization, tabulation, state machines |
+| 12 | [Greedy Algorithms](topics/12-greedy-algorithms.md) | Interval scheduling, Huffman |
+| 13 | [Sliding Window & Two Pointers](topics/13-sliding-window-two-pointers.md) | Fixed/variable window |
+| 14 | [Bit Manipulation](topics/14-bit-manipulation.md) | XOR tricks, bit masks |
+| 15 | [Intervals](topics/15-intervals.md) | Merge, insert, overlap |
+| 16 | [Tries & Advanced](topics/16-tries-and-advanced.md) | Prefix trees, segment trees |
+| 17 | [Math & Number Theory](topics/17-math-and-number-theory.md) | Primes, sieve, GCD, modular arithmetic, combinatorics |
+| 18 | [Matrix Patterns](topics/18-matrix-patterns.md) | Spiral, rotate, search sorted 2D, grid DP |
+| 19 | [Design Data Structures](topics/19-design-data-structures.md) | LRU/LFU Cache, RandomizedSet, Min Stack, iterators |
 
 ## Complexity Cheat Sheet
 
