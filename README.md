@@ -10,7 +10,7 @@ A comprehensive, markdown-based interview preparation guide for **senior softwar
 |---|---------|-------------|
 | 1 | [**DSA**](01-dsa/) | Data Structures & Algorithms with C++, Java, Python examples |
 | 2 | [**System Design**](02-system-design/) | 28 fundamentals + 14 case studies for high-level design |
-| 3 | [**Low-Level Design**](03-low-level-design/) | 7 OOP principles + 16 classic LLD problems |
+| 3 | [**Low-Level Design**](03-low-level-design/) | 13 principles + 4 concurrency topics + 16 case studies |
 | 4 | [**Design Patterns**](04-design-patterns/) | 19 GoF patterns — creational, structural, behavioral |
 | 5 | [**AI Engineering**](05-ai-engineering/) | ML fundamentals, MLOps, LLM engineering (RAG, agents, fine-tuning) |
 | 6 | [**Behavioral**](06-behavioral/) | STAR method, leadership principles, common questions |
@@ -40,7 +40,8 @@ interview-prep/
 │   ├── fundamentals/            # 28 building-block guides
 │   └── case-studies/            # 14 classic problems
 ├── 03-low-level-design/         # Object-oriented design
-│   ├── principles/              # 7 principle guides (OOP, SOLID, etc.)
+│   ├── principles/              # 13 principle guides (OOP, SOLID, DI, etc.)
+│   │   └── concurrency/         # 4 concurrency & threading topics
 │   └── case-studies/            # 16 classic LLD problems
 ├── 04-design-patterns/          # GoF patterns
 │   ├── creational/              # 5 patterns
