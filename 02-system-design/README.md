@@ -56,17 +56,27 @@ Core building blocks every system design relies on:
 | 22 | Capacity Estimation | [capacity-estimation](fundamentals/22-capacity-estimation.md) |
 | 23 | Tradeoff Analysis | [tradeoff-analysis](fundamentals/23-tradeoff-analysis.md) |
 | 24 | Cloud Technologies | [cloud-technologies](fundamentals/24-cloud-technologies.md) |
+| 25 | Rate Limiting & Throttling | [rate-limiting](fundamentals/25-rate-limiting.md) |
+| 26 | Microservices Patterns | [microservices-patterns](fundamentals/26-microservices-patterns.md) |
+| 27 | Event-Driven Architecture | [event-driven-architecture](fundamentals/27-event-driven-architecture.md) |
 
 ## Case Studies
 
 Classic system design interview problems:
 
-| Problem | Guide |
-|---------|-------|
-| URL Shortener | [url-shortener.md](case-studies/url-shortener.md) |
-| Rate Limiter | [rate-limiter.md](case-studies/rate-limiter.md) |
-| Chat System | [chat-system.md](case-studies/chat-system.md) |
-| News Feed | [news-feed.md](case-studies/news-feed.md) |
-| Notification Service | [notification-service.md](case-studies/notification-service.md) |
-| Distributed Cache | [distributed-cache.md](case-studies/distributed-cache.md) |
-| Video Streaming | [video-streaming.md](case-studies/video-streaming.md) |
+| Problem | Key Concepts | Guide |
+|---------|-------------|-------|
+| URL Shortener | Hashing, base62, read-heavy | [url-shortener](case-studies/url-shortener.md) |
+| Rate Limiter | Token bucket, sliding window | [rate-limiter](case-studies/rate-limiter.md) |
+| Chat System | WebSocket, presence, fanout | [chat-system](case-studies/chat-system.md) |
+| News Feed | Fanout, ranking, caching | [news-feed](case-studies/news-feed.md) |
+| Notification Service | Push/pull, priority, templates | [notification-service](case-studies/notification-service.md) |
+| Distributed Cache | Consistent hashing, eviction | [distributed-cache](case-studies/distributed-cache.md) |
+| Video Streaming | CDN, adaptive bitrate, encoding | [video-streaming](case-studies/video-streaming.md) |
+| Typeahead / Autocomplete | Trie, ranking, prefix search | [typeahead-autocomplete](case-studies/typeahead-autocomplete.md) |
+| Web Crawler | BFS, politeness, dedup | [web-crawler](case-studies/web-crawler.md) |
+| Ride Sharing (Uber) | Geospatial index, matching, ETA | [ride-sharing](case-studies/ride-sharing.md) |
+| Collaborative Editing | OT/CRDT, real-time sync | [collaborative-editing](case-studies/collaborative-editing.md) |
+| Payment System | Idempotency, distributed txn | [payment-system](case-studies/payment-system.md) |
+| File Storage (Dropbox) | Chunking, sync, dedup | [file-storage](case-studies/file-storage.md) |
+| Ticket Booking | Seat locking, concurrency | [ticket-booking](case-studies/ticket-booking.md) |
