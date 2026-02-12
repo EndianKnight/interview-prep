@@ -28,6 +28,8 @@ A guide to object-oriented design and low-level system design interviews for sen
 
 ## Principles
 
+### Core OOP & Design
+
 | Topic | Guide |
 |-------|-------|
 | OOP Fundamentals | [oop-fundamentals.md](principles/oop-fundamentals.md) |
@@ -36,7 +38,27 @@ A guide to object-oriented design and low-level system design interviews for sen
 | Coupling & Cohesion | [coupling-cohesion.md](principles/coupling-cohesion.md) |
 | Composition vs Inheritance | [composition-vs-inheritance.md](principles/composition-vs-inheritance.md) |
 | UML & Class Diagrams | [uml-class-diagrams.md](principles/uml-class-diagrams.md) |
-| Concurrency Basics | [concurrency-basics.md](principles/concurrency-basics.md) |
+
+### Applied Design
+
+| Topic | Guide |
+|-------|-------|
+| Dependency Injection | [dependency-injection.md](principles/dependency-injection.md) |
+| API & Interface Design | [api-interface-design.md](principles/api-interface-design.md) |
+| Error Handling Patterns | [error-handling.md](principles/error-handling.md) |
+| Immutability & Defensive Programming | [immutability.md](principles/immutability.md) |
+| Generics & Type Safety | [generics-type-safety.md](principles/generics-type-safety.md) |
+| Enums, Constants & Type Modeling | [enums-type-modeling.md](principles/enums-type-modeling.md) |
+| Design for Testability | [design-for-testability.md](principles/design-for-testability.md) |
+
+## Concurrency
+
+| Topic | Guide |
+|-------|-------|
+| Async Processing & Producer-Consumer | [async-processing.md](principles/concurrency/async-processing.md) |
+| Locking & Synchronization | [locking-synchronization.md](principles/concurrency/locking-synchronization.md) |
+| Multithreading & Thread Management | [multithreading.md](principles/concurrency/multithreading.md) |
+| Advanced Concurrency | [advanced-concurrency.md](principles/concurrency/advanced-concurrency.md) |
 
 ## Case Studies
 

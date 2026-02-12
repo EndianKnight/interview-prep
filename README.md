@@ -9,12 +9,12 @@ A comprehensive, markdown-based interview preparation guide for **senior softwar
 | # | Section | Description |
 |---|---------|-------------|
 | 1 | [**DSA**](01-dsa/) | Data Structures & Algorithms with C++, Java, Python examples |
-| 2 | [**System Design**](02-system-design/) | High-level design fundamentals, tradeoffs, capacity estimation, cloud technologies & case studies |
-| 3 | [**Low-Level Design**](03-low-level-design/) | OOP principles (SOLID, DRY/KISS/YAGNI) & classic LLD problems |
-| 4 | [**Design Patterns**](04-design-patterns/) | GoF creational, structural, and behavioral patterns |
+| 2 | [**System Design**](02-system-design/) | 28 fundamentals + 14 case studies for high-level design |
+| 3 | [**Low-Level Design**](03-low-level-design/) | 7 OOP principles + 16 classic LLD problems |
+| 4 | [**Design Patterns**](04-design-patterns/) | 19 GoF patterns — creational, structural, behavioral |
 | 5 | [**AI Engineering**](05-ai-engineering/) | ML fundamentals, MLOps, LLM engineering (RAG, agents, fine-tuning) |
 | 6 | [**Behavioral**](06-behavioral/) | STAR method, leadership principles, common questions |
-| 7 | [**Deployment Strategies**](07-deployment-strategies/) | CI/CD, containers, cloud deployments, release strategies, IaC |
+| 7 | [**Engineering Excellence**](07-engineering-excellence/) | Ship it, run it, build it right — 12 topics across CI/CD, SRE, testing, security |
 | — | [**Resources**](resources/) | Books, courses, cheat sheets |
 
 ---
@@ -31,29 +31,35 @@ A comprehensive, markdown-based interview preparation guide for **senior softwar
 
 ```
 interview-prep/
-├── 01-dsa/                  # DSA refreshers (C++, Java, Python)
-│   ├── topics/              # 14 pattern-based topic guides
-│   ├── cpp/                 # C++ implementations & STL tips
-│   ├── java/                # Java implementations & Collections tips
-│   └── python/              # Python implementations & stdlib tips
-├── 02-system-design/        # High-level system design
-│   ├── fundamentals/        # 13 building-block guides
-│   └── case-studies/        # 7 classic problems
-├── 03-low-level-design/     # Object-oriented design
-│   ├── principles/          # SOLID, DRY/KISS/YAGNI, coupling
-│   └── case-studies/        # 5 classic LLD problems
-├── 04-design-patterns/      # GoF patterns
-│   ├── creational/          # 5 patterns
-│   ├── structural/          # 5 patterns
-│   └── behavioral/          # 5 patterns
-├── 05-ai-engineering/       # AI/ML engineering
-│   ├── fundamentals/        # ML, DL, NLP, transformers
-│   ├── mlops/               # Pipelines, serving, monitoring
-│   └── llm-engineering/     # RAG, fine-tuning, agents
-├── 06-behavioral/           # Behavioral interviews
-├── 07-deployment-strategies/ # Deployment & release engineering
-├── resources/               # Books, courses, cheat sheets
-└── .tasks/tasks.md          # Content progress tracker
+├── 01-dsa/                      # DSA refreshers (C++, Java, Python)
+│   ├── topics/                  # 19 pattern-based topic guides
+│   ├── cpp/                     # C++ implementations & STL tips
+│   ├── java/                    # Java implementations & Collections tips
+│   └── python/                  # Python implementations & stdlib tips
+├── 02-system-design/            # High-level system design
+│   ├── fundamentals/            # 28 building-block guides
+│   └── case-studies/            # 14 classic problems
+├── 03-low-level-design/         # Object-oriented design
+│   ├── principles/              # 7 principle guides (OOP, SOLID, etc.)
+│   └── case-studies/            # 16 classic LLD problems
+├── 04-design-patterns/          # GoF patterns
+│   ├── creational/              # 5 patterns
+│   ├── structural/              # 6 patterns
+│   └── behavioral/              # 8 patterns
+├── 05-ai-engineering/           # AI/ML engineering
+│   ├── fundamentals/            # ML, DL, NLP, transformers
+│   ├── mlops/                   # Pipelines, serving, monitoring
+│   └── llm-engineering/         # RAG, fine-tuning, agents
+├── 06-behavioral/               # Behavioral interviews
+│   ├── star-method.md
+│   ├── leadership-principles.md
+│   └── common-questions.md
+├── 07-engineering-excellence/   # Engineering practices
+│   ├── ship-it/                 # CI/CD, containers, releases, IaC
+│   ├── run-it/                  # SRE, incidents, performance
+│   └── build-it-right/          # Testing, code quality, security
+├── resources/                   # Books, courses, cheat sheets
+└── .tasks/tasks.md              # Content progress tracker
 ```
 
 ## 📝 Content Standards
