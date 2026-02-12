@@ -90,6 +90,45 @@ def dfs(graph: dict[int, list[int]], start: int) -> list[int]:
 
 ### Iterative DFS (Stack)
 
+**C++**
+```cpp
+vector<int> dfsIterative(unordered_map<int, vector<int>>& graph, int start) {
+    vector<int> result;
+    unordered_set<int> visited;
+    stack<int> stk;
+    stk.push(start);
+    while (!stk.empty()) {
+        int node = stk.top(); stk.pop();
+        if (visited.count(node)) continue;
+        visited.insert(node);
+        result.push_back(node);
+        for (int neighbor : graph[node])
+            if (!visited.count(neighbor))
+                stk.push(neighbor);
+    }
+    return result;
+}
+```
+
+**Java**
+```java
+public List<Integer> dfsIterative(Map<Integer, List<Integer>> graph, int start) {
+    List<Integer> result = new ArrayList<>();
+    Set<Integer> visited = new HashSet<>();
+    Deque<Integer> stack = new ArrayDeque<>();
+    stack.push(start);
+    while (!stack.isEmpty()) {
+        int node = stack.pop();
+        if (!visited.add(node)) continue;
+        result.add(node);
+        for (int neighbor : graph.getOrDefault(node, List.of()))
+            if (!visited.contains(neighbor))
+                stack.push(neighbor);
+    }
+    return result;
+}
+```
+
 **Python**
 ```python
 def dfs_iterative(graph, start):
@@ -251,6 +290,62 @@ def bfs_shortest_path(graph, start, end):
 ```
 
 ### Multi-Source BFS (e.g. Rotten Oranges)
+
+**C++**
+```cpp
+int orangesRotting(vector<vector<int>>& grid) {
+    int rows = grid.size(), cols = grid[0].size(), fresh = 0;
+    queue<tuple<int,int,int>> q;
+    for (int r = 0; r < rows; r++)
+        for (int c = 0; c < cols; c++)
+            if (grid[r][c] == 2) q.push({r, c, 0});
+            else if (grid[r][c] == 1) fresh++;
+
+    int time = 0;
+    int dirs[] = {0, 1, 0, -1, 0};
+    while (!q.empty() && fresh) {
+        auto [r, c, t] = q.front(); q.pop();
+        for (int d = 0; d < 4; d++) {
+            int nr = r + dirs[d], nc = c + dirs[d+1];
+            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && grid[nr][nc] == 1) {
+                grid[nr][nc] = 2;
+                fresh--;
+                time = t + 1;
+                q.push({nr, nc, t + 1});
+            }
+        }
+    }
+    return fresh == 0 ? time : -1;
+}
+```
+
+**Java**
+```java
+public int orangesRotting(int[][] grid) {
+    int rows = grid.length, cols = grid[0].length, fresh = 0;
+    Queue<int[]> queue = new ArrayDeque<>();
+    for (int r = 0; r < rows; r++)
+        for (int c = 0; c < cols; c++)
+            if (grid[r][c] == 2) queue.offer(new int[]{r, c, 0});
+            else if (grid[r][c] == 1) fresh++;
+
+    int time = 0;
+    int[][] dirs = {{0,1},{0,-1},{1,0},{-1,0}};
+    while (!queue.isEmpty() && fresh > 0) {
+        int[] curr = queue.poll();
+        for (int[] d : dirs) {
+            int nr = curr[0] + d[0], nc = curr[1] + d[1];
+            if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && grid[nr][nc] == 1) {
+                grid[nr][nc] = 2;
+                fresh--;
+                time = curr[2] + 1;
+                queue.offer(new int[]{nr, nc, curr[2] + 1});
+            }
+        }
+    }
+    return fresh == 0 ? time : -1;
+}
+```
 
 **Python**
 ```python
@@ -522,6 +617,44 @@ class UnionFind:
 
 ### Undirected Graph — DFS
 
+**C++**
+```cpp
+bool hasCycleUndirected(vector<vector<int>>& graph, int n) {
+    vector<bool> visited(n, false);
+    function<bool(int, int)> dfs = [&](int node, int parent) -> bool {
+        visited[node] = true;
+        for (int neighbor : graph[node]) {
+            if (!visited[neighbor]) {
+                if (dfs(neighbor, node)) return true;
+            } else if (neighbor != parent) return true;
+        }
+        return false;
+    };
+    for (int i = 0; i < n; i++)
+        if (!visited[i] && dfs(i, -1)) return true;
+    return false;
+}
+```
+
+**Java**
+```java
+public boolean hasCycleUndirected(List<List<Integer>> graph, int n) {
+    boolean[] visited = new boolean[n];
+    for (int i = 0; i < n; i++)
+        if (!visited[i] && dfs(graph, i, -1, visited)) return true;
+    return false;
+}
+private boolean dfs(List<List<Integer>> graph, int node, int parent, boolean[] visited) {
+    visited[node] = true;
+    for (int neighbor : graph.get(node)) {
+        if (!visited[neighbor]) {
+            if (dfs(graph, neighbor, node, visited)) return true;
+        } else if (neighbor != parent) return true;
+    }
+    return false;
+}
+```
+
 **Python**
 ```python
 def has_cycle_undirected(graph, n):
@@ -545,6 +678,44 @@ def has_cycle_undirected(graph, n):
 ```
 
 ### Directed Graph — DFS (Three-Color)
+
+**C++**
+```cpp
+bool hasCycleDirected(vector<vector<int>>& graph, int n) {
+    vector<int> color(n, 0);  // 0=WHITE, 1=GRAY, 2=BLACK
+    function<bool(int)> dfs = [&](int node) -> bool {
+        color[node] = 1;
+        for (int neighbor : graph[node]) {
+            if (color[neighbor] == 1) return true;
+            if (color[neighbor] == 0 && dfs(neighbor)) return true;
+        }
+        color[node] = 2;
+        return false;
+    };
+    for (int i = 0; i < n; i++)
+        if (color[i] == 0 && dfs(i)) return true;
+    return false;
+}
+```
+
+**Java**
+```java
+public boolean hasCycleDirected(List<List<Integer>> graph, int n) {
+    int[] color = new int[n]; // 0=WHITE, 1=GRAY, 2=BLACK
+    for (int i = 0; i < n; i++)
+        if (color[i] == 0 && dfsCycle(graph, i, color)) return true;
+    return false;
+}
+private boolean dfsCycle(List<List<Integer>> graph, int node, int[] color) {
+    color[node] = 1;
+    for (int neighbor : graph.get(node)) {
+        if (color[neighbor] == 1) return true;
+        if (color[neighbor] == 0 && dfsCycle(graph, neighbor, color)) return true;
+    }
+    color[node] = 2;
+    return false;
+}
+```
 
 **Python**
 ```python
@@ -570,6 +741,54 @@ def has_cycle_directed(graph, n):
 ## Pattern 6: Bipartite Check
 
 **When to use:** Two-coloring, odd-cycle detection.
+
+**C++**
+```cpp
+bool isBipartite(vector<vector<int>>& graph, int n) {
+    vector<int> color(n, -1);
+    for (int i = 0; i < n; i++) {
+        if (color[i] != -1) continue;
+        queue<int> q;
+        q.push(i);
+        color[i] = 0;
+        while (!q.empty()) {
+            int node = q.front(); q.pop();
+            for (int neighbor : graph[node]) {
+                if (color[neighbor] == -1) {
+                    color[neighbor] = 1 - color[node];
+                    q.push(neighbor);
+                } else if (color[neighbor] == color[node]) return false;
+            }
+        }
+    }
+    return true;
+}
+```
+
+**Java**
+```java
+public boolean isBipartite(int[][] graph) {
+    int n = graph.length;
+    int[] color = new int[n];
+    Arrays.fill(color, -1);
+    for (int i = 0; i < n; i++) {
+        if (color[i] != -1) continue;
+        Queue<Integer> queue = new ArrayDeque<>();
+        queue.offer(i);
+        color[i] = 0;
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            for (int neighbor : graph[node]) {
+                if (color[neighbor] == -1) {
+                    color[neighbor] = 1 - color[node];
+                    queue.offer(neighbor);
+                } else if (color[neighbor] == color[node]) return false;
+            }
+        }
+    }
+    return true;
+}
+```
 
 **Python**
 ```python
@@ -673,6 +892,40 @@ def dijkstra(graph, src, n):
 
 **Time:** O(V × E) — also detects negative cycles.
 
+**C++**
+```cpp
+vector<int> bellmanFord(vector<tuple<int,int,int>>& edges, int src, int n) {
+    vector<int> dist(n, INT_MAX);
+    dist[src] = 0;
+    for (int i = 0; i < n - 1; i++)
+        for (auto& [u, v, w] : edges)
+            if (dist[u] != INT_MAX && dist[u] + w < dist[v])
+                dist[v] = dist[u] + w;
+    // Check for negative cycles
+    for (auto& [u, v, w] : edges)
+        if (dist[u] != INT_MAX && dist[u] + w < dist[v])
+            return {};  // negative cycle
+    return dist;
+}
+```
+
+**Java**
+```java
+public int[] bellmanFord(int[][] edges, int src, int n) {
+    int[] dist = new int[n];
+    Arrays.fill(dist, Integer.MAX_VALUE);
+    dist[src] = 0;
+    for (int i = 0; i < n - 1; i++)
+        for (int[] e : edges)
+            if (dist[e[0]] != Integer.MAX_VALUE && dist[e[0]] + e[2] < dist[e[1]])
+                dist[e[1]] = dist[e[0]] + e[2];
+    for (int[] e : edges)
+        if (dist[e[0]] != Integer.MAX_VALUE && dist[e[0]] + e[2] < dist[e[1]])
+            return new int[0];
+    return dist;
+}
+```
+
 **Python**
 ```python
 def bellman_ford(edges, src, n):
@@ -720,6 +973,40 @@ def floyd_warshall(n, edges):
 ### Kruskal's Algorithm (Union-Find)
 
 **Time:** O(E log E) — sort edges, then union-find.
+
+**C++**
+```cpp
+int kruskal(int n, vector<tuple<int,int,int>>& edges) {
+    // edges: (weight, u, v)
+    sort(edges.begin(), edges.end());
+    UnionFind uf(n);
+    int mstWeight = 0, mstEdges = 0;
+    for (auto& [w, u, v] : edges) {
+        if (uf.unite(u, v)) {
+            mstWeight += w;
+            if (++mstEdges == n - 1) break;
+        }
+    }
+    return mstEdges == n - 1 ? mstWeight : -1;
+}
+```
+
+**Java**
+```java
+public int kruskal(int n, int[][] edges) {
+    // edges[i] = {weight, u, v}
+    Arrays.sort(edges, (a, b) -> a[0] - b[0]);
+    UnionFind uf = new UnionFind(n);
+    int mstWeight = 0, mstEdges = 0;
+    for (int[] e : edges) {
+        if (uf.union(e[1], e[2])) {
+            mstWeight += e[0];
+            if (++mstEdges == n - 1) break;
+        }
+    }
+    return mstEdges == n - 1 ? mstWeight : -1;
+}
+```
 
 **Python**
 ```python

@@ -167,6 +167,60 @@ def inorder_iterative(root: TreeNode | None) -> list[int]:
 
 ### Morris Traversal (O(1) Space Inorder)
 
+**C++**
+```cpp
+vector<int> morrisInorder(TreeNode* root) {
+    vector<int> result;
+    TreeNode* curr = root;
+    while (curr) {
+        if (!curr->left) {
+            result.push_back(curr->val);
+            curr = curr->right;
+        } else {
+            TreeNode* pred = curr->left;
+            while (pred->right && pred->right != curr)
+                pred = pred->right;
+            if (!pred->right) {
+                pred->right = curr;
+                curr = curr->left;
+            } else {
+                pred->right = nullptr;
+                result.push_back(curr->val);
+                curr = curr->right;
+            }
+        }
+    }
+    return result;
+}
+```
+
+**Java**
+```java
+public List<Integer> morrisInorder(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+    TreeNode curr = root;
+    while (curr != null) {
+        if (curr.left == null) {
+            result.add(curr.val);
+            curr = curr.right;
+        } else {
+            TreeNode pred = curr.left;
+            while (pred.right != null && pred.right != curr)
+                pred = pred.right;
+            if (pred.right == null) {
+                pred.right = curr;
+                curr = curr.left;
+            } else {
+                pred.right = null;
+                result.add(curr.val);
+                curr = curr.right;
+            }
+        }
+    }
+    return result;
+}
+```
+
 **Python**
 ```python
 def morris_inorder(root: TreeNode | None) -> list[int]:
@@ -263,6 +317,56 @@ def level_order(root: TreeNode | None) -> list[list[int]]:
 
 ### Zigzag Level Order
 
+**C++**
+```cpp
+vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+    vector<vector<int>> result;
+    if (!root) return result;
+    queue<TreeNode*> q;
+    q.push(root);
+    bool leftToRight = true;
+    while (!q.empty()) {
+        int size = q.size();
+        vector<int> level(size);
+        for (int i = 0; i < size; i++) {
+            TreeNode* node = q.front(); q.pop();
+            int idx = leftToRight ? i : size - 1 - i;
+            level[idx] = node->val;
+            if (node->left) q.push(node->left);
+            if (node->right) q.push(node->right);
+        }
+        result.push_back(level);
+        leftToRight = !leftToRight;
+    }
+    return result;
+}
+```
+
+**Java**
+```java
+public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
+    List<List<Integer>> result = new ArrayList<>();
+    if (root == null) return result;
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    boolean leftToRight = true;
+    while (!queue.isEmpty()) {
+        int size = queue.size();
+        Integer[] level = new Integer[size];
+        for (int i = 0; i < size; i++) {
+            TreeNode node = queue.poll();
+            int idx = leftToRight ? i : size - 1 - i;
+            level[idx] = node.val;
+            if (node.left != null) queue.offer(node.left);
+            if (node.right != null) queue.offer(node.right);
+        }
+        result.add(Arrays.asList(level));
+        leftToRight = !leftToRight;
+    }
+    return result;
+}
+```
+
 **Python**
 ```python
 def zigzag_level_order(root: TreeNode | None) -> list[list[int]]:
@@ -283,6 +387,46 @@ def zigzag_level_order(root: TreeNode | None) -> list[list[int]]:
 
 ### Right Side View
 
+**C++**
+```cpp
+vector<int> rightSideView(TreeNode* root) {
+    vector<int> result;
+    if (!root) return result;
+    queue<TreeNode*> q;
+    q.push(root);
+    while (!q.empty()) {
+        int size = q.size();
+        for (int i = 0; i < size; i++) {
+            TreeNode* node = q.front(); q.pop();
+            if (i == size - 1) result.push_back(node->val);
+            if (node->left) q.push(node->left);
+            if (node->right) q.push(node->right);
+        }
+    }
+    return result;
+}
+```
+
+**Java**
+```java
+public List<Integer> rightSideView(TreeNode root) {
+    List<Integer> result = new ArrayList<>();
+    if (root == null) return result;
+    Queue<TreeNode> queue = new LinkedList<>();
+    queue.offer(root);
+    while (!queue.isEmpty()) {
+        int size = queue.size();
+        for (int i = 0; i < size; i++) {
+            TreeNode node = queue.poll();
+            if (i == size - 1) result.add(node.val);
+            if (node.left != null) queue.offer(node.left);
+            if (node.right != null) queue.offer(node.right);
+        }
+    }
+    return result;
+}
+```
+
 **Python**
 ```python
 def right_side_view(root: TreeNode | None) -> list[int]:
@@ -290,13 +434,13 @@ def right_side_view(root: TreeNode | None) -> list[int]:
         return []
     result, queue = [], deque([root])
     while queue:
-        for i in range(len(queue)):
+        size = len(queue)
+        for i in range(size):
             node = queue.popleft()
-            if i == len(queue):  # wait, we need the last node per level
-                pass
+            if i == size - 1:
+                result.append(node.val)
             if node.left:  queue.append(node.left)
             if node.right: queue.append(node.right)
-        result.append(node.val)  # last node in the level
     return result
 ```
 
@@ -382,6 +526,26 @@ def diameter_of_binary_tree(root: TreeNode | None) -> int:
 
 ### Path Sum (Root to Leaf)
 
+**C++**
+```cpp
+bool hasPathSum(TreeNode* root, int target) {
+    if (!root) return false;
+    if (!root->left && !root->right) return root->val == target;
+    return hasPathSum(root->left, target - root->val) ||
+           hasPathSum(root->right, target - root->val);
+}
+```
+
+**Java**
+```java
+public boolean hasPathSum(TreeNode root, int target) {
+    if (root == null) return false;
+    if (root.left == null && root.right == null) return root.val == target;
+    return hasPathSum(root.left, target - root.val) ||
+           hasPathSum(root.right, target - root.val);
+}
+```
+
 **Python**
 ```python
 def has_path_sum(root: TreeNode | None, target: int) -> bool:
@@ -394,6 +558,46 @@ def has_path_sum(root: TreeNode | None, target: int) -> bool:
 ```
 
 ### Path Sum III (Any-to-Any Downward, Prefix Sum)
+
+**C++**
+```cpp
+int pathSumIII(TreeNode* root, int target) {
+    int count = 0;
+    unordered_map<long, int> prefix;
+    prefix[0] = 1;
+    function<void(TreeNode*, long)> dfs = [&](TreeNode* node, long curr) {
+        if (!node) return;
+        curr += node->val;
+        count += prefix[curr - target];
+        prefix[curr]++;
+        dfs(node->left, curr);
+        dfs(node->right, curr);
+        prefix[curr]--;
+    };
+    dfs(root, 0);
+    return count;
+}
+```
+
+**Java**
+```java
+int count = 0;
+public int pathSum(TreeNode root, int targetSum) {
+    Map<Long, Integer> prefix = new HashMap<>();
+    prefix.put(0L, 1);
+    dfs(root, 0L, targetSum, prefix);
+    return count;
+}
+private void dfs(TreeNode node, long curr, int target, Map<Long, Integer> prefix) {
+    if (node == null) return;
+    curr += node.val;
+    count += prefix.getOrDefault(curr - target, 0);
+    prefix.merge(curr, 1, Integer::sum);
+    dfs(node.left, curr, target, prefix);
+    dfs(node.right, curr, target, prefix);
+    prefix.merge(curr, -1, Integer::sum);
+}
+```
 
 **Python**
 ```python
@@ -454,6 +658,34 @@ def invert_tree(root: TreeNode | None) -> TreeNode | None:
 
 ### Symmetric Tree
 
+**C++**
+```cpp
+bool isSymmetric(TreeNode* root) {
+    return mirror(root, root);
+}
+bool mirror(TreeNode* a, TreeNode* b) {
+    if (!a && !b) return true;
+    if (!a || !b) return false;
+    return a->val == b->val &&
+           mirror(a->left, b->right) &&
+           mirror(a->right, b->left);
+}
+```
+
+**Java**
+```java
+public boolean isSymmetric(TreeNode root) {
+    return mirror(root, root);
+}
+private boolean mirror(TreeNode a, TreeNode b) {
+    if (a == null && b == null) return true;
+    if (a == null || b == null) return false;
+    return a.val == b.val &&
+           mirror(a.left, b.right) &&
+           mirror(a.right, b.left);
+}
+```
+
 **Python**
 ```python
 def is_symmetric(root: TreeNode | None) -> bool:
@@ -469,6 +701,34 @@ def is_symmetric(root: TreeNode | None) -> bool:
 ```
 
 ### Subtree of Another Tree
+
+**C++**
+```cpp
+bool isSubtree(TreeNode* root, TreeNode* sub) {
+    if (!root) return false;
+    if (sameTree(root, sub)) return true;
+    return isSubtree(root->left, sub) || isSubtree(root->right, sub);
+}
+bool sameTree(TreeNode* a, TreeNode* b) {
+    if (!a && !b) return true;
+    if (!a || !b) return false;
+    return a->val == b->val && sameTree(a->left, b->left) && sameTree(a->right, b->right);
+}
+```
+
+**Java**
+```java
+public boolean isSubtree(TreeNode root, TreeNode sub) {
+    if (root == null) return false;
+    if (sameTree(root, sub)) return true;
+    return isSubtree(root.left, sub) || isSubtree(root.right, sub);
+}
+private boolean sameTree(TreeNode a, TreeNode b) {
+    if (a == null && b == null) return true;
+    if (a == null || b == null) return false;
+    return a.val == b.val && sameTree(a.left, b.left) && sameTree(a.right, b.right);
+}
+```
 
 **Python**
 ```python
@@ -567,6 +827,28 @@ def lowest_common_ancestor(root, p, q):
 
 ### LCA of Binary Tree (not BST)
 
+**C++**
+```cpp
+TreeNode* lca(TreeNode* root, TreeNode* p, TreeNode* q) {
+    if (!root || root == p || root == q) return root;
+    TreeNode* left = lca(root->left, p, q);
+    TreeNode* right = lca(root->right, p, q);
+    if (left && right) return root;
+    return left ? left : right;
+}
+```
+
+**Java**
+```java
+public TreeNode lca(TreeNode root, TreeNode p, TreeNode q) {
+    if (root == null || root == p || root == q) return root;
+    TreeNode left = lca(root.left, p, q);
+    TreeNode right = lca(root.right, p, q);
+    if (left != null && right != null) return root;
+    return left != null ? left : right;
+}
+```
+
 **Python**
 ```python
 def lca(root, p, q):
@@ -580,6 +862,42 @@ def lca(root, p, q):
 ```
 
 ### Kth Smallest in BST (Inorder)
+
+**C++**
+```cpp
+int kthSmallest(TreeNode* root, int k) {
+    stack<TreeNode*> stk;
+    TreeNode* curr = root;
+    while (curr || !stk.empty()) {
+        while (curr) {
+            stk.push(curr);
+            curr = curr->left;
+        }
+        curr = stk.top(); stk.pop();
+        if (--k == 0) return curr->val;
+        curr = curr->right;
+    }
+    return -1;
+}
+```
+
+**Java**
+```java
+public int kthSmallest(TreeNode root, int k) {
+    Deque<TreeNode> stack = new ArrayDeque<>();
+    TreeNode curr = root;
+    while (curr != null || !stack.isEmpty()) {
+        while (curr != null) {
+            stack.push(curr);
+            curr = curr.left;
+        }
+        curr = stack.pop();
+        if (--k == 0) return curr.val;
+        curr = curr.right;
+    }
+    return -1;
+}
+```
 
 **Python**
 ```python
@@ -598,6 +916,56 @@ def kth_smallest(root: TreeNode, k: int) -> int:
 ```
 
 ### BST Insert / Delete
+
+**C++**
+```cpp
+TreeNode* insertBST(TreeNode* root, int val) {
+    if (!root) return new TreeNode(val);
+    if (val < root->val) root->left = insertBST(root->left, val);
+    else root->right = insertBST(root->right, val);
+    return root;
+}
+
+TreeNode* deleteBST(TreeNode* root, int key) {
+    if (!root) return nullptr;
+    if (key < root->val) root->left = deleteBST(root->left, key);
+    else if (key > root->val) root->right = deleteBST(root->right, key);
+    else {
+        if (!root->left) return root->right;
+        if (!root->right) return root->left;
+        TreeNode* succ = root->right;
+        while (succ->left) succ = succ->left;
+        root->val = succ->val;
+        root->right = deleteBST(root->right, succ->val);
+    }
+    return root;
+}
+```
+
+**Java**
+```java
+public TreeNode insertBST(TreeNode root, int val) {
+    if (root == null) return new TreeNode(val);
+    if (val < root.val) root.left = insertBST(root.left, val);
+    else root.right = insertBST(root.right, val);
+    return root;
+}
+
+public TreeNode deleteBST(TreeNode root, int key) {
+    if (root == null) return null;
+    if (key < root.val) root.left = deleteBST(root.left, key);
+    else if (key > root.val) root.right = deleteBST(root.right, key);
+    else {
+        if (root.left == null) return root.right;
+        if (root.right == null) return root.left;
+        TreeNode succ = root.right;
+        while (succ.left != null) succ = succ.left;
+        root.val = succ.val;
+        root.right = deleteBST(root.right, succ.val);
+    }
+    return root;
+}
+```
 
 **Python**
 ```python
@@ -637,6 +1005,43 @@ def delete_bst(root, key):
 
 ### Build from Preorder + Inorder
 
+**C++**
+```cpp
+TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+    unordered_map<int, int> inMap;
+    for (int i = 0; i < inorder.size(); i++) inMap[inorder[i]] = i;
+    int preIdx = 0;
+    function<TreeNode*(int, int)> build = [&](int lo, int hi) -> TreeNode* {
+        if (lo > hi) return nullptr;
+        TreeNode* root = new TreeNode(preorder[preIdx++]);
+        int mid = inMap[root->val];
+        root->left = build(lo, mid - 1);
+        root->right = build(mid + 1, hi);
+        return root;
+    };
+    return build(0, inorder.size() - 1);
+}
+```
+
+**Java**
+```java
+int preIdx = 0;
+Map<Integer, Integer> inMap = new HashMap<>();
+
+public TreeNode buildTree(int[] preorder, int[] inorder) {
+    for (int i = 0; i < inorder.length; i++) inMap.put(inorder[i], i);
+    return build(preorder, 0, inorder.length - 1);
+}
+private TreeNode build(int[] preorder, int lo, int hi) {
+    if (lo > hi) return null;
+    TreeNode root = new TreeNode(preorder[preIdx++]);
+    int mid = inMap.get(root.val);
+    root.left = build(preorder, lo, mid - 1);
+    root.right = build(preorder, mid + 1, hi);
+    return root;
+}
+```
+
 **Python**
 ```python
 def build_tree(preorder, inorder):
@@ -650,6 +1055,51 @@ def build_tree(preorder, inorder):
 ```
 
 ### Serialize / Deserialize (Preorder)
+
+**C++**
+```cpp
+string serialize(TreeNode* root) {
+    if (!root) return "#";
+    return to_string(root->val) + "," +
+           serialize(root->left) + "," +
+           serialize(root->right);
+}
+
+TreeNode* deserialize(const string& data) {
+    istringstream ss(data);
+    return deserializeHelper(ss);
+}
+TreeNode* deserializeHelper(istringstream& ss) {
+    string val;
+    getline(ss, val, ',');
+    if (val == "#") return nullptr;
+    TreeNode* node = new TreeNode(stoi(val));
+    node->left = deserializeHelper(ss);
+    node->right = deserializeHelper(ss);
+    return node;
+}
+```
+
+**Java**
+```java
+public String serialize(TreeNode root) {
+    if (root == null) return "#";
+    return root.val + "," + serialize(root.left) + "," + serialize(root.right);
+}
+
+public TreeNode deserialize(String data) {
+    Queue<String> queue = new LinkedList<>(Arrays.asList(data.split(",")));
+    return deserializeHelper(queue);
+}
+private TreeNode deserializeHelper(Queue<String> queue) {
+    String val = queue.poll();
+    if ("#".equals(val)) return null;
+    TreeNode node = new TreeNode(Integer.parseInt(val));
+    node.left = deserializeHelper(queue);
+    node.right = deserializeHelper(queue);
+    return node;
+}
+```
 
 **Python**
 ```python
@@ -680,6 +1130,36 @@ def deserialize(data):
 
 ### Sorted Array to Balanced BST
 
+**C++**
+```cpp
+TreeNode* sortedArrayToBST(vector<int>& nums) {
+    return build(nums, 0, nums.size() - 1);
+}
+TreeNode* build(vector<int>& nums, int lo, int hi) {
+    if (lo > hi) return nullptr;
+    int mid = lo + (hi - lo) / 2;
+    TreeNode* root = new TreeNode(nums[mid]);
+    root->left = build(nums, lo, mid - 1);
+    root->right = build(nums, mid + 1, hi);
+    return root;
+}
+```
+
+**Java**
+```java
+public TreeNode sortedArrayToBST(int[] nums) {
+    return build(nums, 0, nums.length - 1);
+}
+private TreeNode build(int[] nums, int lo, int hi) {
+    if (lo > hi) return null;
+    int mid = lo + (hi - lo) / 2;
+    TreeNode root = new TreeNode(nums[mid]);
+    root.left = build(nums, lo, mid - 1);
+    root.right = build(nums, mid + 1, hi);
+    return root;
+}
+```
+
 **Python**
 ```python
 def sorted_array_to_bst(nums):
@@ -699,6 +1179,45 @@ def sorted_array_to_bst(nums):
 **When to use:** Right/left side view, boundary traversal, vertical order.
 
 ### Vertical Order Traversal
+
+**C++**
+```cpp
+vector<vector<int>> verticalOrder(TreeNode* root) {
+    if (!root) return {};
+    map<int, vector<int>> colMap;
+    queue<pair<TreeNode*, int>> q;
+    q.push({root, 0});
+    while (!q.empty()) {
+        auto [node, col] = q.front(); q.pop();
+        colMap[col].push_back(node->val);
+        if (node->left) q.push({node->left, col - 1});
+        if (node->right) q.push({node->right, col + 1});
+    }
+    vector<vector<int>> result;
+    for (auto& [col, vals] : colMap)
+        result.push_back(vals);
+    return result;
+}
+```
+
+**Java**
+```java
+public List<List<Integer>> verticalOrder(TreeNode root) {
+    if (root == null) return new ArrayList<>();
+    TreeMap<Integer, List<Integer>> colMap = new TreeMap<>();
+    Queue<Object[]> queue = new LinkedList<>();
+    queue.offer(new Object[]{root, 0});
+    while (!queue.isEmpty()) {
+        Object[] pair = queue.poll();
+        TreeNode node = (TreeNode) pair[0];
+        int col = (int) pair[1];
+        colMap.computeIfAbsent(col, k -> new ArrayList<>()).add(node.val);
+        if (node.left != null) queue.offer(new Object[]{node.left, col - 1});
+        if (node.right != null) queue.offer(new Object[]{node.right, col + 1});
+    }
+    return new ArrayList<>(colMap.values());
+}
+```
 
 **Python**
 ```python
@@ -723,6 +1242,38 @@ def vertical_order(root):
 ```
 
 ### Binary Tree Maximum Path Sum
+
+**C++**
+```cpp
+int maxPathSum(TreeNode* root) {
+    int result = INT_MIN;
+    function<int(TreeNode*)> dfs = [&](TreeNode* node) -> int {
+        if (!node) return 0;
+        int left = max(dfs(node->left), 0);
+        int right = max(dfs(node->right), 0);
+        result = max(result, left + right + node->val);
+        return max(left, right) + node->val;
+    };
+    dfs(root);
+    return result;
+}
+```
+
+**Java**
+```java
+int result = Integer.MIN_VALUE;
+public int maxPathSum(TreeNode root) {
+    dfs(root);
+    return result;
+}
+private int dfs(TreeNode node) {
+    if (node == null) return 0;
+    int left = Math.max(dfs(node.left), 0);
+    int right = Math.max(dfs(node.right), 0);
+    result = Math.max(result, left + right + node.val);
+    return Math.max(left, right) + node.val;
+}
+```
 
 **Python**
 ```python
