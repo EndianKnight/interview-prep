@@ -108,6 +108,32 @@ def inorder_iterative(root: TreeNode | None) -> list[int]:
 
 ### Graph DFS
 
+**C++**
+```cpp
+void dfs(unordered_map<int, vector<int>>& graph, int node,
+         unordered_set<int>& visited, vector<int>& result) {
+    visited.insert(node);
+    result.push_back(node);
+    for (int neighbor : graph[node]) {
+        if (!visited.count(neighbor))
+            dfs(graph, neighbor, visited, result);
+    }
+}
+```
+
+**Java**
+```java
+public void dfs(Map<Integer, List<Integer>> graph, int node,
+                Set<Integer> visited, List<Integer> result) {
+    visited.add(node);
+    result.add(node);
+    for (int neighbor : graph.getOrDefault(node, List.of())) {
+        if (!visited.contains(neighbor))
+            dfs(graph, neighbor, visited, result);
+    }
+}
+```
+
 **Python**
 ```python
 def dfs(graph: dict[int, list[int]], start: int) -> list[int]:
@@ -206,6 +232,48 @@ def level_order(root: TreeNode | None) -> list[list[int]]:
 
 ### Graph BFS (Shortest Path)
 
+**C++**
+```cpp
+int bfsShortestPath(unordered_map<int, vector<int>>& graph, int start, int end) {
+    queue<pair<int, int>> q;
+    unordered_set<int> visited;
+    q.push({start, 0});
+    visited.insert(start);
+
+    while (!q.empty()) {
+        auto [node, dist] = q.front(); q.pop();
+        if (node == end) return dist;
+        for (int neighbor : graph[node]) {
+            if (!visited.count(neighbor)) {
+                visited.insert(neighbor);
+                q.push({neighbor, dist + 1});
+            }
+        }
+    }
+    return -1;
+}
+```
+
+**Java**
+```java
+public int bfsShortestPath(Map<Integer, List<Integer>> graph, int start, int end) {
+    Queue<int[]> queue = new ArrayDeque<>();
+    Set<Integer> visited = new HashSet<>();
+    queue.offer(new int[]{start, 0});
+    visited.add(start);
+
+    while (!queue.isEmpty()) {
+        int[] curr = queue.poll();
+        if (curr[0] == end) return curr[1];
+        for (int neighbor : graph.getOrDefault(curr[0], List.of())) {
+            if (visited.add(neighbor))
+                queue.offer(new int[]{neighbor, curr[1] + 1});
+        }
+    }
+    return -1;
+}
+```
+
 **Python**
 ```python
 from collections import deque
@@ -233,6 +301,22 @@ def bfs_shortest_path(graph: dict, start: int, end: int) -> int:
 
 ### Example: Maximum Depth
 
+**C++**
+```cpp
+int maxDepth(TreeNode* root) {
+    if (!root) return 0;
+    return 1 + max(maxDepth(root->left), maxDepth(root->right));
+}
+```
+
+**Java**
+```java
+public int maxDepth(TreeNode root) {
+    if (root == null) return 0;
+    return 1 + Math.max(maxDepth(root.left), maxDepth(root.right));
+}
+```
+
 **Python**
 ```python
 def max_depth(root: TreeNode | None) -> int:
@@ -253,6 +337,20 @@ bool isValidBST(TreeNode* root, long minVal = LONG_MIN, long maxVal = LONG_MAX) 
 }
 ```
 
+**Java**
+```java
+public boolean isValidBST(TreeNode root) {
+    return validate(root, Long.MIN_VALUE, Long.MAX_VALUE);
+}
+
+private boolean validate(TreeNode node, long min, long max) {
+    if (node == null) return true;
+    if (node.val <= min || node.val >= max) return false;
+    return validate(node.left, min, node.val) &&
+           validate(node.right, node.val, max);
+}
+```
+
 **Python**
 ```python
 def is_valid_bst(root: TreeNode | None,
@@ -267,6 +365,30 @@ def is_valid_bst(root: TreeNode | None,
 ```
 
 ### Example: Lowest Common Ancestor (BST)
+
+**C++**
+```cpp
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+    while (root) {
+        if (p->val < root->val && q->val < root->val) root = root->left;
+        else if (p->val > root->val && q->val > root->val) root = root->right;
+        else return root;
+    }
+    return nullptr;
+}
+```
+
+**Java**
+```java
+public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    while (root != null) {
+        if (p.val < root.val && q.val < root.val) root = root.left;
+        else if (p.val > root.val && q.val > root.val) root = root.right;
+        else return root;
+    }
+    return null;
+}
+```
 
 **Python**
 ```python
@@ -287,32 +409,6 @@ def lowest_common_ancestor(root: TreeNode, p: TreeNode, q: TreeNode) -> TreeNode
 **When to use:** Task scheduling, course prerequisites, build dependencies — any DAG ordering.
 
 ### Example: Course Schedule (Kahn's BFS)
-
-**Python**
-```python
-from collections import deque, defaultdict
-
-def can_finish(num_courses: int, prerequisites: list[list[int]]) -> bool:
-    graph = defaultdict(list)
-    in_degree = [0] * num_courses
-
-    for course, prereq in prerequisites:
-        graph[prereq].append(course)
-        in_degree[course] += 1
-
-    queue = deque(i for i in range(num_courses) if in_degree[i] == 0)
-    completed = 0
-
-    while queue:
-        node = queue.popleft()
-        completed += 1
-        for neighbor in graph[node]:
-            in_degree[neighbor] -= 1
-            if in_degree[neighbor] == 0:
-                queue.append(neighbor)
-
-    return completed == num_courses
-```
 
 **C++**
 ```cpp
@@ -340,11 +436,122 @@ bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
 }
 ```
 
+**Java**
+```java
+public boolean canFinish(int numCourses, int[][] prerequisites) {
+    List<List<Integer>> graph = new ArrayList<>();
+    int[] inDegree = new int[numCourses];
+    for (int i = 0; i < numCourses; i++) graph.add(new ArrayList<>());
+
+    for (int[] p : prerequisites) {
+        graph.get(p[1]).add(p[0]);
+        inDegree[p[0]]++;
+    }
+
+    Queue<Integer> q = new ArrayDeque<>();
+    for (int i = 0; i < numCourses; i++)
+        if (inDegree[i] == 0) q.offer(i);
+
+    int completed = 0;
+    while (!q.isEmpty()) {
+        int node = q.poll();
+        completed++;
+        for (int next : graph.get(node))
+            if (--inDegree[next] == 0) q.offer(next);
+    }
+    return completed == numCourses;
+}
+```
+
+**Python**
+```python
+from collections import deque, defaultdict
+
+def can_finish(num_courses: int, prerequisites: list[list[int]]) -> bool:
+    graph = defaultdict(list)
+    in_degree = [0] * num_courses
+
+    for course, prereq in prerequisites:
+        graph[prereq].append(course)
+        in_degree[course] += 1
+
+    queue = deque(i for i in range(num_courses) if in_degree[i] == 0)
+    completed = 0
+
+    while queue:
+        node = queue.popleft()
+        completed += 1
+        for neighbor in graph[node]:
+            in_degree[neighbor] -= 1
+            if in_degree[neighbor] == 0:
+                queue.append(neighbor)
+
+    return completed == num_courses
+```
+
 ---
 
 ## Pattern 5: Union-Find (Disjoint Set)
 
 **When to use:** Connected components, cycle detection in undirected graphs, Kruskal's MST.
+
+**C++**
+```cpp
+class UnionFind {
+public:
+    vector<int> parent, rank_;
+    int components;
+
+    UnionFind(int n) : parent(n), rank_(n, 0), components(n) {
+        iota(parent.begin(), parent.end(), 0);
+    }
+
+    int find(int x) {
+        if (parent[x] != x) parent[x] = find(parent[x]);
+        return parent[x];
+    }
+
+    bool unite(int x, int y) {
+        int px = find(x), py = find(y);
+        if (px == py) return false;
+        if (rank_[px] < rank_[py]) swap(px, py);
+        parent[py] = px;
+        if (rank_[px] == rank_[py]) rank_[px]++;
+        components--;
+        return true;
+    }
+};
+```
+
+**Java**
+```java
+class UnionFind {
+    int[] parent, rank;
+    int components;
+
+    UnionFind(int n) {
+        parent = new int[n];
+        rank = new int[n];
+        components = n;
+        for (int i = 0; i < n; i++) parent[i] = i;
+    }
+
+    int find(int x) {
+        if (parent[x] != x) parent[x] = find(parent[x]);
+        return parent[x];
+    }
+
+    boolean union(int x, int y) {
+        int px = find(x), py = find(y);
+        if (px == py) return false;
+        if (rank[px] < rank[py]) { int t = px; px = py; py = t; }
+        parent[py] = px;
+        if (rank[px] == rank[py]) rank[px]++;
+        components--;
+        return true;
+    }
+}
+```
 
 **Python**
 ```python

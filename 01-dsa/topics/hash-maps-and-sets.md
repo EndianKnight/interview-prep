@@ -186,6 +186,19 @@ vector<vector<string>> groupAnagrams(vector<string>& strs) {
 }
 ```
 
+**Java**
+```java
+public List<List<String>> groupAnagrams(String[] strs) {
+    Map<String, List<String>> groups = new HashMap<>();
+    for (String s : strs) {
+        char[] key = s.toCharArray();
+        Arrays.sort(key);
+        groups.computeIfAbsent(new String(key), k -> new ArrayList<>()).add(s);
+    }
+    return new ArrayList<>(groups.values());
+}
+```
+
 **Python**
 ```python
 from collections import defaultdict
@@ -193,18 +206,8 @@ from collections import defaultdict
 def group_anagrams(strs: list[str]) -> list[list[str]]:
     groups = defaultdict(list)
     for s in strs:
-        key = tuple(sorted(s))  # or use character count tuple
+        key = tuple(sorted(s))
         groups[key].append(s)
-    return list(groups.values())
-
-# O(n*k) approach using character count as key
-def group_anagrams_optimal(strs: list[str]) -> list[list[str]]:
-    groups = defaultdict(list)
-    for s in strs:
-        count = [0] * 26
-        for c in s:
-            count[ord(c) - ord('a')] += 1
-        groups[tuple(count)].append(s)
     return list(groups.values())
 ```
 
@@ -216,21 +219,33 @@ def group_anagrams_optimal(strs: list[str]) -> list[list[str]]:
 
 ### Example: Intersection of Two Arrays
 
+**C++**
+```cpp
+vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {
+    unordered_set<int> s1(nums1.begin(), nums1.end());
+    vector<int> result;
+    for (int n : nums2)
+        if (s1.erase(n)) result.push_back(n);
+    return result;
+}
+```
+
+**Java**
+```java
+public int[] intersection(int[] nums1, int[] nums2) {
+    Set<Integer> set = new HashSet<>();
+    for (int n : nums1) set.add(n);
+    List<Integer> result = new ArrayList<>();
+    for (int n : nums2)
+        if (set.remove(n)) result.add(n);
+    return result.stream().mapToInt(Integer::intValue).toArray();
+}
+```
+
 **Python**
 ```python
 def intersection(nums1: list[int], nums2: list[int]) -> list[int]:
     return list(set(nums1) & set(nums2))
-
-# With duplicates (frequency-aware)
-from collections import Counter
-def intersect(nums1: list[int], nums2: list[int]) -> list[int]:
-    counts = Counter(nums1)
-    result = []
-    for num in nums2:
-        if counts[num] > 0:
-            result.append(num)
-            counts[num] -= 1
-    return result
 ```
 
 ---
@@ -248,7 +263,6 @@ int longestConsecutive(vector<int>& nums) {
     int maxLen = 0;
 
     for (int num : numSet) {
-        // Only start counting from sequence beginning
         if (!numSet.count(num - 1)) {
             int curr = num, len = 1;
             while (numSet.count(curr + 1)) {
@@ -256,6 +270,24 @@ int longestConsecutive(vector<int>& nums) {
                 len++;
             }
             maxLen = max(maxLen, len);
+        }
+    }
+    return maxLen;
+}
+```
+
+**Java**
+```java
+public int longestConsecutive(int[] nums) {
+    Set<Integer> numSet = new HashSet<>();
+    for (int n : nums) numSet.add(n);
+    int maxLen = 0;
+
+    for (int num : numSet) {
+        if (!numSet.contains(num - 1)) {
+            int curr = num, len = 1;
+            while (numSet.contains(curr + 1)) { curr++; len++; }
+            maxLen = Math.max(maxLen, len);
         }
     }
     return maxLen;

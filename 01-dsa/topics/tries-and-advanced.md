@@ -139,6 +139,64 @@ class Trie:
 - Range sum / min / max queries with point updates
 - O(log n) query and update, O(n) build
 
+**C++**
+```cpp
+class SegmentTree {
+    vector<int> tree;
+    int n;
+public:
+    SegmentTree(vector<int>& nums) : n(nums.size()), tree(2 * nums.size()) {
+        for (int i = 0; i < n; i++) tree[n + i] = nums[i];
+        for (int i = n - 1; i > 0; i--) tree[i] = tree[2*i] + tree[2*i+1];
+    }
+
+    void update(int idx, int val) {
+        idx += n;
+        tree[idx] = val;
+        while (idx > 1) { idx /= 2; tree[idx] = tree[2*idx] + tree[2*idx+1]; }
+    }
+
+    int query(int left, int right) { // [left, right)
+        int res = 0;
+        for (left += n, right += n; left < right; left >>= 1, right >>= 1) {
+            if (left & 1) res += tree[left++];
+            if (right & 1) res += tree[--right];
+        }
+        return res;
+    }
+};
+```
+
+**Java**
+```java
+class SegmentTree {
+    int[] tree;
+    int n;
+
+    SegmentTree(int[] nums) {
+        n = nums.length;
+        tree = new int[2 * n];
+        for (int i = 0; i < n; i++) tree[n + i] = nums[i];
+        for (int i = n - 1; i > 0; i--) tree[i] = tree[2*i] + tree[2*i+1];
+    }
+
+    void update(int idx, int val) {
+        idx += n;
+        tree[idx] = val;
+        while (idx > 1) { idx /= 2; tree[idx] = tree[2*idx] + tree[2*idx+1]; }
+    }
+
+    int query(int left, int right) { // [left, right)
+        int res = 0;
+        for (left += n, right += n; left < right; left >>= 1, right >>= 1) {
+            if ((left & 1) == 1) res += tree[left++];
+            if ((right & 1) == 1) res += tree[--right];
+        }
+        return res;
+    }
+}
+```
+
 **Python**
 ```python
 class SegmentTree:

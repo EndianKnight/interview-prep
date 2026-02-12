@@ -68,6 +68,42 @@ def merge(intervals: list[list[int]]) -> list[list[int]]:
 
 ## Pattern 2: Insert Interval
 
+**C++**
+```cpp
+vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+    vector<vector<int>> result;
+    int i = 0;
+    while (i < intervals.size() && intervals[i][1] < newInterval[0])
+        result.push_back(intervals[i++]);
+    while (i < intervals.size() && intervals[i][0] <= newInterval[1]) {
+        newInterval = {min(newInterval[0], intervals[i][0]),
+                       max(newInterval[1], intervals[i][1])};
+        i++;
+    }
+    result.push_back(newInterval);
+    while (i < intervals.size()) result.push_back(intervals[i++]);
+    return result;
+}
+```
+
+**Java**
+```java
+public int[][] insert(int[][] intervals, int[] newInterval) {
+    List<int[]> result = new ArrayList<>();
+    int i = 0;
+    while (i < intervals.length && intervals[i][1] < newInterval[0])
+        result.add(intervals[i++]);
+    while (i < intervals.length && intervals[i][0] <= newInterval[1]) {
+        newInterval[0] = Math.min(newInterval[0], intervals[i][0]);
+        newInterval[1] = Math.max(newInterval[1], intervals[i][1]);
+        i++;
+    }
+    result.add(newInterval);
+    while (i < intervals.length) result.add(intervals[i++]);
+    return result.toArray(new int[0][]);
+}
+```
+
 **Python**
 ```python
 def insert(intervals: list[list[int]], new: list[int]) -> list[list[int]]:
@@ -92,6 +128,42 @@ def insert(intervals: list[list[int]], new: list[int]) -> list[list[int]]:
 ## Pattern 3: Line Sweep (Event-Based)
 
 **When to use:** Meeting rooms, overlapping count, skyline problem.
+
+**C++**
+```cpp
+int minMeetingRooms(vector<vector<int>>& intervals) {
+    vector<pair<int, int>> events;
+    for (auto& iv : intervals) {
+        events.push_back({iv[0], 1});
+        events.push_back({iv[1], -1});
+    }
+    sort(events.begin(), events.end());
+    int maxRooms = 0, current = 0;
+    for (auto& [_, delta] : events) {
+        current += delta;
+        maxRooms = max(maxRooms, current);
+    }
+    return maxRooms;
+}
+```
+
+**Java**
+```java
+public int minMeetingRooms(int[][] intervals) {
+    List<int[]> events = new ArrayList<>();
+    for (int[] iv : intervals) {
+        events.add(new int[]{iv[0], 1});
+        events.add(new int[]{iv[1], -1});
+    }
+    events.sort((a, b) -> a[0] != b[0] ? a[0] - b[0] : a[1] - b[1]);
+    int maxRooms = 0, current = 0;
+    for (int[] e : events) {
+        current += e[1];
+        maxRooms = Math.max(maxRooms, current);
+    }
+    return maxRooms;
+}
+```
 
 **Python**
 ```python

@@ -50,6 +50,22 @@ def erase_overlap_intervals(intervals: list[list[int]]) -> int:
     return count
 ```
 
+**Java**
+```java
+public int eraseOverlapIntervals(int[][] intervals) {
+    Arrays.sort(intervals, (a, b) -> Integer.compare(a[1], b[1]));
+    int count = 0, prevEnd = Integer.MIN_VALUE;
+    for (int[] iv : intervals) {
+        if (iv[0] >= prevEnd) {
+            prevEnd = iv[1];
+        } else {
+            count++;
+        }
+    }
+    return count;
+}
+```
+
 ---
 
 ## Pattern 2: Greedy Scheduling / Assignment
@@ -89,6 +105,36 @@ bool canJump(vector<int>& nums) {
     }
     return true;
 }
+
+int jump(vector<int>& nums) {
+    int jumps = 0, currentEnd = 0, farthest = 0;
+    for (int i = 0; i < nums.size() - 1; i++) {
+        farthest = max(farthest, i + nums[i]);
+        if (i == currentEnd) { jumps++; currentEnd = farthest; }
+    }
+    return jumps;
+}
+```
+
+**Java**
+```java
+public boolean canJump(int[] nums) {
+    int maxReach = 0;
+    for (int i = 0; i < nums.length; i++) {
+        if (i > maxReach) return false;
+        maxReach = Math.max(maxReach, i + nums[i]);
+    }
+    return true;
+}
+
+public int jump(int[] nums) {
+    int jumps = 0, currentEnd = 0, farthest = 0;
+    for (int i = 0; i < nums.length - 1; i++) {
+        farthest = Math.max(farthest, i + nums[i]);
+        if (i == currentEnd) { jumps++; currentEnd = farthest; }
+    }
+    return jumps;
+}
 ```
 
 ---
@@ -118,6 +164,32 @@ def min_platforms(arrivals: list[int], departures: list[int]) -> int:
 ```
 
 ### Example: Gas Station
+
+**C++**
+```cpp
+int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+    int totalTank = 0, currTank = 0, start = 0;
+    for (int i = 0; i < gas.size(); i++) {
+        totalTank += gas[i] - cost[i];
+        currTank += gas[i] - cost[i];
+        if (currTank < 0) { start = i + 1; currTank = 0; }
+    }
+    return totalTank >= 0 ? start : -1;
+}
+```
+
+**Java**
+```java
+public int canCompleteCircuit(int[] gas, int[] cost) {
+    int totalTank = 0, currTank = 0, start = 0;
+    for (int i = 0; i < gas.length; i++) {
+        totalTank += gas[i] - cost[i];
+        currTank += gas[i] - cost[i];
+        if (currTank < 0) { start = i + 1; currTank = 0; }
+    }
+    return totalTank >= 0 ? start : -1;
+}
+```
 
 **Python**
 ```python
@@ -154,6 +226,25 @@ def partition_labels(s: str) -> list[int]:
             result.append(end - start + 1)
             start = end + 1
     return result
+```
+
+**Java**
+```java
+public List<Integer> partitionLabels(String s) {
+    int[] last = new int[26];
+    for (int i = 0; i < s.length(); i++) last[s.charAt(i) - 'a'] = i;
+
+    List<Integer> result = new ArrayList<>();
+    int start = 0, end = 0;
+    for (int i = 0; i < s.length(); i++) {
+        end = Math.max(end, last[s.charAt(i) - 'a']);
+        if (i == end) {
+            result.add(end - start + 1);
+            start = end + 1;
+        }
+    }
+    return result;
+}
 ```
 
 **C++**

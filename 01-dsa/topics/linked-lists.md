@@ -97,7 +97,32 @@ def has_cycle(head: ListNode | None) -> bool:
 
 ### Example: Find Middle Node
 
-**Python** (clean example — same logic applies in all languages)
+**C++**
+```cpp
+ListNode* middleNode(ListNode* head) {
+    ListNode* slow = head;
+    ListNode* fast = head;
+    while (fast && fast->next) {
+        slow = slow->next;
+        fast = fast->next->next;
+    }
+    return slow;
+}
+```
+
+**Java**
+```java
+public ListNode middleNode(ListNode head) {
+    ListNode slow = head, fast = head;
+    while (fast != null && fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+    }
+    return slow;
+}
+```
+
+**Python**
 ```python
 def find_middle(head: ListNode | None) -> ListNode | None:
     slow = fast = head
@@ -159,6 +184,28 @@ def reverse_list(head: ListNode | None) -> ListNode | None:
 ```
 
 ### Recursive Reversal
+
+**C++**
+```cpp
+ListNode* reverseListRecursive(ListNode* head) {
+    if (!head || !head->next) return head;
+    ListNode* newHead = reverseListRecursive(head->next);
+    head->next->next = head;
+    head->next = nullptr;
+    return newHead;
+}
+```
+
+**Java**
+```java
+public ListNode reverseListRecursive(ListNode head) {
+    if (head == null || head.next == null) return head;
+    ListNode newHead = reverseListRecursive(head.next);
+    head.next.next = head;
+    head.next = null;
+    return newHead;
+}
+```
 
 **Python**
 ```python
@@ -252,6 +299,41 @@ def merge_two_lists(l1: ListNode | None, l2: ListNode | None) -> ListNode | None
 Advance the first pointer by N steps, then move both pointers until the first reaches the end. The second pointer will be at the target position.
 
 ### Example: Remove Nth Node From End
+
+**C++**
+```cpp
+ListNode* removeNthFromEnd(ListNode* head, int n) {
+    ListNode dummy(0, head);
+    ListNode* first = &dummy;
+    ListNode* second = &dummy;
+
+    for (int i = 0; i <= n; i++) first = first->next;
+    while (first) {
+        first = first->next;
+        second = second->next;
+    }
+    ListNode* toDelete = second->next;
+    second->next = second->next->next;
+    delete toDelete;
+    return dummy.next;
+}
+```
+
+**Java**
+```java
+public ListNode removeNthFromEnd(ListNode head, int n) {
+    ListNode dummy = new ListNode(0, head);
+    ListNode first = dummy, second = dummy;
+
+    for (int i = 0; i <= n; i++) first = first.next;
+    while (first != null) {
+        first = first.next;
+        second = second.next;
+    }
+    second.next = second.next.next;
+    return dummy.next;
+}
+```
 
 **Python**
 ```python

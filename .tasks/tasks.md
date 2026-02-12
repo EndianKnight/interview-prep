@@ -9,7 +9,8 @@ Master checklist of all content to be written. Each file should contain **detail
 ### Topic Guides (language-agnostic concepts)
 - [x] `01-dsa/topics/arrays-and-strings.md`
 - [x] `01-dsa/topics/linked-lists.md`
-- [x] `01-dsa/topics/stacks-and-queues.md`
+- [x] `01-dsa/topics/stacks.md`
+- [x] `01-dsa/topics/queues.md`
 - [x] `01-dsa/topics/trees-and-graphs.md`
 - [x] `01-dsa/topics/heaps-and-priority-queues.md`
 - [x] `01-dsa/topics/hash-maps-and-sets.md`

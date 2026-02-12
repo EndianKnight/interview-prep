@@ -41,6 +41,15 @@ int singleNumber(vector<int>& nums) {
 }
 ```
 
+**Java**
+```java
+public int singleNumber(int[] nums) {
+    int result = 0;
+    for (int n : nums) result ^= n;
+    return result;
+}
+```
+
 **Python**
 ```python
 from functools import reduce
@@ -51,6 +60,26 @@ def single_number(nums: list[int]) -> int:
 ```
 
 ### Example: Missing Number
+
+**C++**
+```cpp
+int missingNumber(vector<int>& nums) {
+    int result = nums.size();
+    for (int i = 0; i < nums.size(); i++)
+        result ^= i ^ nums[i];
+    return result;
+}
+```
+
+**Java**
+```java
+public int missingNumber(int[] nums) {
+    int result = nums.length;
+    for (int i = 0; i < nums.length; i++)
+        result ^= i ^ nums[i];
+    return result;
+}
+```
 
 **Python**
 ```python
@@ -102,6 +131,21 @@ def count_bits(n: int) -> int:
 
 ### Power of Two Check
 
+**C++**
+```cpp
+bool isPowerOfTwo(int n) {
+    return n > 0 && (n & (n - 1)) == 0;
+}
+```
+
+**Java**
+```java
+public boolean isPowerOfTwo(int n) {
+    return n > 0 && (n & (n - 1)) == 0;
+}
+```
+
+**Python**
 ```python
 def is_power_of_two(n: int) -> bool:
     return n > 0 and (n & (n - 1)) == 0
@@ -137,6 +181,22 @@ vector<vector<int>> subsets(vector<int>& nums) {
             if (mask & (1 << i)) subset.push_back(nums[i]);
         }
         result.push_back(subset);
+    }
+    return result;
+}
+```
+
+**Java**
+```java
+public List<List<Integer>> subsets(int[] nums) {
+    int n = nums.length;
+    List<List<Integer>> result = new ArrayList<>();
+    for (int mask = 0; mask < (1 << n); mask++) {
+        List<Integer> subset = new ArrayList<>();
+        for (int i = 0; i < n; i++) {
+            if ((mask & (1 << i)) != 0) subset.add(nums[i]);
+        }
+        result.add(subset);
     }
     return result;
 }

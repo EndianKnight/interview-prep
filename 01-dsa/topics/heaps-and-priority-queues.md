@@ -132,6 +132,26 @@ ListNode* mergeKLists(vector<ListNode*>& lists) {
 }
 ```
 
+**Java**
+```java
+public ListNode mergeKLists(ListNode[] lists) {
+    PriorityQueue<ListNode> pq = new PriorityQueue<>(
+        Comparator.comparingInt(a -> a.val)
+    );
+    for (ListNode node : lists)
+        if (node != null) pq.offer(node);
+
+    ListNode dummy = new ListNode(0), tail = dummy;
+    while (!pq.isEmpty()) {
+        ListNode node = pq.poll();
+        tail.next = node;
+        tail = tail.next;
+        if (node.next != null) pq.offer(node.next);
+    }
+    return dummy.next;
+}
+```
+
 **Complexity:** Time O(N log K) where N = total elements, K = number of lists
 
 ---
@@ -141,6 +161,24 @@ ListNode* mergeKLists(vector<ListNode*>& lists) {
 **When to use:** Running median, or splitting data into two halves by value.
 
 ### Example: Find Median from Data Stream
+
+**C++**
+```cpp
+class MedianFinder {
+    priority_queue<int> lo; // max-heap (smaller half)
+    priority_queue<int, vector<int>, greater<int>> hi; // min-heap (larger half)
+public:
+    void addNum(int num) {
+        lo.push(num);
+        hi.push(lo.top()); lo.pop();
+        if (hi.size() > lo.size()) { lo.push(hi.top()); hi.pop(); }
+    }
+
+    double findMedian() {
+        return lo.size() > hi.size() ? lo.top() : (lo.top() + hi.top()) / 2.0;
+    }
+};
+```
 
 **Python**
 ```python
@@ -188,6 +226,36 @@ class MedianFinder {
 **When to use:** Task scheduling, meeting rooms, CPU intervals.
 
 ### Example: Meeting Rooms II (Minimum Rooms)
+
+**C++**
+```cpp
+int minMeetingRooms(vector<vector<int>>& intervals) {
+    sort(intervals.begin(), intervals.end());
+    priority_queue<int, vector<int>, greater<int>> pq; // min-heap of end times
+
+    for (auto& iv : intervals) {
+        if (!pq.empty() && pq.top() <= iv[0])
+            pq.pop();
+        pq.push(iv[1]);
+    }
+    return pq.size();
+}
+```
+
+**Java**
+```java
+public int minMeetingRooms(int[][] intervals) {
+    Arrays.sort(intervals, Comparator.comparingInt(a -> a[0]));
+    PriorityQueue<Integer> pq = new PriorityQueue<>(); // min-heap of end times
+
+    for (int[] iv : intervals) {
+        if (!pq.isEmpty() && pq.peek() <= iv[0])
+            pq.poll();
+        pq.offer(iv[1]);
+    }
+    return pq.size();
+}
+```
 
 **Python**
 ```python

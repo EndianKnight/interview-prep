@@ -91,6 +91,37 @@ string minWindow(string s, string t) {
 }
 ```
 
+**Java**
+```java
+public String minWindow(String s, String t) {
+    Map<Character, Integer> need = new HashMap<>(), window = new HashMap<>();
+    for (char c : t.toCharArray()) need.merge(c, 1, Integer::sum);
+
+    int left = 0, valid = 0, start = 0, minLen = Integer.MAX_VALUE;
+
+    for (int right = 0; right < s.length(); right++) {
+        char c = s.charAt(right);
+        if (need.containsKey(c)) {
+            window.merge(c, 1, Integer::sum);
+            if (window.get(c).equals(need.get(c))) valid++;
+        }
+
+        while (valid == need.size()) {
+            if (right - left + 1 < minLen) {
+                start = left;
+                minLen = right - left + 1;
+            }
+            char d = s.charAt(left++);
+            if (need.containsKey(d)) {
+                if (window.get(d).equals(need.get(d))) valid--;
+                window.merge(d, -1, Integer::sum);
+            }
+        }
+    }
+    return minLen == Integer.MAX_VALUE ? "" : s.substring(start, start + minLen);
+}
+```
+
 **Python**
 ```python
 from collections import Counter, defaultdict
@@ -129,6 +160,35 @@ def min_window(s: str, t: str) -> str:
 
 **Example: Container With Most Water**
 
+**C++**
+```cpp
+int maxArea(vector<int>& height) {
+    int left = 0, right = height.size() - 1, best = 0;
+    while (left < right) {
+        int area = min(height[left], height[right]) * (right - left);
+        best = max(best, area);
+        if (height[left] < height[right]) left++;
+        else right--;
+    }
+    return best;
+}
+```
+
+**Java**
+```java
+public int maxArea(int[] height) {
+    int left = 0, right = height.length - 1, best = 0;
+    while (left < right) {
+        int area = Math.min(height[left], height[right]) * (right - left);
+        best = Math.max(best, area);
+        if (height[left] < height[right]) left++;
+        else right--;
+    }
+    return best;
+}
+```
+
+**Python**
 ```python
 def max_area(height: list[int]) -> int:
     left, right = 0, len(height) - 1
@@ -147,6 +207,35 @@ def max_area(height: list[int]) -> int:
 
 **Example: Remove Duplicates from Sorted Array**
 
+**C++**
+```cpp
+int removeDuplicates(vector<int>& nums) {
+    if (nums.empty()) return 0;
+    int write = 1;
+    for (int read = 1; read < nums.size(); read++) {
+        if (nums[read] != nums[read - 1]) {
+            nums[write++] = nums[read];
+        }
+    }
+    return write;
+}
+```
+
+**Java**
+```java
+public int removeDuplicates(int[] nums) {
+    if (nums.length == 0) return 0;
+    int write = 1;
+    for (int read = 1; read < nums.length; read++) {
+        if (nums[read] != nums[read - 1]) {
+            nums[write++] = nums[read];
+        }
+    }
+    return write;
+}
+```
+
+**Python**
 ```python
 def remove_duplicates(nums: list[int]) -> int:
     if not nums:
@@ -161,6 +250,53 @@ def remove_duplicates(nums: list[int]) -> int:
 
 ### Three Pointers (3Sum)
 
+**C++**
+```cpp
+vector<vector<int>> threeSum(vector<int>& nums) {
+    sort(nums.begin(), nums.end());
+    vector<vector<int>> result;
+    for (int i = 0; i < (int)nums.size() - 2; i++) {
+        if (i > 0 && nums[i] == nums[i-1]) continue;
+        int left = i + 1, right = nums.size() - 1;
+        while (left < right) {
+            int total = nums[i] + nums[left] + nums[right];
+            if (total == 0) {
+                result.push_back({nums[i], nums[left], nums[right]});
+                while (left < right && nums[left] == nums[left+1]) left++;
+                while (left < right && nums[right] == nums[right-1]) right--;
+                left++; right--;
+            } else if (total < 0) left++;
+            else right--;
+        }
+    }
+    return result;
+}
+```
+
+**Java**
+```java
+public List<List<Integer>> threeSum(int[] nums) {
+    Arrays.sort(nums);
+    List<List<Integer>> result = new ArrayList<>();
+    for (int i = 0; i < nums.length - 2; i++) {
+        if (i > 0 && nums[i] == nums[i-1]) continue;
+        int left = i + 1, right = nums.length - 1;
+        while (left < right) {
+            int total = nums[i] + nums[left] + nums[right];
+            if (total == 0) {
+                result.add(List.of(nums[i], nums[left], nums[right]));
+                while (left < right && nums[left] == nums[left+1]) left++;
+                while (left < right && nums[right] == nums[right-1]) right--;
+                left++; right--;
+            } else if (total < 0) left++;
+            else right--;
+        }
+    }
+    return result;
+}
+```
+
+**Python**
 ```python
 def three_sum(nums: list[int]) -> list[list[int]]:
     nums.sort()

@@ -19,6 +19,54 @@ Mastering sorting algorithms and binary search variants is essential — they un
 
 ### Quick Sort Implementation
 
+**C++**
+```cpp
+#include <vector>
+#include <cstdlib>
+using namespace std;
+
+int partition(vector<int>& arr, int lo, int hi) {
+    int pivotIdx = lo + rand() % (hi - lo + 1);
+    swap(arr[pivotIdx], arr[hi]);
+    int pivot = arr[hi], i = lo;
+
+    for (int j = lo; j < hi; j++) {
+        if (arr[j] <= pivot) swap(arr[i++], arr[j]);
+    }
+    swap(arr[i], arr[hi]);
+    return i;
+}
+
+void quicksort(vector<int>& arr, int lo, int hi) {
+    if (lo >= hi) return;
+    int p = partition(arr, lo, hi);
+    quicksort(arr, lo, p - 1);
+    quicksort(arr, p + 1, hi);
+}
+```
+
+**Java**
+```java
+import java.util.Random;
+
+public void quicksort(int[] arr, int lo, int hi) {
+    if (lo >= hi) return;
+    int pivotIdx = lo + new Random().nextInt(hi - lo + 1);
+    int temp = arr[pivotIdx]; arr[pivotIdx] = arr[hi]; arr[hi] = temp;
+    int pivot = arr[hi], i = lo;
+
+    for (int j = lo; j < hi; j++) {
+        if (arr[j] <= pivot) {
+            temp = arr[i]; arr[i] = arr[j]; arr[j] = temp;
+            i++;
+        }
+    }
+    temp = arr[i]; arr[i] = arr[hi]; arr[hi] = temp;
+    quicksort(arr, lo, i - 1);
+    quicksort(arr, i + 1, hi);
+}
+```
+
 **Python**
 ```python
 import random
@@ -68,6 +116,48 @@ void mergeSort(vector<int>& arr, int lo, int hi) {
 }
 ```
 
+**Java**
+```java
+public void mergeSort(int[] arr, int lo, int hi) {
+    if (lo >= hi) return;
+    int mid = lo + (hi - lo) / 2;
+    mergeSort(arr, lo, mid);
+    mergeSort(arr, mid + 1, hi);
+    merge(arr, lo, mid, hi);
+}
+
+private void merge(int[] arr, int lo, int mid, int hi) {
+    int[] left = Arrays.copyOfRange(arr, lo, mid + 1);
+    int[] right = Arrays.copyOfRange(arr, mid + 1, hi + 1);
+    int i = 0, j = 0, k = lo;
+
+    while (i < left.length && j < right.length)
+        arr[k++] = (left[i] <= right[j]) ? left[i++] : right[j++];
+    while (i < left.length) arr[k++] = left[i++];
+    while (j < right.length) arr[k++] = right[j++];
+}
+```
+
+**Python**
+```python
+def merge_sort(arr: list[int]) -> list[int]:
+    if len(arr) <= 1:
+        return arr
+    mid = len(arr) // 2
+    left = merge_sort(arr[:mid])
+    right = merge_sort(arr[mid:])
+
+    merged, i, j = [], 0, 0
+    while i < len(left) and j < len(right):
+        if left[i] <= right[j]:
+            merged.append(left[i]); i += 1
+        else:
+            merged.append(right[j]); j += 1
+    merged.extend(left[i:])
+    merged.extend(right[j:])
+    return merged
+```
+
 ### Language Built-in Sorting
 
 | | C++ | Java | Python |
@@ -85,6 +175,34 @@ void mergeSort(vector<int>& arr, int lo, int hi) {
 
 ### Template
 
+**C++**
+```cpp
+int binarySearch(vector<int>& nums, int target) {
+    int lo = 0, hi = nums.size() - 1;
+    while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (nums[mid] == target) return mid;
+        else if (nums[mid] < target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return -1;
+}
+```
+
+**Java**
+```java
+public int binarySearch(int[] nums, int target) {
+    int lo = 0, hi = nums.length - 1;
+    while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (nums[mid] == target) return mid;
+        else if (nums[mid] < target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return -1;
+}
+```
+
 **Python**
 ```python
 def binary_search(nums: list[int], target: int) -> int:
@@ -100,20 +218,6 @@ def binary_search(nums: list[int], target: int) -> int:
     return -1  # not found
 ```
 
-**C++**
-```cpp
-int binarySearch(vector<int>& nums, int target) {
-    int lo = 0, hi = nums.size() - 1;
-    while (lo <= hi) {
-        int mid = lo + (hi - lo) / 2;
-        if (nums[mid] == target) return mid;
-        else if (nums[mid] < target) lo = mid + 1;
-        else hi = mid - 1;
-    }
-    return -1;
-}
-```
-
 ---
 
 ## Pattern 2: Binary Search on Answer (Bisect)
@@ -124,6 +228,36 @@ int binarySearch(vector<int>& nums, int target) {
 Binary search on the answer space. For each candidate, check if it's feasible in O(n).
 
 ### Example: Koko Eating Bananas
+
+**C++**
+```cpp
+int minEatingSpeed(vector<int>& piles, int h) {
+    int lo = 1, hi = *max_element(piles.begin(), piles.end());
+    while (lo < hi) {
+        int mid = lo + (hi - lo) / 2;
+        int hours = 0;
+        for (int p : piles) hours += (p + mid - 1) / mid;
+        if (hours <= h) hi = mid;
+        else lo = mid + 1;
+    }
+    return lo;
+}
+```
+
+**Java**
+```java
+public int minEatingSpeed(int[] piles, int h) {
+    int lo = 1, hi = Arrays.stream(piles).max().getAsInt();
+    while (lo < hi) {
+        int mid = lo + (hi - lo) / 2;
+        int hours = 0;
+        for (int p : piles) hours += (p + mid - 1) / mid;
+        if (hours <= h) hi = mid;
+        else lo = mid + 1;
+    }
+    return lo;
+}
+```
 
 **Python**
 ```python
@@ -142,21 +276,6 @@ def min_eating_speed(piles: list[int], h: int) -> int:
     return lo
 ```
 
-**C++**
-```cpp
-int minEatingSpeed(vector<int>& piles, int h) {
-    int lo = 1, hi = *max_element(piles.begin(), piles.end());
-    while (lo < hi) {
-        int mid = lo + (hi - lo) / 2;
-        int hours = 0;
-        for (int p : piles) hours += (p + mid - 1) / mid;
-        if (hours <= h) hi = mid;
-        else lo = mid + 1;
-    }
-    return lo;
-}
-```
-
 ---
 
 ## Pattern 3: Finding Boundaries (Lower/Upper Bound)
@@ -164,6 +283,66 @@ int minEatingSpeed(vector<int>& piles, int h) {
 **When to use:** First/last occurrence, insertion point, count of target.
 
 ### Example: First and Last Position of Target
+
+**C++**
+```cpp
+vector<int> searchRange(vector<int>& nums, int target) {
+    int left = findLeft(nums, target);
+    int right = findRight(nums, target);
+    if (left <= right) return {left, right};
+    return {-1, -1};
+}
+
+int findLeft(vector<int>& nums, int target) {
+    int lo = 0, hi = nums.size() - 1;
+    while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (nums[mid] < target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return lo;
+}
+
+int findRight(vector<int>& nums, int target) {
+    int lo = 0, hi = nums.size() - 1;
+    while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (nums[mid] <= target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return hi;
+}
+```
+
+**Java**
+```java
+public int[] searchRange(int[] nums, int target) {
+    int left = findLeft(nums, target);
+    int right = findRight(nums, target);
+    if (left <= right) return new int[]{left, right};
+    return new int[]{-1, -1};
+}
+
+private int findLeft(int[] nums, int target) {
+    int lo = 0, hi = nums.length - 1;
+    while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (nums[mid] < target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return lo;
+}
+
+private int findRight(int[] nums, int target) {
+    int lo = 0, hi = nums.length - 1;
+    while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (nums[mid] <= target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return hi;
+}
+```
 
 **Python**
 ```python
@@ -203,6 +382,12 @@ auto [lo, hi] = equal_range(nums.begin(), nums.end(), target);
 if (lo != hi) return {(int)(lo - nums.begin()), (int)(hi - nums.begin() - 1)};
 ```
 
+**Java**
+```java
+int lo = Collections.binarySearch(list, target); // only finds one occurrence
+// For bounds: use Arrays.binarySearch or implement manually as above
+```
+
 **Python**
 ```python
 from bisect import bisect_left, bisect_right
@@ -217,6 +402,54 @@ hi = bisect_right(nums, target) - 1
 **When to use:** Rotated sorted array, mountain array, bitonic sequence.
 
 ### Example: Search in Rotated Sorted Array
+
+**C++**
+```cpp
+int search(vector<int>& nums, int target) {
+    int lo = 0, hi = nums.size() - 1;
+    while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (nums[mid] == target) return mid;
+
+        if (nums[lo] <= nums[mid]) { // left half sorted
+            if (nums[lo] <= target && target < nums[mid])
+                hi = mid - 1;
+            else
+                lo = mid + 1;
+        } else { // right half sorted
+            if (nums[mid] < target && target <= nums[hi])
+                lo = mid + 1;
+            else
+                hi = mid - 1;
+        }
+    }
+    return -1;
+}
+```
+
+**Java**
+```java
+public int search(int[] nums, int target) {
+    int lo = 0, hi = nums.length - 1;
+    while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        if (nums[mid] == target) return mid;
+
+        if (nums[lo] <= nums[mid]) { // left half sorted
+            if (nums[lo] <= target && target < nums[mid])
+                hi = mid - 1;
+            else
+                lo = mid + 1;
+        } else { // right half sorted
+            if (nums[mid] < target && target <= nums[hi])
+                lo = mid + 1;
+            else
+                hi = mid - 1;
+        }
+    }
+    return -1;
+}
+```
 
 **Python**
 ```python
