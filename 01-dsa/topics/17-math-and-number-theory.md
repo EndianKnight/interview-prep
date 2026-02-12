@@ -172,6 +172,30 @@ primes = [i for i, v in enumerate(sieve(n)) if v]
 
 ### Primality Check
 
+**C++**
+```cpp
+bool isPrime(int n) {
+    if (n < 2) return false;
+    if (n < 4) return true;
+    if (n % 2 == 0 || n % 3 == 0) return false;
+    for (int i = 5; (long)i * i <= n; i += 6)
+        if (n % i == 0 || n % (i + 2) == 0) return false;
+    return true;
+}
+```
+
+**Java**
+```java
+public boolean isPrime(int n) {
+    if (n < 2) return false;
+    if (n < 4) return true;
+    if (n % 2 == 0 || n % 3 == 0) return false;
+    for (int i = 5; (long)i * i <= n; i += 6)
+        if (n % i == 0 || n % (i + 2) == 0) return false;
+    return true;
+}
+```
+
 **Python**
 ```python
 def is_prime(n):
@@ -187,6 +211,36 @@ def is_prime(n):
 ```
 
 ### Prime Factorization
+
+**C++**
+```cpp
+vector<int> primeFactors(int n) {
+    vector<int> factors;
+    for (int d = 2; (long)d * d <= n; d++) {
+        while (n % d == 0) {
+            factors.push_back(d);
+            n /= d;
+        }
+    }
+    if (n > 1) factors.push_back(n);
+    return factors;
+}
+```
+
+**Java**
+```java
+public List<Integer> primeFactors(int n) {
+    List<Integer> factors = new ArrayList<>();
+    for (int d = 2; (long)d * d <= n; d++) {
+        while (n % d == 0) {
+            factors.add(d);
+            n /= d;
+        }
+    }
+    if (n > 1) factors.add(n);
+    return factors;
+}
+```
 
 **Python**
 ```python
@@ -208,6 +262,32 @@ def prime_factors(n):
 ## Pattern 4: Combinatorics
 
 ### nCr (Combinations) with Modular Arithmetic
+
+**C++**
+```cpp
+long long nCr(int n, int k, long long mod) {
+    if (k > n) return 0;
+    vector<long long> fact(n + 1), inv_fact(n + 1);
+    fact[0] = 1;
+    for (int i = 1; i <= n; i++) fact[i] = fact[i-1] * i % mod;
+    inv_fact[n] = power(fact[n], mod - 2, mod);  // uses fast power
+    for (int i = n - 1; i >= 0; i--) inv_fact[i] = inv_fact[i+1] * (i+1) % mod;
+    return fact[n] % mod * inv_fact[k] % mod * inv_fact[n-k] % mod;
+}
+```
+
+**Java**
+```java
+public long nCr(int n, int k, long mod) {
+    if (k > n) return 0;
+    long[] fact = new long[n + 1], invFact = new long[n + 1];
+    fact[0] = 1;
+    for (int i = 1; i <= n; i++) fact[i] = fact[i-1] * i % mod;
+    invFact[n] = power(fact[n], mod - 2, mod);  // uses fast power
+    for (int i = n - 1; i >= 0; i--) invFact[i] = invFact[i+1] * (i+1) % mod;
+    return fact[n] % mod * invFact[k] % mod * invFact[n-k] % mod;
+}
+```
 
 **Python**
 ```python
@@ -329,6 +409,24 @@ def fib(n):
 
 ### Count Trailing Zeros in n!
 
+**C++**
+```cpp
+int trailingZeroes(int n) {
+    int count = 0;
+    while (n >= 5) { n /= 5; count += n; }
+    return count;
+}
+```
+
+**Java**
+```java
+public int trailingZeroes(int n) {
+    int count = 0;
+    while (n >= 5) { n /= 5; count += n; }
+    return count;
+}
+```
+
 **Python**
 ```python
 def trailing_zeros(n):
@@ -340,6 +438,33 @@ def trailing_zeros(n):
 ```
 
 ### Happy Number
+
+**C++**
+```cpp
+bool isHappy(int n) {
+    unordered_set<int> seen;
+    while (n != 1 && !seen.count(n)) {
+        seen.insert(n);
+        int sum = 0;
+        while (n > 0) { int d = n % 10; sum += d * d; n /= 10; }
+        n = sum;
+    }
+    return n == 1;
+}
+```
+
+**Java**
+```java
+public boolean isHappy(int n) {
+    Set<Integer> seen = new HashSet<>();
+    while (n != 1 && seen.add(n)) {
+        int sum = 0;
+        while (n > 0) { int d = n % 10; sum += d * d; n /= 10; }
+        n = sum;
+    }
+    return n == 1;
+}
+```
 
 **Python**
 ```python

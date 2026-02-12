@@ -218,6 +218,38 @@ def search_matrix(matrix, target):
 
 Rows sorted, first element of each row > last element of previous row.
 
+**C++**
+```cpp
+bool searchMatrix(vector<vector<int>>& matrix, int target) {
+    int rows = matrix.size(), cols = matrix[0].size();
+    int lo = 0, hi = rows * cols - 1;
+    while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        int val = matrix[mid / cols][mid % cols];
+        if (val == target) return true;
+        else if (val < target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return false;
+}
+```
+
+**Java**
+```java
+public boolean searchMatrix(int[][] matrix, int target) {
+    int rows = matrix.length, cols = matrix[0].length;
+    int lo = 0, hi = rows * cols - 1;
+    while (lo <= hi) {
+        int mid = lo + (hi - lo) / 2;
+        int val = matrix[mid / cols][mid % cols];
+        if (val == target) return true;
+        else if (val < target) lo = mid + 1;
+        else hi = mid - 1;
+    }
+    return false;
+}
+```
+
 **Python**
 ```python
 def search_sorted_matrix(matrix, target):
@@ -237,6 +269,42 @@ def search_sorted_matrix(matrix, target):
 ## Pattern 4: Set Matrix Zeroes
 
 ### O(1) Space — Use First Row/Col as Markers
+
+**C++**
+```cpp
+void setZeroes(vector<vector<int>>& matrix) {
+    int rows = matrix.size(), cols = matrix[0].size();
+    bool firstRow = false, firstCol = false;
+    for (int c = 0; c < cols; c++) if (matrix[0][c] == 0) firstRow = true;
+    for (int r = 0; r < rows; r++) if (matrix[r][0] == 0) firstCol = true;
+    for (int r = 1; r < rows; r++)
+        for (int c = 1; c < cols; c++)
+            if (matrix[r][c] == 0) { matrix[r][0] = 0; matrix[0][c] = 0; }
+    for (int r = 1; r < rows; r++)
+        for (int c = 1; c < cols; c++)
+            if (matrix[r][0] == 0 || matrix[0][c] == 0) matrix[r][c] = 0;
+    if (firstRow) for (int c = 0; c < cols; c++) matrix[0][c] = 0;
+    if (firstCol) for (int r = 0; r < rows; r++) matrix[r][0] = 0;
+}
+```
+
+**Java**
+```java
+public void setZeroes(int[][] matrix) {
+    int rows = matrix.length, cols = matrix[0].length;
+    boolean firstRow = false, firstCol = false;
+    for (int c = 0; c < cols; c++) if (matrix[0][c] == 0) firstRow = true;
+    for (int r = 0; r < rows; r++) if (matrix[r][0] == 0) firstCol = true;
+    for (int r = 1; r < rows; r++)
+        for (int c = 1; c < cols; c++)
+            if (matrix[r][c] == 0) { matrix[r][0] = 0; matrix[0][c] = 0; }
+    for (int r = 1; r < rows; r++)
+        for (int c = 1; c < cols; c++)
+            if (matrix[r][0] == 0 || matrix[0][c] == 0) matrix[r][c] = 0;
+    if (firstRow) for (int c = 0; c < cols; c++) matrix[0][c] = 0;
+    if (firstCol) for (int r = 0; r < rows; r++) matrix[r][0] = 0;
+}
+```
 
 **Python**
 ```python
@@ -271,6 +339,36 @@ def set_zeroes(matrix):
 
 ### Minimum Path Sum
 
+**C++**
+```cpp
+int minPathSum(vector<vector<int>>& grid) {
+    int rows = grid.size(), cols = grid[0].size();
+    vector<vector<int>> dp(rows, vector<int>(cols, 0));
+    dp[0][0] = grid[0][0];
+    for (int r = 1; r < rows; r++) dp[r][0] = dp[r-1][0] + grid[r][0];
+    for (int c = 1; c < cols; c++) dp[0][c] = dp[0][c-1] + grid[0][c];
+    for (int r = 1; r < rows; r++)
+        for (int c = 1; c < cols; c++)
+            dp[r][c] = grid[r][c] + min(dp[r-1][c], dp[r][c-1]);
+    return dp[rows-1][cols-1];
+}
+```
+
+**Java**
+```java
+public int minPathSum(int[][] grid) {
+    int rows = grid.length, cols = grid[0].length;
+    int[][] dp = new int[rows][cols];
+    dp[0][0] = grid[0][0];
+    for (int r = 1; r < rows; r++) dp[r][0] = dp[r-1][0] + grid[r][0];
+    for (int c = 1; c < cols; c++) dp[0][c] = dp[0][c-1] + grid[0][c];
+    for (int r = 1; r < rows; r++)
+        for (int c = 1; c < cols; c++)
+            dp[r][c] = grid[r][c] + Math.min(dp[r-1][c], dp[r][c-1]);
+    return dp[rows-1][cols-1];
+}
+```
+
 **Python**
 ```python
 def min_path_sum(grid):
@@ -290,6 +388,38 @@ def min_path_sum(grid):
 
 ### Unique Paths (with Obstacles)
 
+**C++**
+```cpp
+int uniquePathsWithObstacles(vector<vector<int>>& grid) {
+    int rows = grid.size(), cols = grid[0].size();
+    vector<vector<int>> dp(rows, vector<int>(cols, 0));
+    dp[0][0] = grid[0][0] == 0 ? 1 : 0;
+    for (int r = 0; r < rows; r++)
+        for (int c = 0; c < cols; c++) {
+            if (grid[r][c] == 1) { dp[r][c] = 0; continue; }
+            if (r > 0) dp[r][c] += dp[r-1][c];
+            if (c > 0) dp[r][c] += dp[r][c-1];
+        }
+    return dp[rows-1][cols-1];
+}
+```
+
+**Java**
+```java
+public int uniquePathsWithObstacles(int[][] grid) {
+    int rows = grid.length, cols = grid[0].length;
+    int[][] dp = new int[rows][cols];
+    dp[0][0] = grid[0][0] == 0 ? 1 : 0;
+    for (int r = 0; r < rows; r++)
+        for (int c = 0; c < cols; c++) {
+            if (grid[r][c] == 1) { dp[r][c] = 0; continue; }
+            if (r > 0) dp[r][c] += dp[r-1][c];
+            if (c > 0) dp[r][c] += dp[r][c-1];
+        }
+    return dp[rows-1][cols-1];
+}
+```
+
 **Python**
 ```python
 def unique_paths_with_obstacles(grid):
@@ -308,6 +438,40 @@ def unique_paths_with_obstacles(grid):
 ```
 
 ### Maximal Square
+
+**C++**
+```cpp
+int maximalSquare(vector<vector<char>>& matrix) {
+    int rows = matrix.size(), cols = matrix[0].size(), maxSide = 0;
+    vector<vector<int>> dp(rows, vector<int>(cols, 0));
+    for (int r = 0; r < rows; r++)
+        for (int c = 0; c < cols; c++) {
+            if (matrix[r][c] == '1') {
+                dp[r][c] = (r == 0 || c == 0) ? 1
+                    : 1 + min({dp[r-1][c], dp[r][c-1], dp[r-1][c-1]});
+                maxSide = max(maxSide, dp[r][c]);
+            }
+        }
+    return maxSide * maxSide;
+}
+```
+
+**Java**
+```java
+public int maximalSquare(char[][] matrix) {
+    int rows = matrix.length, cols = matrix[0].length, maxSide = 0;
+    int[][] dp = new int[rows][cols];
+    for (int r = 0; r < rows; r++)
+        for (int c = 0; c < cols; c++) {
+            if (matrix[r][c] == '1') {
+                dp[r][c] = (r == 0 || c == 0) ? 1
+                    : 1 + Math.min(dp[r-1][c-1], Math.min(dp[r-1][c], dp[r][c-1]));
+                maxSide = Math.max(maxSide, dp[r][c]);
+            }
+        }
+    return maxSide * maxSide;
+}
+```
 
 **Python**
 ```python

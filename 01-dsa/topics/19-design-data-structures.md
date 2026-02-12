@@ -357,6 +357,61 @@ class RandomizedSet:
 
 ### HashMap from Scratch
 
+**C++**
+```cpp
+class MyHashMap {
+    static const int SIZE = 1000;
+    vector<list<pair<int,int>>> buckets;
+public:
+    MyHashMap() : buckets(SIZE) {}
+    void put(int key, int value) {
+        auto& bucket = buckets[key % SIZE];
+        for (auto& [k, v] : bucket) {
+            if (k == key) { v = value; return; }
+        }
+        bucket.emplace_back(key, value);
+    }
+    int get(int key) {
+        auto& bucket = buckets[key % SIZE];
+        for (auto& [k, v] : bucket)
+            if (k == key) return v;
+        return -1;
+    }
+    void remove(int key) {
+        auto& bucket = buckets[key % SIZE];
+        bucket.remove_if([key](auto& p) { return p.first == key; });
+    }
+};
+```
+
+**Java**
+```java
+class MyHashMap {
+    private static final int SIZE = 1000;
+    private List<int[]>[] buckets;
+
+    public MyHashMap() {
+        buckets = new LinkedList[SIZE];
+        for (int i = 0; i < SIZE; i++) buckets[i] = new LinkedList<>();
+    }
+    public void put(int key, int value) {
+        var bucket = buckets[key % SIZE];
+        for (int[] pair : bucket) {
+            if (pair[0] == key) { pair[1] = value; return; }
+        }
+        bucket.add(new int[]{key, value});
+    }
+    public int get(int key) {
+        for (int[] pair : buckets[key % SIZE])
+            if (pair[0] == key) return pair[1];
+        return -1;
+    }
+    public void remove(int key) {
+        buckets[key % SIZE].removeIf(p -> p[0] == key);
+    }
+}
+```
+
 **Python**
 ```python
 class MyHashMap:
@@ -396,6 +451,50 @@ class MyHashMap:
 
 ### Flatten Nested List Iterator
 
+**C++**
+```cpp
+class NestedIterator {
+    stack<NestedInteger> stk;
+public:
+    NestedIterator(vector<NestedInteger>& nestedList) {
+        for (int i = nestedList.size() - 1; i >= 0; i--)
+            stk.push(nestedList[i]);
+    }
+    int next() {
+        int val = stk.top().getInteger(); stk.pop();
+        return val;
+    }
+    bool hasNext() {
+        while (!stk.empty() && !stk.top().isInteger()) {
+            auto list = stk.top().getList(); stk.pop();
+            for (int i = list.size() - 1; i >= 0; i--)
+                stk.push(list[i]);
+        }
+        return !stk.empty();
+    }
+};
+```
+
+**Java**
+```java
+public class NestedIterator implements Iterator<Integer> {
+    Deque<NestedInteger> stack = new ArrayDeque<>();
+    public NestedIterator(List<NestedInteger> nestedList) {
+        for (int i = nestedList.size() - 1; i >= 0; i--)
+            stack.push(nestedList.get(i));
+    }
+    public Integer next() { return stack.pop().getInteger(); }
+    public boolean hasNext() {
+        while (!stack.isEmpty() && !stack.peek().isInteger()) {
+            List<NestedInteger> list = stack.pop().getList();
+            for (int i = list.size() - 1; i >= 0; i--)
+                stack.push(list.get(i));
+        }
+        return !stack.isEmpty();
+    }
+}
+```
+
 **Python**
 ```python
 class NestedIterator:
@@ -416,6 +515,43 @@ class NestedIterator:
 ```
 
 ### Peeking Iterator
+
+**C++**
+```cpp
+class PeekingIterator : public Iterator {
+    int peekedVal;
+    bool hasPeeked = false;
+public:
+    PeekingIterator(const vector<int>& nums) : Iterator(nums) {}
+    int peek() {
+        if (!hasPeeked) { peekedVal = Iterator::next(); hasPeeked = true; }
+        return peekedVal;
+    }
+    int next() {
+        if (hasPeeked) { hasPeeked = false; return peekedVal; }
+        return Iterator::next();
+    }
+    bool hasNext() const { return hasPeeked || Iterator::hasNext(); }
+};
+```
+
+**Java**
+```java
+class PeekingIterator implements Iterator<Integer> {
+    Iterator<Integer> iter;
+    Integer peeked = null;
+    public PeekingIterator(Iterator<Integer> iter) { this.iter = iter; }
+    public Integer peek() {
+        if (peeked == null) peeked = iter.next();
+        return peeked;
+    }
+    public Integer next() {
+        if (peeked != null) { Integer val = peeked; peeked = null; return val; }
+        return iter.next();
+    }
+    public boolean hasNext() { return peeked != null || iter.hasNext(); }
+}
+```
 
 **Python**
 ```python
@@ -443,6 +579,41 @@ class PeekingIterator:
 
 ### BSTIterator (Inorder)
 
+**C++**
+```cpp
+class BSTIterator {
+    stack<TreeNode*> stk;
+    void pushLeft(TreeNode* node) {
+        while (node) { stk.push(node); node = node->left; }
+    }
+public:
+    BSTIterator(TreeNode* root) { pushLeft(root); }
+    int next() {
+        auto node = stk.top(); stk.pop();
+        pushLeft(node->right);
+        return node->val;
+    }
+    bool hasNext() { return !stk.empty(); }
+};
+```
+
+**Java**
+```java
+class BSTIterator {
+    Deque<TreeNode> stack = new ArrayDeque<>();
+    public BSTIterator(TreeNode root) { pushLeft(root); }
+    private void pushLeft(TreeNode node) {
+        while (node != null) { stack.push(node); node = node.left; }
+    }
+    public int next() {
+        TreeNode node = stack.pop();
+        pushLeft(node.right);
+        return node.val;
+    }
+    public boolean hasNext() { return !stack.isEmpty(); }
+}
+```
+
 **Python**
 ```python
 class BSTIterator:
@@ -468,25 +639,21 @@ class BSTIterator:
 
 ## Pattern 7: Median Finder (Two Heaps)
 
-**Python**
-```python
-import heapq
-
-class MedianFinder:
-    def __init__(self):
-        self.lo = []  # max-heap (negated) — stores smaller half
-        self.hi = []  # min-heap — stores larger half
-
-    def addNum(self, num: int) -> None:
-        heapq.heappush(self.lo, -num)
-        heapq.heappush(self.hi, -heapq.heappop(self.lo))
-        if len(self.hi) > len(self.lo):
-            heapq.heappush(self.lo, -heapq.heappop(self.hi))
-
-    def findMedian(self) -> float:
-        if len(self.lo) > len(self.hi):
-            return -self.lo[0]
-        return (-self.lo[0] + self.hi[0]) / 2
+**C++**
+```cpp
+class MedianFinder {
+    priority_queue<int> lo;                              // max-heap
+    priority_queue<int, vector<int>, greater<>> hi;      // min-heap
+public:
+    void addNum(int num) {
+        lo.push(num);
+        hi.push(lo.top()); lo.pop();
+        if (hi.size() > lo.size()) { lo.push(hi.top()); hi.pop(); }
+    }
+    double findMedian() {
+        return lo.size() > hi.size() ? lo.top() : (lo.top() + hi.top()) / 2.0;
+    }
+};
 ```
 
 **Java**
@@ -507,9 +674,95 @@ class MedianFinder {
 }
 ```
 
+**Python**
+```python
+import heapq
+
+class MedianFinder:
+    def __init__(self):
+        self.lo = []  # max-heap (negated) — stores smaller half
+        self.hi = []  # min-heap — stores larger half
+
+    def addNum(self, num: int) -> None:
+        heapq.heappush(self.lo, -num)
+        heapq.heappush(self.hi, -heapq.heappop(self.lo))
+        if len(self.hi) > len(self.lo):
+            heapq.heappush(self.lo, -heapq.heappop(self.hi))
+
+    def findMedian(self) -> float:
+        if len(self.lo) > len(self.hi):
+            return -self.lo[0]
+        return (-self.lo[0] + self.hi[0]) / 2
+```
+```
+
 ---
 
 ## Pattern 8: Trie (Prefix Tree)
+
+**C++**
+```cpp
+class Trie {
+    struct Node {
+        Node* children[26] = {};
+        bool isEnd = false;
+    };
+    Node* root = new Node();
+public:
+    void insert(string word) {
+        auto node = root;
+        for (char c : word) {
+            if (!node->children[c - 'a']) node->children[c - 'a'] = new Node();
+            node = node->children[c - 'a'];
+        }
+        node->isEnd = true;
+    }
+    bool search(string word) {
+        auto node = find(word);
+        return node && node->isEnd;
+    }
+    bool startsWith(string prefix) { return find(prefix) != nullptr; }
+private:
+    Node* find(string& s) {
+        auto node = root;
+        for (char c : s) {
+            if (!node->children[c - 'a']) return nullptr;
+            node = node->children[c - 'a'];
+        }
+        return node;
+    }
+};
+```
+
+**Java**
+```java
+class Trie {
+    private Trie[] children = new Trie[26];
+    private boolean isEnd = false;
+
+    public void insert(String word) {
+        Trie node = this;
+        for (char c : word.toCharArray()) {
+            if (node.children[c - 'a'] == null) node.children[c - 'a'] = new Trie();
+            node = node.children[c - 'a'];
+        }
+        node.isEnd = true;
+    }
+    public boolean search(String word) {
+        Trie node = find(word);
+        return node != null && node.isEnd;
+    }
+    public boolean startsWith(String prefix) { return find(prefix) != null; }
+    private Trie find(String s) {
+        Trie node = this;
+        for (char c : s.toCharArray()) {
+            if (node.children[c - 'a'] == null) return null;
+            node = node.children[c - 'a'];
+        }
+        return node;
+    }
+}
+```
 
 **Python**
 ```python
