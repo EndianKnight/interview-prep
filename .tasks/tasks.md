@@ -2,148 +2,220 @@
 
 Master checklist of all content to be written. Each file should contain **detailed documentation** with proper examples, diagrams, and code in C++, Java, and Python where applicable.
 
+Legend: `[x]` = done, `[/]` = stub with topics outlined, `[ ]` = empty stub
+
 ---
 
 ## 01 — DSA
 
-### Topic Guides (language-agnostic concepts)
-- [x] `01-dsa/topics/arrays-and-strings.md`
-- [x] `01-dsa/topics/linked-lists.md`
-- [x] `01-dsa/topics/stacks.md`
-- [x] `01-dsa/topics/queues.md`
-- [x] `01-dsa/topics/trees-and-graphs.md`
-- [x] `01-dsa/topics/heaps-and-priority-queues.md`
-- [x] `01-dsa/topics/hash-maps-and-sets.md`
-- [x] `01-dsa/topics/sorting-and-searching.md`
-- [x] `01-dsa/topics/recursion-and-backtracking.md`
-- [x] `01-dsa/topics/dynamic-programming.md`
-- [x] `01-dsa/topics/greedy-algorithms.md`
-- [x] `01-dsa/topics/sliding-window-two-pointers.md`
-- [x] `01-dsa/topics/bit-manipulation.md`
-- [x] `01-dsa/topics/intervals.md`
-- [x] `01-dsa/topics/tries-and-advanced.md`
+### Topic Guides
+- [x] `01-arrays-and-strings.md`
+- [x] `02-linked-lists.md`
+- [x] `03-stacks.md`
+- [x] `04-queues.md`
+- [x] `05-trees.md`
+- [x] `06-graphs.md`
+- [x] `07-heaps-and-priority-queues.md`
+- [x] `08-hash-maps-and-sets.md`
+- [x] `09-sorting-and-searching.md`
+- [x] `10-recursion-and-backtracking.md`
+- [x] `11-dynamic-programming.md`
+- [x] `12-greedy-algorithms.md`
+- [x] `13-sliding-window-two-pointers.md`
+- [x] `14-bit-manipulation.md`
+- [x] `15-intervals.md`
+- [x] `16-tries-and-advanced.md`
+- [x] `17-math-and-number-theory.md`
+- [x] `18-matrix-patterns.md`
+- [x] `19-design-data-structures.md`
 
 ### Language-Specific Solutions
-- [x] `01-dsa/cpp/` — C++ implementations with STL patterns
-- [x] `01-dsa/java/` — Java implementations with Collections patterns
-- [x] `01-dsa/python/` — Python implementations with stdlib patterns
+- [x] `cpp/README.md`
+- [x] `java/README.md`
+- [x] `python/README.md`
 
 ---
 
 ## 02 — System Design
 
-### Fundamentals
-- [ ] `02-system-design/fundamentals/scalability.md`
-- [ ] `02-system-design/fundamentals/load-balancing.md`
-- [ ] `02-system-design/fundamentals/caching.md`
-- [ ] `02-system-design/fundamentals/databases.md`
-- [ ] `02-system-design/fundamentals/message-queues.md`
-- [ ] `02-system-design/fundamentals/cap-theorem.md`
-- [ ] `02-system-design/fundamentals/networking-basics.md`
-- [ ] `02-system-design/fundamentals/api-design.md`
-- [ ] `02-system-design/fundamentals/capacity-estimation.md`
-- [ ] `02-system-design/fundamentals/tradeoff-analysis.md`
-- [ ] `02-system-design/fundamentals/coordination.md`
-- [ ] `02-system-design/fundamentals/synchronization-and-locking.md`
-- [ ] `02-system-design/fundamentals/cloud-technologies.md`
+### Fundamentals (28 topics)
+- [/] `01-networking-basics.md`
+- [/] `02-dns.md`
+- [/] `03-proxies-and-cdns.md`
+- [/] `04-load-balancing.md`
+- [/] `05-api-design.md`
+- [/] `06-scalability.md`
+- [/] `07-caching.md`
+- [/] `08-databases.md`
+- [/] `09-data-modeling.md`
+- [/] `10-data-partitioning.md`
+- [/] `11-replication-consistency.md`
+- [/] `12-consistent-hashing.md`
+- [/] `13-cap-theorem.md`
+- [/] `14-storage-systems.md`
+- [/] `15-message-queues.md`
+- [/] `16-batch-stream-processing.md`
+- [/] `17-search-and-indexing.md`
+- [/] `18-unique-id-generation.md`
+- [/] `19-coordination.md`
+- [/] `20-synchronization-and-locking.md`
+- [/] `21-monitoring-observability.md`
+- [/] `22-security-authentication.md`
+- [/] `23-capacity-estimation.md`
+- [/] `24-tradeoff-analysis.md`
+- [/] `25-cloud-technologies.md`
+- [/] `26-rate-limiting.md`
+- [/] `27-microservices-patterns.md`
+- [/] `28-event-driven-architecture.md`
 
-### Case Studies
-- [ ] `02-system-design/case-studies/url-shortener.md`
-- [ ] `02-system-design/case-studies/rate-limiter.md`
-- [ ] `02-system-design/case-studies/chat-system.md`
-- [ ] `02-system-design/case-studies/news-feed.md`
-- [ ] `02-system-design/case-studies/notification-service.md`
-- [ ] `02-system-design/case-studies/distributed-cache.md`
-- [ ] `02-system-design/case-studies/video-streaming.md`
+### Case Studies (14 topics)
+- [ ] `url-shortener.md`
+- [ ] `rate-limiter.md`
+- [ ] `chat-system.md`
+- [ ] `news-feed.md`
+- [ ] `notification-service.md`
+- [ ] `distributed-cache.md`
+- [ ] `video-streaming.md`
+- [ ] `typeahead-autocomplete.md`
+- [ ] `web-crawler.md`
+- [ ] `ride-sharing.md`
+- [ ] `collaborative-editing.md`
+- [ ] `payment-system.md`
+- [ ] `file-storage.md`
+- [ ] `ticket-booking.md`
 
 ---
 
 ## 03 — Low-Level Design
 
-### Principles
-- [ ] `03-low-level-design/principles/solid.md`
-- [ ] `03-low-level-design/principles/dry-kiss-yagni.md`
-- [ ] `03-low-level-design/principles/coupling-cohesion.md`
+### Principles — Core OOP (6 topics)
+- [/] `oop-fundamentals.md`
+- [/] `solid.md`
+- [/] `dry-kiss-yagni.md`
+- [/] `coupling-cohesion.md`
+- [/] `composition-vs-inheritance.md`
+- [/] `uml-class-diagrams.md`
 
-### Case Studies
-- [ ] `03-low-level-design/case-studies/parking-lot.md`
-- [ ] `03-low-level-design/case-studies/elevator-system.md`
-- [ ] `03-low-level-design/case-studies/library-management.md`
-- [ ] `03-low-level-design/case-studies/snake-and-ladder.md`
-- [ ] `03-low-level-design/case-studies/food-delivery-app.md`
+### Principles — Applied Design (7 topics)
+- [/] `dependency-injection.md`
+- [/] `api-interface-design.md`
+- [/] `error-handling.md`
+- [/] `immutability.md`
+- [/] `generics-type-safety.md`
+- [/] `enums-type-modeling.md`
+- [/] `design-for-testability.md`
+
+### Concurrency (4 topics)
+- [/] `concurrency/async-processing.md`
+- [/] `concurrency/locking-synchronization.md`
+- [/] `concurrency/multithreading.md`
+- [/] `concurrency/advanced-concurrency.md`
+
+### Case Studies (16 problems)
+- [ ] `parking-lot.md`
+- [ ] `elevator-system.md`
+- [ ] `vending-machine.md`
+- [ ] `atm-system.md`
+- [ ] `tic-tac-toe.md`
+- [ ] `movie-ticket-booking.md`
+- [ ] `library-management.md`
+- [ ] `snake-and-ladder.md`
+- [ ] `logger-system.md`
+- [ ] `chess-game.md`
+- [ ] `hotel-booking.md`
+- [ ] `food-delivery-app.md`
+- [ ] `shopping-cart.md`
+- [ ] `splitwise.md`
+- [ ] `car-rental.md`
+- [ ] `online-auction.md`
 
 ---
 
 ## 04 — Design Patterns
 
-### Creational
-- [ ] `04-design-patterns/creational/singleton.md`
-- [ ] `04-design-patterns/creational/factory.md`
-- [ ] `04-design-patterns/creational/abstract-factory.md`
-- [ ] `04-design-patterns/creational/builder.md`
-- [ ] `04-design-patterns/creational/prototype.md`
+### Creational (5 patterns)
+- [ ] `singleton.md`
+- [ ] `factory.md`
+- [ ] `abstract-factory.md`
+- [ ] `builder.md`
+- [ ] `prototype.md`
 
-### Structural
-- [ ] `04-design-patterns/structural/adapter.md`
-- [ ] `04-design-patterns/structural/decorator.md`
-- [ ] `04-design-patterns/structural/facade.md`
-- [ ] `04-design-patterns/structural/proxy.md`
-- [ ] `04-design-patterns/structural/composite.md`
+### Structural (6 patterns)
+- [ ] `adapter.md`
+- [ ] `decorator.md`
+- [ ] `facade.md`
+- [ ] `proxy.md`
+- [ ] `composite.md`
+- [ ] `flyweight.md`
 
-### Behavioral
-- [ ] `04-design-patterns/behavioral/observer.md`
-- [ ] `04-design-patterns/behavioral/strategy.md`
-- [ ] `04-design-patterns/behavioral/command.md`
-- [ ] `04-design-patterns/behavioral/state.md`
-- [ ] `04-design-patterns/behavioral/chain-of-responsibility.md`
+### Behavioral (8 patterns)
+- [ ] `observer.md`
+- [ ] `strategy.md`
+- [ ] `command.md`
+- [ ] `state.md`
+- [ ] `chain-of-responsibility.md`
+- [ ] `iterator.md`
+- [ ] `template-method.md`
+- [ ] `mediator.md`
 
 ---
 
 ## 05 — AI Engineering
 
 ### Fundamentals
-- [ ] `05-ai-engineering/fundamentals/ml-basics.md`
-- [ ] `05-ai-engineering/fundamentals/deep-learning.md`
-- [ ] `05-ai-engineering/fundamentals/nlp-fundamentals.md`
-- [ ] `05-ai-engineering/fundamentals/transformers-and-attention.md`
-- [ ] `05-ai-engineering/fundamentals/evaluation-metrics.md`
+- [ ] `ml-basics.md`
+- [ ] `deep-learning.md`
+- [ ] `nlp-fundamentals.md`
+- [ ] `transformers-and-attention.md`
+- [ ] `evaluation-metrics.md`
 
 ### MLOps
-- [ ] `05-ai-engineering/mlops/training-pipelines.md`
-- [ ] `05-ai-engineering/mlops/model-serving.md`
-- [ ] `05-ai-engineering/mlops/feature-stores.md`
-- [ ] `05-ai-engineering/mlops/monitoring.md`
+- [ ] `training-pipelines.md`
+- [ ] `model-serving.md`
+- [ ] `feature-stores.md`
+- [ ] `monitoring.md`
 
 ### LLM Engineering
-- [ ] `05-ai-engineering/llm-engineering/prompt-engineering.md`
-- [ ] `05-ai-engineering/llm-engineering/rag-architecture.md`
-- [ ] `05-ai-engineering/llm-engineering/fine-tuning.md`
-- [ ] `05-ai-engineering/llm-engineering/agents-and-tools.md`
-- [ ] `05-ai-engineering/llm-engineering/evaluation-and-safety.md`
+- [ ] `prompt-engineering.md`
+- [ ] `rag-architecture.md`
+- [ ] `fine-tuning.md`
+- [ ] `agents-and-tools.md`
+- [ ] `evaluation-and-safety.md`
 
 ---
 
 ## 06 — Behavioral
 
-- [ ] `06-behavioral/star-method.md`
-- [ ] `06-behavioral/leadership-principles.md`
-- [ ] `06-behavioral/common-questions.md`
+- [ ] `star-method.md`
+- [ ] `leadership-principles.md`
+- [ ] `common-questions.md`
 
 ---
 
-## 07 — Deployment Strategies
+## 07 — Engineering Excellence
 
-- [ ] `07-deployment-strategies/ci-cd-pipelines.md`
-- [ ] `07-deployment-strategies/containerization.md`
-- [ ] `07-deployment-strategies/cloud-deployments.md`
-- [ ] `07-deployment-strategies/release-strategies.md`
-- [ ] `07-deployment-strategies/infrastructure-as-code.md`
-- [ ] `07-deployment-strategies/monitoring-and-rollback.md`
+### Ship It
+- [/] `ship-it/ci-cd-pipelines.md`
+- [/] `ship-it/release-strategies.md`
+- [/] `ship-it/containerization.md`
+- [/] `ship-it/cloud-deployments.md`
+- [/] `ship-it/infrastructure-as-code.md`
+- [/] `ship-it/monitoring-and-rollback.md`
+
+### Run It
+- [/] `run-it/operational-reliability.md`
+- [/] `run-it/incident-management.md`
+- [/] `run-it/performance-optimization.md`
+
+### Build It Right
+- [/] `build-it-right/testing-strategies.md`
+- [/] `build-it-right/code-quality-reviews.md`
+- [/] `build-it-right/security-engineering.md`
 
 ---
 
 ## Resources
 
-- [ ] `resources/books.md`
-- [ ] `resources/courses.md`
-- [ ] `resources/cheat-sheets.md`
+- [ ] `books.md`
+- [ ] `courses.md`
+- [ ] `cheat-sheets.md`
