@@ -40,25 +40,26 @@ Core building blocks every system design relies on:
 | 6 | Scalability | [scalability](fundamentals/06-scalability.md) |
 | 7 | Caching | [caching](fundamentals/07-caching.md) |
 | 8 | Databases | [databases](fundamentals/08-databases.md) |
-| 9 | Data Partitioning & Sharding | [data-partitioning](fundamentals/09-data-partitioning.md) |
-| 10 | Replication & Consistency Models | [replication-consistency](fundamentals/10-replication-consistency.md) |
-| 11 | Consistent Hashing | [consistent-hashing](fundamentals/11-consistent-hashing.md) |
-| 12 | CAP Theorem | [cap-theorem](fundamentals/12-cap-theorem.md) |
-| 13 | Storage & File Systems | [storage-systems](fundamentals/13-storage-systems.md) |
-| 14 | Message Queues | [message-queues](fundamentals/14-message-queues.md) |
-| 15 | Batch vs Stream Processing | [batch-stream-processing](fundamentals/15-batch-stream-processing.md) |
-| 16 | Search & Indexing | [search-and-indexing](fundamentals/16-search-and-indexing.md) |
-| 17 | Unique ID Generation | [unique-id-generation](fundamentals/17-unique-id-generation.md) |
-| 18 | Coordination & Consensus | [coordination](fundamentals/18-coordination.md) |
-| 19 | Synchronization & Locking | [synchronization-and-locking](fundamentals/19-synchronization-and-locking.md) |
-| 20 | Monitoring & Observability | [monitoring-observability](fundamentals/20-monitoring-observability.md) |
-| 21 | Security & Authentication | [security-authentication](fundamentals/21-security-authentication.md) |
-| 22 | Capacity Estimation | [capacity-estimation](fundamentals/22-capacity-estimation.md) |
-| 23 | Tradeoff Analysis | [tradeoff-analysis](fundamentals/23-tradeoff-analysis.md) |
-| 24 | Cloud Technologies | [cloud-technologies](fundamentals/24-cloud-technologies.md) |
-| 25 | Rate Limiting & Throttling | [rate-limiting](fundamentals/25-rate-limiting.md) |
-| 26 | Microservices Patterns | [microservices-patterns](fundamentals/26-microservices-patterns.md) |
-| 27 | Event-Driven Architecture | [event-driven-architecture](fundamentals/27-event-driven-architecture.md) |
+| 9 | Data Modeling | [data-modeling](fundamentals/09-data-modeling.md) |
+| 10 | Data Partitioning & Sharding | [data-partitioning](fundamentals/10-data-partitioning.md) |
+| 11 | Replication & Consistency Models | [replication-consistency](fundamentals/11-replication-consistency.md) |
+| 12 | Consistent Hashing | [consistent-hashing](fundamentals/12-consistent-hashing.md) |
+| 13 | CAP Theorem | [cap-theorem](fundamentals/13-cap-theorem.md) |
+| 14 | Storage & File Systems | [storage-systems](fundamentals/14-storage-systems.md) |
+| 15 | Message Queues | [message-queues](fundamentals/15-message-queues.md) |
+| 16 | Batch vs Stream Processing | [batch-stream-processing](fundamentals/16-batch-stream-processing.md) |
+| 17 | Search & Indexing | [search-and-indexing](fundamentals/17-search-and-indexing.md) |
+| 18 | Unique ID Generation | [unique-id-generation](fundamentals/18-unique-id-generation.md) |
+| 19 | Coordination & Consensus | [coordination](fundamentals/19-coordination.md) |
+| 20 | Synchronization & Locking | [synchronization-and-locking](fundamentals/20-synchronization-and-locking.md) |
+| 21 | Monitoring & Observability | [monitoring-observability](fundamentals/21-monitoring-observability.md) |
+| 22 | Security & Authentication | [security-authentication](fundamentals/22-security-authentication.md) |
+| 23 | Capacity Estimation | [capacity-estimation](fundamentals/23-capacity-estimation.md) |
+| 24 | Tradeoff Analysis | [tradeoff-analysis](fundamentals/24-tradeoff-analysis.md) |
+| 25 | Cloud Technologies | [cloud-technologies](fundamentals/25-cloud-technologies.md) |
+| 26 | Rate Limiting & Throttling | [rate-limiting](fundamentals/26-rate-limiting.md) |
+| 27 | Microservices Patterns | [microservices-patterns](fundamentals/27-microservices-patterns.md) |
+| 28 | Event-Driven Architecture | [event-driven-architecture](fundamentals/28-event-driven-architecture.md) |
 
 ## Case Studies
 

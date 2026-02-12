@@ -16,11 +16,15 @@ A practical guide to Gang of Four (GoF) and modern design patterns for senior en
 | Simplify complex subsystem | Facade | Structural |
 | Control access to object | Proxy | Structural |
 | Tree structures | Composite | Structural |
+| Share common state efficiently | Flyweight | Structural |
 | React to state changes | Observer | Behavioral |
 | Swap algorithms at runtime | Strategy | Behavioral |
 | Encapsulate requests | Command | Behavioral |
 | Object behavior depends on state | State | Behavioral |
 | Pass request along a chain | Chain of Responsibility | Behavioral |
+| Traverse collection elements | Iterator | Behavioral |
+| Define algorithm skeleton | Template Method | Behavioral |
+| Centralize complex communication | Mediator | Behavioral |
 
 ## Creational Patterns
 
@@ -41,6 +45,7 @@ A practical guide to Gang of Four (GoF) and modern design patterns for senior en
 | Facade | [facade.md](structural/facade.md) |
 | Proxy | [proxy.md](structural/proxy.md) |
 | Composite | [composite.md](structural/composite.md) |
+| Flyweight | [flyweight.md](structural/flyweight.md) |
 
 ## Behavioral Patterns
 
@@ -51,3 +56,6 @@ A practical guide to Gang of Four (GoF) and modern design patterns for senior en
 | Command | [command.md](behavioral/command.md) |
 | State | [state.md](behavioral/state.md) |
 | Chain of Responsibility | [chain-of-responsibility.md](behavioral/chain-of-responsibility.md) |
+| Iterator | [iterator.md](behavioral/iterator.md) |
+| Template Method | [template-method.md](behavioral/template-method.md) |
+| Mediator | [mediator.md](behavioral/mediator.md) |
