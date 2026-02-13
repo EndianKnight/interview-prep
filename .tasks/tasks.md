@@ -214,6 +214,16 @@ Legend: `[x]` = done, `[/]` = stub with topics outlined, `[ ]` = empty stub
 
 ---
 
+## 08 — Frameworks
+
+### Java / Spring Ecosystem
+- [/] `spring-boot.md`
+- [/] `spring-data-jpa.md`
+- [/] `spring-security.md`
+- [/] `hibernate-jpa.md`
+
+---
+
 ## Resources
 
 - [ ] `books.md`

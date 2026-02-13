@@ -14,9 +14,9 @@ Quick-reference guides for your interview language, covering **every data struct
 
 | Language | Guide | Highlights |
 |----------|-------|------------|
-| C++ | [cpp/README.md](cpp/README.md) | STL containers (`vector`, `map`, `set`, `priority_queue`, `bitset`, `multiset`), `<algorithm>` & `<numeric>` (40+ functions), lambda captures, custom comparators for sort/PQ/set, structs with operator overloading & custom hash |
-| Java | [java/README.md](java/README.md) | Collections (`ArrayList`, `HashMap`, `TreeMap`, `PriorityQueue`, `ArrayDeque`, `LinkedHashMap`, `BitSet`), functional interfaces & method references, `Comparator.comparing` chains, `record` types, `equals`/`hashCode` contract, Streams & Collectors |
-| Python | [python/README.md](python/README.md) | Built-ins (`list`, `dict`, `set`, `tuple`, `frozenset`), `collections` (`Counter`, `defaultdict`, `deque`, `OrderedDict`), `heapq`, `bisect`, `itertools`, `functools` (`lru_cache`, `cmp_to_key`), `@dataclass`, `@total_ordering`, `sortedcontainers` |
+| C++ | [C++ Guide](cpp/README.md) | STL containers (`vector`, `map`, `set`, `priority_queue`, `bitset`, `multiset`), `<algorithm>` & `<numeric>` (40+ functions), lambda captures, custom comparators for sort/PQ/set, structs with operator overloading & custom hash |
+| Java | [Java Guide](java/README.md) | Collections (`ArrayList`, `HashMap`, `TreeMap`, `PriorityQueue`, `ArrayDeque`, `LinkedHashMap`, `BitSet`), functional interfaces & method references, `Comparator.comparing` chains, `record` types, `equals`/`hashCode` contract, Streams & Collectors |
+| Python | [Python Guide](python/README.md) | Built-ins (`list`, `dict`, `set`, `tuple`, `frozenset`), `collections` (`Counter`, `defaultdict`, `deque`, `OrderedDict`), `heapq`, `bisect`, `itertools`, `functools` (`lru_cache`, `cmp_to_key`), `@dataclass`, `@total_ordering`, `sortedcontainers` |
 
 ## Topics Index
 

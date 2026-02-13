@@ -15,6 +15,7 @@ A comprehensive, markdown-based interview preparation guide for **senior softwar
 | 5 | [**AI Engineering**](05-ai-engineering/) | ML fundamentals, MLOps, LLM engineering (RAG, agents, fine-tuning) |
 | 6 | [**Behavioral**](06-behavioral/) | STAR method, leadership principles, common questions |
 | 7 | [**Engineering Excellence**](07-engineering-excellence/) | Ship it, run it, build it right — 12 topics across CI/CD, SRE, testing, security |
+| 8 | [**Frameworks**](08-frameworks/) | Spring Boot, Spring Data JPA, Spring Security, Hibernate/JPA internals |
 | — | [**Resources**](resources/) | Books, courses, cheat sheets |
 
 ---
@@ -59,6 +60,8 @@ interview-prep/
 │   ├── ship-it/                 # CI/CD, containers, releases, IaC
 │   ├── run-it/                  # SRE, incidents, performance
 │   └── build-it-right/          # Testing, code quality, security
+├── 08-frameworks/               # Framework-specific interview prep
+│   └── spring-boot, spring-data-jpa, spring-security, hibernate-jpa
 ├── resources/                   # Books, courses, cheat sheets
 └── .tasks/tasks.md              # Content progress tracker
 ```
