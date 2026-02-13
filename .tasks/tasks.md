@@ -39,34 +39,34 @@ Legend: `[x]` = done, `[/]` = stub with topics outlined, `[ ]` = empty stub
 ## 02 — System Design
 
 ### Fundamentals (28 topics)
-- [/] `01-networking-basics.md`
-- [/] `02-dns.md`
-- [/] `03-proxies-and-cdns.md`
-- [/] `04-load-balancing.md`
-- [/] `05-api-design.md`
-- [/] `06-scalability.md`
-- [/] `07-caching.md`
-- [/] `08-databases.md`
-- [/] `09-data-modeling.md`
-- [/] `10-data-partitioning.md`
-- [/] `11-replication-consistency.md`
-- [/] `12-consistent-hashing.md`
-- [/] `13-cap-theorem.md`
-- [/] `14-storage-systems.md`
-- [/] `15-message-queues.md`
-- [/] `16-batch-stream-processing.md`
-- [/] `17-search-and-indexing.md`
-- [/] `18-unique-id-generation.md`
-- [/] `19-coordination.md`
-- [/] `20-synchronization-and-locking.md`
-- [/] `21-monitoring-observability.md`
-- [/] `22-security-authentication.md`
-- [/] `23-capacity-estimation.md`
-- [/] `24-tradeoff-analysis.md`
-- [/] `25-cloud-technologies.md`
-- [/] `26-rate-limiting.md`
-- [/] `27-microservices-patterns.md`
-- [/] `28-event-driven-architecture.md`
+- [x] `01-networking-basics.md`
+- [x] `02-dns.md`
+- [x] `03-proxies-and-cdns.md`
+- [x] `04-load-balancing.md`
+- [x] `05-api-design.md`
+- [x] `06-scalability.md`
+- [x] `07-caching.md`
+- [x] `08-databases.md`
+- [x] `09-data-modeling.md`
+- [x] `10-data-partitioning.md`
+- [x] `11-replication-consistency.md`
+- [x] `12-consistent-hashing.md`
+- [x] `13-cap-theorem.md`
+- [x] `14-storage-systems.md`
+- [x] `15-message-queues.md`
+- [x] `16-batch-stream-processing.md`
+- [x] `17-search-and-indexing.md`
+- [x] `18-unique-id-generation.md`
+- [x] `19-coordination.md`
+- [x] `20-synchronization-and-locking.md`
+- [x] `21-monitoring-observability.md`
+- [x] `22-security-authentication.md`
+- [x] `23-capacity-estimation.md`
+- [x] `24-tradeoff-analysis.md`
+- [x] `25-cloud-technologies.md`
+- [x] `26-rate-limiting.md`
+- [x] `27-microservices-patterns.md`
+- [x] `28-event-driven-architecture.md`
 
 ### Case Studies (14 topics)
 - [ ] `url-shortener.md`
