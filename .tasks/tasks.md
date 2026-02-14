@@ -168,12 +168,16 @@ Legend: `[x]` = done, `[/]` = stub with topics outlined, `[ ]` = empty stub
 - [ ] `nlp-fundamentals.md`
 - [ ] `transformers-and-attention.md`
 - [ ] `evaluation-metrics.md`
+- [ ] `vector-databases.md`
+- [ ] `embeddings.md`
 
 ### MLOps
 - [ ] `training-pipelines.md`
 - [ ] `model-serving.md`
 - [ ] `feature-stores.md`
 - [ ] `monitoring.md`
+- [ ] `ab-testing.md`
+- [ ] `data-versioning.md`
 
 ### LLM Engineering
 - [ ] `prompt-engineering.md`
@@ -181,6 +185,12 @@ Legend: `[x]` = done, `[/]` = stub with topics outlined, `[ ]` = empty stub
 - [ ] `fine-tuning.md`
 - [ ] `agents-and-tools.md`
 - [ ] `evaluation-and-safety.md`
+- [ ] `tokenization.md`
+- [ ] `quantization.md`
+- [ ] `sampling-strategies.md`
+- [ ] `tool-calling.md`
+- [ ] `mcp.md`
+- [ ] `agentic-patterns.md`
 
 ---
 
