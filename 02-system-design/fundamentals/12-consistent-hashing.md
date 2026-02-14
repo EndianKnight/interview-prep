@@ -23,17 +23,16 @@ This is catastrophic for caches — a massive number of cache misses all at once
 
 ```mermaid
 graph TD
-    subgraph Hash Ring
-        direction TB
-        A["Server A<br/>(position 90°)"]
-        B["Server B<br/>(position 210°)"]
-        C["Server C<br/>(position 330°)"]
+    subgraph Ring["Hash Ring (0 to 2^32)"]
+        A["Server A<br/>position 90"]
+        B["Server B<br/>position 210"]
+        C["Server C<br/>position 330"]
     end
 
-    K1["Key 1 (45°) → Server A"]
-    K2["Key 2 (150°) → Server B"]
-    K3["Key 3 (300°) → Server C"]
-    K4["Key 4 (350°) → Server A"]
+    K1["Key 1 at 45"] --> A
+    K2["Key 2 at 150"] --> B
+    K3["Key 3 at 300"] --> C
+    K4["Key 4 at 350"] --> A
 ```
 
 1. Hash both **servers** and **keys** onto a circular ring (0 to 2^32)
@@ -44,16 +43,16 @@ graph TD
 
 ```mermaid
 graph LR
-    subgraph Before
-        B1[A handles 0°-90°]
-        B2[B handles 90°-210°]
-        B3[C handles 210°-360°]
+    subgraph Before["Before"]
+        B1["A: 0 - 90"]
+        B2["B: 90 - 210"]
+        B3["C: 210 - 360"]
     end
-    subgraph After Adding D at 150°
-        A1[A handles 0°-90°]
-        A2[D handles 90°-150°]
-        A3["B handles 150°-210° (lost some keys)"]
-        A4[C handles 210°-360°]
+    subgraph After["After Adding D at 150"]
+        A1["A: 0 - 90"]
+        A2["D: 90 - 150"]
+        A3["B: 150 - 210"]
+        A4["C: 210 - 360"]
     end
 ```
 
@@ -69,17 +68,23 @@ graph LR
 
 ```mermaid
 graph TD
-    subgraph "Ring with Virtual Nodes"
-        direction TB
-        A1["A-vnode1 (30°)"]
-        B1["B-vnode1 (60°)"]
-        A2["A-vnode2 (120°)"]
-        C1["C-vnode1 (180°)"]
-        B2["B-vnode2 (240°)"]
-        C2["C-vnode2 (300°)"]
+    subgraph VRing["Ring with Virtual Nodes"]
+        A1["A-vnode1 at 30"]
+        B1["B-vnode1 at 60"]
+        A2["A-vnode2 at 120"]
+        C1["C-vnode1 at 180"]
+        B2["B-vnode2 at 240"]
+        C2["C-vnode2 at 300"]
     end
 
-    Note["Each server has ~100-200 vnodes<br/>for even distribution"]
+    Info["Each server gets 100-200 vnodes<br/>for even distribution"]
+
+    style A1 fill:#4CAF50,color:#fff
+    style A2 fill:#4CAF50,color:#fff
+    style B1 fill:#2196F3,color:#fff
+    style B2 fill:#2196F3,color:#fff
+    style C1 fill:#FF9800,color:#fff
+    style C2 fill:#FF9800,color:#fff
 ```
 
 | Without vnodes | With vnodes |
