@@ -38,7 +38,7 @@ Legend: `[x]` = done, `[/]` = stub with topics outlined, `[ ]` = empty stub
 
 ## 02 — System Design
 
-### Fundamentals (28 topics)
+### Fundamentals (29 topics)
 - [x] `01-networking-basics.md`
 - [x] `02-dns.md`
 - [x] `03-proxies-and-cdns.md`
@@ -67,6 +67,7 @@ Legend: `[x]` = done, `[/]` = stub with topics outlined, `[ ]` = empty stub
 - [x] `26-rate-limiting.md`
 - [x] `27-microservices-patterns.md`
 - [x] `28-event-driven-architecture.md`
+- [x] `29-encryption.md`
 
 ### Case Studies (14 topics)
 - [ ] `url-shortener.md`

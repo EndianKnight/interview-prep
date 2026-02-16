@@ -60,6 +60,7 @@ Core building blocks every system design relies on:
 | 26 | Rate Limiting & Throttling | [rate-limiting](fundamentals/26-rate-limiting.md) |
 | 27 | Microservices Patterns | [microservices-patterns](fundamentals/27-microservices-patterns.md) |
 | 28 | Event-Driven Architecture | [event-driven-architecture](fundamentals/28-event-driven-architecture.md) |
+| 29 | Encryption | [encryption](fundamentals/29-encryption.md) |
 
 ## Case Studies
 
