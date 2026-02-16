@@ -90,27 +90,27 @@ Legend: `[x]` = done, `[/]` = stub with topics outlined, `[ ]` = empty stub
 ## 03 — Low-Level Design
 
 ### Principles — Core OOP (6 topics)
-- [/] `oop-fundamentals.md`
-- [/] `solid.md`
-- [/] `dry-kiss-yagni.md`
-- [/] `coupling-cohesion.md`
-- [/] `composition-vs-inheritance.md`
-- [/] `uml-class-diagrams.md`
+- [x] `oop-fundamentals.md`
+- [x] `solid.md`
+- [x] `dry-kiss-yagni.md`
+- [x] `coupling-cohesion.md`
+- [x] `composition-vs-inheritance.md`
+- [x] `uml-class-diagrams.md`
 
 ### Principles — Applied Design (7 topics)
-- [/] `dependency-injection.md`
-- [/] `api-interface-design.md`
-- [/] `error-handling.md`
-- [/] `immutability.md`
-- [/] `generics-type-safety.md`
-- [/] `enums-type-modeling.md`
-- [/] `design-for-testability.md`
+- [x] `dependency-injection.md`
+- [x] `api-interface-design.md`
+- [x] `error-handling.md`
+- [x] `immutability.md`
+- [x] `generics-type-safety.md`
+- [x] `enums-type-modeling.md`
+- [x] `design-for-testability.md`
 
 ### Concurrency (4 topics)
-- [/] `concurrency/async-processing.md`
-- [/] `concurrency/locking-synchronization.md`
-- [/] `concurrency/multithreading.md`
-- [/] `concurrency/advanced-concurrency.md`
+- [x] `concurrency/async-processing.md`
+- [x] `concurrency/locking-synchronization.md`
+- [x] `concurrency/multithreading.md`
+- [x] `concurrency/advanced-concurrency.md`
 
 ### Case Studies (16 problems)
 - [ ] `parking-lot.md`
