@@ -198,11 +198,12 @@ When sharding or using distributed databases, auto-increment IDs don't work (col
 
 ### Snowflake ID Anatomy (64-bit)
 
-```mermaid
-graph LR
-    Sign[1 bit<br/>Unused] --> Time[41 bits<br/>Timestamp (ms)]
-    Time --> Machine[10 bits<br/>Machine ID]
-    Machine --> Seq[12 bits<br/>Sequence #]
+```
+| 1 bit   |        41 bits         |   10 bits    |   12 bits    |
+| Unused  |   Timestamp (ms)       |  Machine ID  |  Sequence #  |
+|---------|------------------------|--------------|--------------|
+| 0       | milliseconds since     | unique per   | counter per  |
+|         | custom epoch           | node/worker  | ms per node  |
 ```
 
 **Recommendation:** Use **UUID v7** (if DB supports it) or **Snowflake ID** (if you need 64-bit integers). Avoid UUID v4 for primary keys in B-Tree/B+Tree databases (MySQL/Postgres) due to index fragmentation.
