@@ -20,7 +20,10 @@ AI engineering interviews typically cover:
 | Deep Learning | [deep-learning.md](fundamentals/deep-learning.md) |
 | NLP Fundamentals | [nlp-fundamentals.md](fundamentals/nlp-fundamentals.md) |
 | Transformers & Attention | [transformers-and-attention.md](fundamentals/transformers-and-attention.md) |
+| Embeddings | [embeddings.md](fundamentals/embeddings.md) |
+| Vector Databases | [vector-databases.md](fundamentals/vector-databases.md) |
 | Evaluation Metrics | [evaluation-metrics.md](fundamentals/evaluation-metrics.md) |
+| Diffusion Models | [diffusion-models.md](fundamentals/diffusion-models.md) |
 
 ## MLOps
 
@@ -30,13 +33,26 @@ AI engineering interviews typically cover:
 | Model Serving | [model-serving.md](mlops/model-serving.md) |
 | Feature Stores | [feature-stores.md](mlops/feature-stores.md) |
 | Monitoring | [monitoring.md](mlops/monitoring.md) |
+| A/B Testing | [ab-testing.md](mlops/ab-testing.md) |
+| Data Versioning | [data-versioning.md](mlops/data-versioning.md) |
+| GPU Infrastructure & Cost Optimization | [gpu-infrastructure.md](mlops/gpu-infrastructure.md) |
 
 ## LLM Engineering
 
 | Topic | Guide |
 |-------|-------|
+| Tokenization | [tokenization.md](llm-engineering/tokenization.md) |
+| Sampling Strategies | [sampling-strategies.md](llm-engineering/sampling-strategies.md) |
 | Prompt Engineering | [prompt-engineering.md](llm-engineering/prompt-engineering.md) |
+| Structured Output & Constrained Generation | [structured-output.md](llm-engineering/structured-output.md) |
+| Context Window Management | [context-window-management.md](llm-engineering/context-window-management.md) |
 | RAG Architecture | [rag-architecture.md](llm-engineering/rag-architecture.md) |
 | Fine-Tuning | [fine-tuning.md](llm-engineering/fine-tuning.md) |
+| Quantization | [quantization.md](llm-engineering/quantization.md) |
+| Tool Calling | [tool-calling.md](llm-engineering/tool-calling.md) |
+| Model Context Protocol (MCP) | [mcp.md](llm-engineering/mcp.md) |
 | Agents & Tools | [agents-and-tools.md](llm-engineering/agents-and-tools.md) |
+| Agentic Patterns | [agentic-patterns.md](llm-engineering/agentic-patterns.md) |
+| Multimodal Models | [multimodal-models.md](llm-engineering/multimodal-models.md) |
+| LLM Security | [llm-security.md](llm-engineering/llm-security.md) |
 | Evaluation & Safety | [evaluation-and-safety.md](llm-engineering/evaluation-and-safety.md) |

@@ -163,35 +163,41 @@ Legend: `[x]` = done, `[/]` = stub with topics outlined, `[ ]` = empty stub
 
 ## 05 — AI Engineering
 
-### Fundamentals
-- [ ] `ml-basics.md`
-- [ ] `deep-learning.md`
-- [ ] `nlp-fundamentals.md`
-- [ ] `transformers-and-attention.md`
-- [ ] `evaluation-metrics.md`
-- [ ] `vector-databases.md`
-- [ ] `embeddings.md`
+### Fundamentals (8 topics)
+- [/] `ml-basics.md`
+- [/] `deep-learning.md`
+- [/] `nlp-fundamentals.md`
+- [/] `transformers-and-attention.md`
+- [/] `embeddings.md`
+- [/] `vector-databases.md`
+- [/] `evaluation-metrics.md`
+- [/] `diffusion-models.md`
 
-### MLOps
-- [ ] `training-pipelines.md`
-- [ ] `model-serving.md`
-- [ ] `feature-stores.md`
-- [ ] `monitoring.md`
-- [ ] `ab-testing.md`
-- [ ] `data-versioning.md`
+### MLOps (7 topics)
+- [/] `training-pipelines.md`
+- [/] `model-serving.md`
+- [/] `feature-stores.md`
+- [/] `monitoring.md`
+- [/] `ab-testing.md`
+- [/] `data-versioning.md`
+- [/] `gpu-infrastructure.md`
 
-### LLM Engineering
-- [ ] `prompt-engineering.md`
-- [ ] `rag-architecture.md`
-- [ ] `fine-tuning.md`
-- [ ] `agents-and-tools.md`
-- [ ] `evaluation-and-safety.md`
-- [ ] `tokenization.md`
-- [ ] `quantization.md`
-- [ ] `sampling-strategies.md`
-- [ ] `tool-calling.md`
-- [ ] `mcp.md`
-- [ ] `agentic-patterns.md`
+### LLM Engineering (15 topics)
+- [/] `tokenization.md`
+- [/] `sampling-strategies.md`
+- [/] `prompt-engineering.md`
+- [/] `structured-output.md`
+- [/] `context-window-management.md`
+- [/] `rag-architecture.md`
+- [/] `fine-tuning.md`
+- [/] `quantization.md`
+- [/] `tool-calling.md`
+- [/] `mcp.md`
+- [/] `agents-and-tools.md`
+- [/] `agentic-patterns.md`
+- [/] `multimodal-models.md`
+- [/] `llm-security.md`
+- [/] `evaluation-and-safety.md`
 
 ---
 
