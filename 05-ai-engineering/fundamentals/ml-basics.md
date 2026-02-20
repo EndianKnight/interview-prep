@@ -24,15 +24,15 @@ graph TD
 
 | Paradigm | Data | Goal | Examples |
 |----------|------|------|----------|
-| **Supervised** | Labeled `(x, y)` pairs | Learn mapping `f(x) -> y` | Spam detection, house price prediction |
-| **Unsupervised** | Unlabeled `x` only | Find structure / patterns | Customer segmentation, PCA, autoencoders |
+| **Supervised** | Labeled $(x, y)$ pairs | Learn mapping $f(x) \to y$ | Spam detection, house price prediction |
+| **Unsupervised** | Unlabeled $x$ only | Find structure / patterns | Customer segmentation, PCA, autoencoders |
 | **Semi-supervised** | Small labeled + large unlabeled | Leverage unlabeled data to improve | Label propagation, pseudo-labeling |
 | **Self-supervised** | Create labels from data | Learn representations without manual labels | Masked language modeling (BERT), contrastive learning (SimCLR) |
 | **Reinforcement learning** | Agent interacts with environment | Maximize cumulative reward | Game AI, robotics, RLHF for LLMs |
 
 ### Supervised Learning
 
-The model learns from input-output pairs. Given training data `{(x_1, y_1), ..., (x_n, y_n)}`, find `f` that minimizes prediction error.
+The model learns from input-output pairs. Given training data $\{(x_1, y_1), \ldots, (x_n, y_n)\}$, find $f$ that minimizes prediction error.
 
 - **Classification**: Discrete output — spam/not-spam, image categories. Metrics: accuracy, precision, recall, F1, AUC-ROC.
 - **Regression**: Continuous output — house price, temperature. Metrics: MSE, MAE, R-squared.
@@ -73,7 +73,7 @@ The agent takes actions in an environment to maximize cumulative reward.
 | **Action (a)** | What the agent can do |
 | **Reward (r)** | Scalar feedback signal |
 | **Policy (pi)** | Strategy mapping states to actions |
-| **Value function V(s)** | Expected cumulative reward from state `s` |
+| **Value function $V(s)$** | Expected cumulative reward from state $s$ |
 
 **RLHF context**: In LLM alignment, a reward model is trained from human preference data, then the language model policy is optimized using PPO (Proximal Policy Optimization) to maximize that reward while staying close to the base model (KL penalty).
 
@@ -83,13 +83,17 @@ The agent takes actions in an environment to maximize cumulative reward.
 
 ### Linear Regression
 
-Fit a linear function to continuous data: `y = w^T x + b`
+Fit a linear function to continuous data:
+
+$$y = w^T x + b$$
 
 **Objective**: Minimize Mean Squared Error (MSE):
 
-`L(w) = (1/n) * sum((y_i - w^T x_i - b)^2)`
+$$L(w) = \frac{1}{n} \sum_{i=1}^{n} (y_i - w^T x_i - b)^2$$
 
-**Closed-form solution** (Normal Equation): `w = (X^T X)^(-1) X^T y`
+**Closed-form solution** (Normal Equation):
+
+$$w = (X^T X)^{-1} X^T y$$
 
 **When to use**: Linear relationships, interpretability matters, baseline model.
 
@@ -119,13 +123,13 @@ print(f"R^2 score: {model.score(X_test, y_test):.4f}")
 
 ### Logistic Regression
 
-Linear model for **classification**. Applies sigmoid to map output to `[0, 1]`:
+Linear model for **classification**. Applies sigmoid to map output to $[0, 1]$:
 
-`P(y=1|x) = sigmoid(w^T x + b) = 1 / (1 + exp(-(w^T x + b)))`
+$$P(y=1|x) = \sigma(w^T x + b) = \frac{1}{1 + e^{-(w^T x + b)}}$$
 
 **Objective**: Minimize Binary Cross-Entropy Loss:
 
-`L = -(1/n) * sum(y_i * log(p_i) + (1 - y_i) * log(1 - p_i))`
+$$L = -\frac{1}{n} \sum_{i=1}^{n} \left[ y_i \log(p_i) + (1 - y_i) \log(1 - p_i) \right]$$
 
 Why cross-entropy and not MSE? MSE with sigmoid creates a non-convex loss surface; cross-entropy is convex, ensuring a single global minimum.
 
@@ -148,13 +152,18 @@ y_proba = model.predict_proba(X_test)[:, 1]
 
 Splitting criteria:
 
-- **Information Gain** (entropy-based): `IG = H(parent) - sum(w_i * H(child_i))` where `H = -sum(p_i * log2(p_i))`
-- **Gini Impurity**: `Gini = 1 - sum(p_i^2)` — probability of misclassifying a random sample.
+- **Information Gain** (entropy-based):
+
+$$IG = H(parent) - \sum w_i \cdot H(child_i) \quad \text{where} \quad H = -\sum p_i \log_2(p_i)$$
+
+- **Gini Impurity** — probability of misclassifying a random sample:
+
+$$Gini = 1 - \sum p_i^2$$
 
 **Random Forest**: Ensemble of decision trees using **bagging** (bootstrap aggregating).
 
-1. Sample `n` bootstrap datasets (sample with replacement).
-2. Train one tree per sample, at each split consider a random subset of `sqrt(d)` features.
+1. Sample $n$ bootstrap datasets (sample with replacement).
+2. Train one tree per sample, at each split consider a random subset of $\sqrt{d}$ features.
 3. Aggregate: majority vote (classification) or average (regression).
 
 ```python
@@ -190,10 +199,10 @@ Build trees **sequentially** — each new tree corrects the errors of the ensemb
 **Key idea**: Fit the new model to the **negative gradient** (residuals) of the loss function:
 
 1. Initialize with a constant prediction (e.g., mean).
-2. For each round `m = 1..M`:
-   - Compute pseudo-residuals: `r_i = -dL/df(x_i)`
-   - Fit a tree `h_m` to the residuals.
-   - Update model: `F_m(x) = F_{m-1}(x) + learning_rate * h_m(x)`
+2. For each round $m = 1..M$:
+   - Compute pseudo-residuals: $r_i = -\frac{\partial L}{\partial f(x_i)}$
+   - Fit a tree $h_m$ to the residuals.
+   - Update model: $F_m(x) = F_{m-1}(x) + \eta \cdot h_m(x)$
 
 ```python
 import xgboost as xgb
@@ -238,18 +247,19 @@ model.fit(
 
 **Goal**: Find the hyperplane that maximizes the **margin** between classes.
 
-**Hard margin** (linearly separable): maximize `2 / ||w||` subject to `y_i(w^T x_i + b) >= 1`
+**Hard margin** (linearly separable): maximize $\frac{2}{\|w\|}$ subject to $y_i(w^T x_i + b) \geq 1$
 
-**Soft margin** (real data): allow some misclassifications with slack variables `xi_i`:
-`minimize (1/2)||w||^2 + C * sum(xi_i)`
+**Soft margin** (real data): allow some misclassifications with slack variables $\xi_i$:
 
-**Kernel Trick**: Map data to higher-dimensional space without computing the transformation explicitly. The kernel function computes `K(x_i, x_j) = phi(x_i)^T phi(x_j)` directly.
+$$\min \frac{1}{2} \|w\|^2 + C \sum \xi_i$$
+
+**Kernel Trick**: Map data to higher-dimensional space without computing the transformation explicitly. The kernel function computes $K(x_i, x_j) = \phi(x_i)^T \phi(x_j)$ directly.
 
 | Kernel | Formula | Use case |
 |--------|---------|----------|
-| Linear | `x_i^T x_j` | High-dimensional data (text) |
-| RBF (Gaussian) | `exp(-gamma * \|\|x_i - x_j\|\|^2)` | Default choice, non-linear boundaries |
-| Polynomial | `(gamma * x_i^T x_j + r)^d` | Image features |
+| Linear | $x_i^T x_j$ | High-dimensional data (text) |
+| RBF (Gaussian) | $\exp(-\gamma \|x_i - x_j\|^2)$ | Default choice, non-linear boundaries |
+| Polynomial | $(\gamma \cdot x_i^T x_j + r)^d$ | Image features |
 
 ```python
 from sklearn.svm import SVC
@@ -278,11 +288,11 @@ model.fit(X_train_scaled, y_train)
 **Algorithm**: For a new point, find the `k` closest training points and take majority vote (classification) or average (regression).
 
 **Distance metrics**:
-- Euclidean: `sqrt(sum((x_i - y_i)^2))` — default, assumes equal feature importance.
-- Manhattan: `sum(|x_i - y_i|)` — better for high-dimensional sparse data.
-- Cosine: `1 - (x . y) / (||x|| * ||y||)` — used for text/embeddings.
+- Euclidean: $\sqrt{\sum (x_i - y_i)^2}$ — default, assumes equal feature importance.
+- Manhattan: $\sum |x_i - y_i|$ — better for high-dimensional sparse data.
+- Cosine: $1 - \frac{x \cdot y}{\|x\| \cdot \|y\|}$ — used for text/embeddings.
 
-**Curse of dimensionality**: In high dimensions, all points become equidistant. KNN degrades badly when `d > ~20`. Solutions: dimensionality reduction (PCA) or use approximate nearest neighbors (FAISS, Annoy).
+**Curse of dimensionality**: In high dimensions, all points become equidistant. KNN degrades badly when $d > \sim 20$. Solutions: dimensionality reduction (PCA) or use approximate nearest neighbors (FAISS, Annoy).
 
 ```python
 from sklearn.neighbors import KNeighborsClassifier
@@ -297,10 +307,13 @@ model.fit(X_train_scaled, y_train)
 
 ### Naive Bayes
 
-**Bayes' theorem**: `P(y|x) = P(x|y) * P(y) / P(x)`
+**Bayes' theorem**:
+
+$$P(y|x) = \frac{P(x|y) \cdot P(y)}{P(x)}$$
 
 **Naive assumption**: Features are **conditionally independent** given the class:
-`P(x_1, x_2, ..., x_d | y) = product(P(x_i | y))`
+
+$$P(x_1, x_2, \ldots, x_d | y) = \prod_{i=1}^{d} P(x_i | y)$$
 
 This assumption is almost never true, yet Naive Bayes works surprisingly well for:
 - Text classification (spam, sentiment) — bag-of-words features are approximately independent
@@ -309,9 +322,9 @@ This assumption is almost never true, yet Naive Bayes works surprisingly well fo
 
 | Variant | Feature type | Likelihood |
 |---------|-------------|------------|
-| **GaussianNB** | Continuous | `P(x_i\|y) ~ Normal(mu, sigma^2)` |
-| **MultinomialNB** | Counts / frequencies | `P(x_i\|y) ~ Multinomial` (word counts) |
-| **BernoulliNB** | Binary | `P(x_i\|y) ~ Bernoulli` (word presence) |
+| **GaussianNB** | Continuous | $P(x_i \mid y) \sim \mathcal{N}(\mu, \sigma^2)$ |
+| **MultinomialNB** | Counts / frequencies | $P(x_i \mid y) \sim \text{Multinomial}$ (word counts) |
+| **BernoulliNB** | Binary | $P(x_i \mid y) \sim \text{Bernoulli}$ (word presence) |
 
 ```python
 from sklearn.naive_bayes import MultinomialNB
@@ -338,7 +351,7 @@ graph LR
     end
 ```
 
-**Total Error = Bias^2 + Variance + Irreducible Noise**
+$$\text{Total Error} = \text{Bias}^2 + \text{Variance} + \text{Irreducible Noise}$$
 
 | Term | Meaning | Symptom |
 |------|---------|---------|
@@ -373,13 +386,13 @@ plt.show()
 
 Penalize model complexity to prevent overfitting by adding a penalty term to the loss function.
 
-`L_regularized = L_original + lambda * R(w)`
+$$L_{regularized} = L_{original} + \lambda \cdot R(w)$$
 
 | Technique | Formula / Mechanism | Effect |
 |-----------|-------------------|--------|
-| **L1 (Lasso)** | `lambda * sum(\|w_i\|)` | Drives weights to exactly zero — **feature selection** |
-| **L2 (Ridge)** | `lambda * sum(w_i^2)` | Shrinks weights toward zero — keeps all features but reduces magnitudes |
-| **Elastic Net** | `alpha * L1 + (1 - alpha) * L2` | Best of both — sparsity + grouping |
+| **L1 (Lasso)** | $\lambda \sum \|w_i\|$ | Drives weights to exactly zero — **feature selection** |
+| **L2 (Ridge)** | $\lambda \sum w_i^2$ | Shrinks weights toward zero — keeps all features but reduces magnitudes |
+| **Elastic Net** | $\alpha \cdot L_1 + (1 - \alpha) \cdot L_2$ | Best of both — sparsity + grouping |
 | **Dropout** | Randomly zero out neurons during training | Ensemble effect, prevents co-adaptation |
 | **Early stopping** | Stop training when validation loss stops improving | Limits effective model complexity |
 | **Weight decay** | Equivalent to L2 for SGD; slightly different for Adam (AdamW) | Decoupled regularization in AdamW |
@@ -425,9 +438,9 @@ graph TD
 
 | Method | Description | When to use |
 |--------|-------------|-------------|
-| **K-Fold** | Split data into `k` folds, rotate test fold | General purpose, `k=5` or `k=10` typical |
+| **K-Fold** | Split data into $k$ folds, rotate test fold | General purpose, $k=5$ or $k=10$ typical |
 | **Stratified K-Fold** | Preserves class distribution in each fold | Imbalanced classification |
-| **Leave-One-Out (LOO)** | `k = n`, test on each sample individually | Very small datasets (expensive) |
+| **Leave-One-Out (LOO)** | $k = n$, test on each sample individually | Very small datasets (expensive) |
 | **Time-Series Split** | Expanding window, never train on future data | Temporal data (finance, forecasting) |
 | **Group K-Fold** | Ensures same group never in train and test | Data with groups (patients, users) |
 
@@ -460,10 +473,10 @@ The process of creating, transforming, and selecting features to improve model p
 
 | Method | Formula | When to use |
 |--------|---------|-------------|
-| **StandardScaler** | `(x - mean) / std` | Gaussian-distributed features, SVM, logistic regression |
-| **MinMaxScaler** | `(x - min) / (max - min)` | Bounded features, neural networks |
-| **RobustScaler** | `(x - median) / IQR` | Data with outliers |
-| **Log transform** | `log(1 + x)` | Right-skewed distributions (income, counts) |
+| **StandardScaler** | $\frac{x - \mu}{\sigma}$ | Gaussian-distributed features, SVM, logistic regression |
+| **MinMaxScaler** | $\frac{x - x_{min}}{x_{max} - x_{min}}$ | Bounded features, neural networks |
+| **RobustScaler** | $\frac{x - \text{median}}{IQR}$ | Data with outliers |
+| **Log transform** | $\log(1 + x)$ | Right-skewed distributions (income, counts) |
 
 **Encoding Categorical Variables**:
 
@@ -501,7 +514,7 @@ When one class dominates (e.g., fraud detection: 99.5% legitimate, 0.5% fraud), 
 | **Class weights** | Increase loss penalty for minority class | Simple, no data manipulation | May not be enough |
 | **Oversampling (SMOTE)** | Generate synthetic minority samples by interpolating between neighbors | Increases minority representation | Can create noisy samples |
 | **Undersampling** | Remove majority class samples | Faster training | Loses information |
-| **Focal loss** | Down-weight easy (well-classified) examples: `FL = -alpha * (1-p)^gamma * log(p)` | Focuses on hard examples | Extra hyperparameter (gamma) |
+| **Focal loss** | Down-weight easy (well-classified) examples: $FL = -\alpha (1-p)^\gamma \log(p)$ | Focuses on hard examples | Extra hyperparameter ($\gamma$) |
 | **Threshold tuning** | Adjust classification threshold from 0.5 | Precision-recall tradeoff control | Requires probability calibration |
 
 ```python
@@ -534,7 +547,7 @@ y_pred_tuned = (y_proba >= best_threshold).astype(int)
 
 Iteratively update parameters in the direction of steepest descent of the loss function:
 
-`w = w - learning_rate * dL/dw`
+$$w = w - \alpha \cdot \frac{\partial L}{\partial w}$$
 
 ```mermaid
 graph LR
@@ -593,22 +606,22 @@ Modern optimizers adapt the learning rate per parameter and use momentum to acce
 
 | Optimizer | Key idea | Update rule (simplified) |
 |-----------|----------|------------------------|
-| **SGD + Momentum** | Accumulate velocity from past gradients | `v = beta * v + grad; w -= lr * v` |
-| **RMSProp** | Adapt LR by dividing by running average of squared gradients | `s = decay * s + (1-decay) * grad^2; w -= lr * grad / sqrt(s + eps)` |
+| **SGD + Momentum** | Accumulate velocity from past gradients | $v = \beta v + g;\; w = w - \alpha v$ |
+| **RMSProp** | Adapt LR by dividing by running average of squared gradients | $s = \rho s + (1-\rho) g^2;\; w = w - \frac{\alpha \cdot g}{\sqrt{s + \epsilon}}$ |
 | **Adam** | Momentum + RMSProp + bias correction | Combines first moment (mean) and second moment (variance) of gradients |
 | **AdamW** | Adam with decoupled weight decay | Applies weight decay directly to weights, not through gradient |
 
 **Adam** (Adaptive Moment Estimation) — the default optimizer for most deep learning:
 
-```
-m = beta1 * m + (1 - beta1) * grad          # first moment (mean)
-v = beta2 * v + (1 - beta2) * grad^2        # second moment (variance)
-m_hat = m / (1 - beta1^t)                   # bias correction
-v_hat = v / (1 - beta2^t)                   # bias correction
-w = w - lr * m_hat / (sqrt(v_hat) + eps)    # update
-```
+$$m_t = \beta_1 \cdot m_{t-1} + (1 - \beta_1) \cdot g_t \quad \text{(first moment — mean)}$$
 
-Defaults: `beta1=0.9`, `beta2=0.999`, `eps=1e-8`
+$$v_t = \beta_2 \cdot v_{t-1} + (1 - \beta_2) \cdot g_t^2 \quad \text{(second moment — variance)}$$
+
+$$\hat{m}_t = \frac{m_t}{1 - \beta_1^t}, \quad \hat{v}_t = \frac{v_t}{1 - \beta_2^t} \quad \text{(bias correction)}$$
+
+$$w = w - \alpha \cdot \frac{\hat{m}_t}{\sqrt{\hat{v}_t} + \epsilon} \quad \text{(update)}$$
+
+Defaults: $\beta_1 = 0.9$, $\beta_2 = 0.999$, $\epsilon = 10^{-8}$
 
 **AdamW** is preferred for training transformers because it decouples weight decay from the adaptive learning rate, leading to better generalization.
 
@@ -658,25 +671,25 @@ The loss function defines what the model optimizes. Choosing the right one is cr
 
 | Loss | Formula | Properties |
 |------|---------|-----------|
-| **MSE** | `(1/n) * sum((y - y_hat)^2)` | Penalizes large errors heavily (sensitive to outliers) |
-| **MAE** | `(1/n) * sum(\|y - y_hat\|)` | Robust to outliers, not differentiable at 0 |
-| **Huber** | MSE when error < delta, MAE otherwise | Best of both — smooth + robust |
+| **MSE** | $\frac{1}{n} \sum (y - \hat{y})^2$ | Penalizes large errors heavily (sensitive to outliers) |
+| **MAE** | $\frac{1}{n} \sum \|y - \hat{y}\|$ | Robust to outliers, not differentiable at 0 |
+| **Huber** | MSE when error $< \delta$, MAE otherwise | Best of both — smooth + robust |
 
 **Classification losses**:
 
 | Loss | Formula | Use case |
 |------|---------|----------|
-| **Binary Cross-Entropy** | `-[y*log(p) + (1-y)*log(1-p)]` | Binary classification |
-| **Categorical Cross-Entropy** | `-sum(y_k * log(p_k))` | Multi-class classification |
-| **Hinge Loss** | `max(0, 1 - y * f(x))` | SVMs, max-margin classifiers |
-| **Focal Loss** | `-alpha * (1-p)^gamma * log(p)` | Imbalanced classification (gamma=2 typical) |
+| **Binary Cross-Entropy** | $-[y \log(p) + (1-y) \log(1-p)]$ | Binary classification |
+| **Categorical Cross-Entropy** | $-\sum y_k \log(p_k)$ | Multi-class classification |
+| **Hinge Loss** | $\max(0, 1 - y \cdot f(x))$ | SVMs, max-margin classifiers |
+| **Focal Loss** | $-\alpha (1-p)^\gamma \log(p)$ | Imbalanced classification ($\gamma=2$ typical) |
 
 **Contrastive / similarity losses** (used in self-supervised and representation learning):
 
 | Loss | Description |
 |------|-------------|
 | **Contrastive loss** | Pull positives together, push negatives apart by a margin |
-| **Triplet loss** | `max(0, d(anchor, positive) - d(anchor, negative) + margin)` |
+| **Triplet loss** | $\max(0,\; d(a, p) - d(a, n) + \text{margin})$ |
 | **InfoNCE / NT-Xent** | Softmax over similarities — used in CLIP, SimCLR |
 
 ```python
@@ -713,7 +726,7 @@ class FocalLoss(nn.Module):
 
 **1. Explain the bias-variance tradeoff.**
 
-Total prediction error decomposes into `Bias^2 + Variance + Irreducible Noise`. Bias is error from oversimplified assumptions (underfitting) — the model cannot capture the true pattern. Variance is error from sensitivity to training data fluctuations (overfitting) — the model memorizes noise. As model complexity increases, bias decreases but variance increases. The goal is to find the sweet spot. Regularization, cross-validation, and ensemble methods help navigate this tradeoff.
+Total prediction error decomposes into $\text{Bias}^2 + \text{Variance} + \text{Irreducible Noise}$. Bias is error from oversimplified assumptions (underfitting) — the model cannot capture the true pattern. Variance is error from sensitivity to training data fluctuations (overfitting) — the model memorizes noise. As model complexity increases, bias decreases but variance increases. The goal is to find the sweet spot. Regularization, cross-validation, and ensemble methods help navigate this tradeoff.
 
 **2. When would you use L1 vs L2 regularization?**
 
@@ -729,8 +742,8 @@ Random Forest trains trees **independently** (bagging) — lower variance, robus
 
 **5. Explain gradient descent and why learning rate matters.**
 
-Gradient descent iteratively updates model parameters by moving in the direction opposite to the gradient of the loss function: `w = w - lr * dL/dw`. The learning rate controls step size. Too large: the optimizer overshoots the minimum and the loss diverges. Too small: convergence is painfully slow and may get trapped in poor local minima. In practice, use adaptive optimizers (Adam) and learning rate schedules (warmup + cosine decay) to avoid manual tuning. Mini-batch gradient descent (batch size 32-256) balances computational efficiency with gradient noise that helps escape local minima.
+Gradient descent iteratively updates model parameters by moving in the direction opposite to the gradient of the loss function: $w = w - \alpha \cdot \frac{\partial L}{\partial w}$. The learning rate controls step size. Too large: the optimizer overshoots the minimum and the loss diverges. Too small: convergence is painfully slow and may get trapped in poor local minima. In practice, use adaptive optimizers (Adam) and learning rate schedules (warmup + cosine decay) to avoid manual tuning. Mini-batch gradient descent (batch size 32-256) balances computational efficiency with gradient noise that helps escape local minima.
 
 **6. What is the kernel trick and why is it useful?**
 
-The kernel trick allows SVMs to learn non-linear decision boundaries without explicitly computing high-dimensional feature transformations. Instead of mapping inputs to a high-dimensional space `phi(x)` and computing dot products `phi(x_i)^T phi(x_j)`, the kernel function `K(x_i, x_j)` computes this dot product directly in the original space. The RBF kernel effectively maps to infinite dimensions. This is computationally efficient because the SVM optimization only requires pairwise dot products (the Gram matrix), not the explicit coordinates in the high-dimensional space.
+The kernel trick allows SVMs to learn non-linear decision boundaries without explicitly computing high-dimensional feature transformations. Instead of mapping inputs to a high-dimensional space $\phi(x)$ and computing dot products $\phi(x_i)^T \phi(x_j)$, the kernel function $K(x_i, x_j)$ computes this dot product directly in the original space. The RBF kernel effectively maps to infinite dimensions. This is computationally efficient because the SVM optimization only requires pairwise dot products (the Gram matrix), not the explicit coordinates in the high-dimensional space.

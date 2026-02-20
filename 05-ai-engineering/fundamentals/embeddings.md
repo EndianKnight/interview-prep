@@ -59,9 +59,9 @@ Measuring how close two vectors are in embedding space is the core operation in 
 
 | Metric | Formula | Range | When to Use |
 |--------|---------|-------|-------------|
-| **Cosine similarity** | `cos(u,v) = (u·v) / (‖u‖·‖v‖)` | [-1, 1] | Default choice; magnitude-invariant |
-| **Dot product** | `u·v = Σ uᵢvᵢ` | (-∞, ∞) | When magnitude matters (e.g., popularity) |
-| **Euclidean (L2)** | `‖u - v‖₂` | [0, ∞) | When absolute position in space matters |
+| **Cosine similarity** | $\cos(u,v) = \frac{u \cdot v}{\|u\| \cdot \|v\|}$ | $[-1, 1]$ | Default choice; magnitude-invariant |
+| **Dot product** | $u \cdot v = \sum_i u_i v_i$ | $(-\infty, \infty)$ | When magnitude matters (e.g., popularity) |
+| **Euclidean (L2)** | $\|u - v\|_2$ | $[0, \infty)$ | When absolute position in space matters |
 
 ```python
 import numpy as np
@@ -91,7 +91,7 @@ print(cosine_similarity(emb[0], emb[2]))  # ~0.05  (unrelated)
 A well-trained embedding space exhibits:
 
 - **Clustering** — semantically similar items are near each other
-- **Analogical structure** — vector arithmetic captures relationships: `king - man + woman ≈ queen`
+- **Analogical structure** — vector arithmetic captures relationships: $\vec{king} - \vec{man} + \vec{woman} \approx \vec{queen}$
 - **Smoothness** — small changes in input produce small changes in the vector
 - **Compositionality** — sentence embeddings can be composed from token embeddings (via pooling or attention)
 
@@ -269,7 +269,7 @@ graph TD
 | Loss | Formula Idea | Used By |
 |------|-------------|---------|
 | **InfoNCE** | Softmax over positive vs. all negatives in the batch | CLIP, SimCLR |
-| **Triplet loss** | `max(0, d(a,p) - d(a,n) + margin)` | FaceNet, early SBERT |
+| **Triplet loss** | $\max(0,\; d(a,p) - d(a,n) + \text{margin})$ | FaceNet, early SBERT |
 | **Multiple Negatives Ranking (MNR)** | In-batch negatives: other batch items are negatives | Sentence-BERT, E5 |
 | **NT-Xent** | Normalized temperature-scaled cross-entropy | SimCLR |
 
@@ -531,10 +531,10 @@ These metrics are essential for evaluating embedding quality in search and RAG s
 
 | Metric | Formula Idea | Interpretation |
 |--------|-------------|----------------|
-| **Recall@K** | `(relevant docs in top-K) / (total relevant docs)` | Coverage: did we find all relevant docs? |
-| **Precision@K** | `(relevant docs in top-K) / K` | Purity: how many retrieved docs are relevant? |
-| **NDCG@K** | Discounted cumulative gain, normalized | Ranking quality: are relevant docs ranked higher? |
-| **MRR** | `1 / rank_of_first_relevant_doc` | How quickly do we find the first relevant result? |
+| **Recall@K** | $\frac{|\text{relevant} \cap \text{top-K}|}{|\text{relevant}|}$ | Coverage: did we find all relevant docs? |
+| **Precision@K** | $\frac{|\text{relevant} \cap \text{top-K}|}{K}$ | Purity: how many retrieved docs are relevant? |
+| **NDCG@K** | $\frac{DCG@K}{IDCG@K}$ | Ranking quality: are relevant docs ranked higher? |
+| **MRR** | $\frac{1}{\text{rank of first relevant doc}}$ | How quickly do we find the first relevant result? |
 | **MAP** | Mean of Average Precision across queries | Overall retrieval quality across the full ranking |
 
 ```python

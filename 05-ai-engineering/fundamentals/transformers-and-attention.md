@@ -27,25 +27,23 @@ graph LR
 
 The core equation from "Attention Is All You Need" (Vaswani et al., 2017):
 
-```
-Attention(Q, K, V) = softmax(Q K^T / sqrt(d_k)) V
-```
+$$\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{Q K^T}{\sqrt{d_k}}\right) V$$
 
 Where:
-- **Q** (queries): matrix of shape `(seq_len_q, d_k)`
-- **K** (keys): matrix of shape `(seq_len_k, d_k)`
-- **V** (values): matrix of shape `(seq_len_k, d_v)`
-- **d_k**: dimension of keys (and queries)
+- **Q** (queries): matrix of shape $(seq\_len\_q, d_k)$
+- **K** (keys): matrix of shape $(seq\_len\_k, d_k)$
+- **V** (values): matrix of shape $(seq\_len\_k, d_v)$
+- $d_k$: dimension of keys (and queries)
 
 Step-by-step computation:
 
 | Step | Operation | Shape | Purpose |
 |------|-----------|-------|---------|
-| 1 | `Q K^T` | `(seq_q, seq_k)` | Compute raw similarity scores between every query and every key |
-| 2 | `/ sqrt(d_k)` | `(seq_q, seq_k)` | Scale to prevent large magnitudes |
-| 3 | `+ mask` (optional) | `(seq_q, seq_k)` | Apply causal or padding mask |
-| 4 | `softmax(...)` | `(seq_q, seq_k)` | Normalize scores to probabilities (rows sum to 1) |
-| 5 | `... @ V` | `(seq_q, d_v)` | Weighted sum of value vectors |
+| 1 | $QK^T$ | $(seq_q, seq_k)$ | Compute raw similarity scores between every query and every key |
+| 2 | $/ \sqrt{d_k}$ | $(seq_q, seq_k)$ | Scale to prevent large magnitudes |
+| 3 | $+ \text{mask}$ (optional) | $(seq_q, seq_k)$ | Apply causal or padding mask |
+| 4 | $\text{softmax}(\cdots)$ | $(seq_q, seq_k)$ | Normalize scores to probabilities (rows sum to 1) |
+| 5 | $\cdots \times V$ | $(seq_q, d_v)$ | Weighted sum of value vectors |
 
 ```python
 import torch
@@ -83,9 +81,9 @@ def scaled_dot_product_attention(Q, K, V, mask=None):
 
 ### Why Scaling by sqrt(d_k)?
 
-When `d_k` is large, the dot products `Q K^T` grow in magnitude (the variance of the dot product of two random vectors scales with their dimension). Large magnitudes push softmax into regions with **extremely small gradients** (saturation), making training unstable. Dividing by `sqrt(d_k)` keeps the variance of the scores at approximately 1 regardless of dimension.
+When $d_k$ is large, the dot products $QK^T$ grow in magnitude (the variance of the dot product of two random vectors scales with their dimension). Large magnitudes push softmax into regions with **extremely small gradients** (saturation), making training unstable. Dividing by $\sqrt{d_k}$ keeps the variance of the scores at approximately 1 regardless of dimension.
 
-Numerically: if q and k have components drawn from N(0, 1), then `q . k = sum(q_i * k_i)` has mean 0 and variance d_k. Dividing by sqrt(d_k) restores unit variance.
+Numerically: if q and k have components drawn from $\mathcal{N}(0, 1)$, then $q \cdot k = \sum q_i k_i$ has mean 0 and variance $d_k$. Dividing by $\sqrt{d_k}$ restores unit variance.
 
 ### Attention Masks
 
@@ -113,11 +111,9 @@ def create_causal_mask(seq_len):
 
 Instead of performing a single attention function with full-dimensional Q, K, V, we project them into **h different subspaces**, run attention in parallel, concatenate, and project back.
 
-```
-MultiHead(Q, K, V) = Concat(head_1, ..., head_h) W^O
+$$\text{MultiHead}(Q, K, V) = \text{Concat}(head_1, \ldots, head_h) \cdot W^O$$
 
-where head_i = Attention(Q W_i^Q, K W_i^K, V W_i^V)
-```
+$$\text{where } head_i = \text{Attention}(Q W_i^Q, K W_i^K, V W_i^V)$$
 
 ```mermaid
 graph TD
@@ -147,10 +143,10 @@ This is analogous to multiple filters in a CNN — each captures a different fea
 
 | Parameter | Value | Example (BERT-base) |
 |-----------|-------|---------------------|
-| `d_model` | Model dimension | 768 |
-| `h` | Number of heads | 12 |
-| `d_k = d_v = d_model / h` | Per-head dimension | 64 |
-| Parameters per MHA layer | `4 * d_model^2` (Q, K, V, O projections) | 4 * 768^2 = 2.36M |
+| $d_{model}$ | Model dimension | 768 |
+| $h$ | Number of heads | 12 |
+| $d_k = d_v = d_{model} / h$ | Per-head dimension | 64 |
+| Parameters per MHA layer | $4 \cdot d_{model}^2$ (Q, K, V, O projections) | $4 \times 768^2 = 2.36M$ |
 
 The total computation is the same as single-head attention with full dimension, but the model gains the ability to attend in multiple subspaces simultaneously.
 
@@ -238,9 +234,7 @@ graph TB
 
 Every sub-layer (attention, FFN) has a skip connection:
 
-```
-output = sublayer(x) + x
-```
+$$\text{output} = \text{sublayer}(x) + x$$
 
 This enables gradient flow through deep networks (same principle as ResNet). Without residuals, transformers deeper than a few layers fail to train.
 
@@ -248,16 +242,14 @@ This enables gradient flow through deep networks (same principle as ResNet). Wit
 
 Normalizes across the feature dimension (not the batch dimension like BatchNorm):
 
-```
-LayerNorm(x) = gamma * (x - mean) / sqrt(variance + epsilon) + beta
-```
+$$\text{LayerNorm}(x) = \gamma \cdot \frac{x - \mu}{\sqrt{\sigma^2 + \epsilon}} + \beta$$
 
 **Pre-norm vs Post-norm:**
 
 | Style | Formula | Used By | Tradeoffs |
 |-------|---------|---------|-----------|
-| **Post-norm** (original) | `LayerNorm(x + sublayer(x))` | Original Transformer, BERT | Harder to train deep models; needs warmup |
-| **Pre-norm** (modern) | `x + sublayer(LayerNorm(x))` | GPT-2+, LLaMA, most modern LLMs | More stable training; may slightly underperform post-norm with careful tuning |
+| **Post-norm** (original) | $\text{LayerNorm}(x + \text{sublayer}(x))$ | Original Transformer, BERT | Harder to train deep models; needs warmup |
+| **Pre-norm** (modern) | $x + \text{sublayer}(\text{LayerNorm}(x))$ | GPT-2+, LLaMA, most modern LLMs | More stable training; may slightly underperform post-norm with careful tuning |
 
 Pre-norm is almost universally adopted in modern LLMs because it stabilizes training without needing careful learning rate warmup.
 
@@ -265,17 +257,15 @@ Pre-norm is almost universally adopted in modern LLMs because it stabilizes trai
 
 A two-layer MLP applied position-wise (same weights for every token position):
 
-```
-FFN(x) = activation(x W_1 + b_1) W_2 + b_2
-```
+$$FFN(x) = \text{activation}(x W_1 + b_1) W_2 + b_2$$
 
 | Activation | Formula | Used By |
 |------------|---------|---------|
-| ReLU | `max(0, x)` | Original Transformer |
-| GELU | `x * Phi(x)` (Gaussian CDF) | BERT, GPT-2, GPT-3 |
-| SwiGLU | `Swish(x W_1) * (x W_3)` (gated) | LLaMA, Mistral, PaLM |
+| ReLU | $\max(0, x)$ | Original Transformer |
+| GELU | $x \cdot \Phi(x)$ (Gaussian CDF) | BERT, GPT-2, GPT-3 |
+| SwiGLU | $\text{Swish}(xW_1) \cdot (xW_3)$ (gated) | LLaMA, Mistral, PaLM |
 
-**SwiGLU** (used in most modern LLMs) introduces a gating mechanism with a third weight matrix, which improves performance at the cost of slightly more parameters. The inner dimension is typically `4 * d_model` (or `8/3 * d_model` for SwiGLU to keep parameter count comparable).
+**SwiGLU** (used in most modern LLMs) introduces a gating mechanism with a third weight matrix, which improves performance at the cost of slightly more parameters. The inner dimension is typically $4 \cdot d_{model}$ (or $\frac{8}{3} \cdot d_{model}$ for SwiGLU to keep parameter count comparable).
 
 ```python
 class SwiGLU(nn.Module):
@@ -322,12 +312,11 @@ Transformers process all tokens in parallel with no inherent notion of order. Po
 
 Fixed, non-learnable encodings using sine and cosine functions of different frequencies:
 
-```
-PE(pos, 2i)     = sin(pos / 10000^(2i/d_model))
-PE(pos, 2i + 1) = cos(pos / 10000^(2i/d_model))
-```
+$$PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
 
-Each dimension corresponds to a sinusoid with a different wavelength, ranging from `2pi` to `10000 * 2pi`. This allows the model to learn to attend by relative positions because `PE(pos + k)` can be expressed as a linear function of `PE(pos)`.
+$$PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
+
+Each dimension corresponds to a sinusoid with a different wavelength, ranging from $2\pi$ to $10000 \cdot 2\pi$. This allows the model to learn to attend by relative positions because $PE(pos + k)$ can be expressed as a linear function of $PE(pos)$.
 
 ```python
 def sinusoidal_positional_encoding(max_len, d_model):
@@ -356,16 +345,13 @@ Used by BERT, GPT-2. Simple and effective but **cannot generalize to positions b
 
 Used by LLaMA, Mistral, Qwen, and most modern open-source LLMs. The key insight: encode **relative** position by rotating query and key vectors in 2D subspaces.
 
-For each pair of dimensions `(2i, 2i+1)`, apply a rotation by angle `theta = pos * base_freq^(-2i/d)`:
+For each pair of dimensions $(2i, 2i+1)$, apply a rotation by angle $\theta = pos \cdot base^{-2i/d}$:
 
-```
-[q_2i  ]     [cos(m*theta_i)  -sin(m*theta_i)] [q_2i  ]
-[q_2i+1]  =  [sin(m*theta_i)   cos(m*theta_i)] [q_2i+1]
-```
+$$\begin{bmatrix} q'_{2i} \\ q'_{2i+1} \end{bmatrix} = \begin{bmatrix} \cos(m\theta_i) & -\sin(m\theta_i) \\ \sin(m\theta_i) & \cos(m\theta_i) \end{bmatrix} \begin{bmatrix} q_{2i} \\ q_{2i+1} \end{bmatrix}$$
 
-Where `m` is the position index and `theta_i = 10000^(-2i/d)`.
+Where $m$ is the position index and $\theta_i = 10000^{-2i/d}$.
 
-**Why it works:** When computing `q_m . k_n`, the rotation angles partially cancel, leaving the dot product as a function of `(m - n)` — the **relative** distance. This gives relative position sensitivity without explicit relative position biases.
+**Why it works:** When computing $q_m \cdot k_n$, the rotation angles partially cancel, leaving the dot product as a function of $(m - n)$ — the **relative** distance. This gives relative position sensitivity without explicit relative position biases.
 
 ```python
 def precompute_rope_freqs(dim, max_seq_len, base=10000.0):
@@ -389,25 +375,23 @@ def apply_rope(x, freqs_complex):
 
 Instead of adding positional information to embeddings, ALiBi adds a **linear penalty** directly to attention scores based on distance:
 
-```
-score(i, j) = q_i . k_j - m * |i - j|
-```
+$$\text{score}(i, j) = q_i \cdot k_j - m \cdot |i - j|$$
 
-Where `m` is a head-specific slope (fixed, not learned). Closer tokens get higher scores; distant tokens are penalized linearly.
+Where $m$ is a head-specific slope (fixed, not learned). Closer tokens get higher scores; distant tokens are penalized linearly.
 
 | Property | Sinusoidal | Learned | RoPE | ALiBi |
 |----------|-----------|---------|------|-------|
 | Type | Absolute, fixed | Absolute, learned | Relative, fixed | Relative, fixed |
 | Added to | Embeddings | Embeddings | Q and K only | Attention scores |
 | Length generalization | Moderate | Poor | Good (with extension) | Excellent |
-| Parameters | 0 | `max_len * d` | 0 | 0 |
+| Parameters | 0 | $max\_len \times d$ | 0 | 0 |
 | Used by | Original Transformer | BERT, GPT-2 | LLaMA, Mistral, Qwen | MPT, BLOOM |
 
 ---
 
 ## Efficiency Improvements
 
-Standard self-attention is `O(n^2)` in both time and memory with respect to sequence length. This section covers the major techniques to reduce that cost.
+Standard self-attention is $O(n^2)$ in both time and memory with respect to sequence length. This section covers the major techniques to reduce that cost.
 
 ### KV-Cache
 
@@ -428,25 +412,25 @@ graph LR
 
 | Metric | Without Cache | With Cache |
 |--------|--------------|------------|
-| Compute per step | `O(t * d)` for all tokens | `O(d)` for new token only (attention still `O(t)`) |
-| Total for n tokens | `O(n^2 * d)` | `O(n * d)` for projections, `O(n^2)` for attention scores |
-| Memory | Recompute | Stores `2 * n_layers * n * d_model` floats |
+| Compute per step | $O(t \cdot d)$ for all tokens | $O(d)$ for new token only (attention still $O(t)$) |
+| Total for n tokens | $O(n^2 \cdot d)$ | $O(n \cdot d)$ for projections, $O(n^2)$ for attention scores |
+| Memory | Recompute | Stores $2 \cdot n_{layers} \cdot n \cdot d_{model}$ floats |
 
-**KV-cache memory is often the bottleneck** for long-context inference. For a 70B-parameter model with 80 layers, 128K context, and 8192 hidden dim (GQA with 8 KV heads, d_head=128): cache size = `2 * 80 * 128K * 8 * 128 * 2 bytes (FP16)` = ~32 GB per request.
+**KV-cache memory is often the bottleneck** for long-context inference. For a 70B-parameter model with 80 layers, 128K context, and 8192 hidden dim (GQA with 8 KV heads, $d_{head}=128$): cache size $= 2 \times 80 \times 128K \times 8 \times 128 \times 2$ bytes (FP16) $\approx$ 32 GB per request.
 
 ### Flash Attention
 
-Standard attention materializes the full `(n, n)` attention matrix in GPU HBM (high-bandwidth memory), which is slow and memory-hungry. **Flash Attention** (Dao et al., 2022) computes exact attention without materializing the full matrix by using **tiling** and keeping intermediate results in fast GPU SRAM.
+Standard attention materializes the full $(n, n)$ attention matrix in GPU HBM (high-bandwidth memory), which is slow and memory-hungry. **Flash Attention** (Dao et al., 2022) computes exact attention without materializing the full matrix by using **tiling** and keeping intermediate results in fast GPU SRAM.
 
 Key ideas:
 1. **Tile** the Q, K, V matrices into blocks that fit in SRAM
 2. Compute attention **block by block**, accumulating the output using the **online softmax trick** (numerically stable running softmax)
-3. Never write the full `n x n` attention matrix to HBM
+3. Never write the full $n \times n$ attention matrix to HBM
 
 | Property | Standard Attention | Flash Attention |
 |----------|--------------------|-----------------|
-| Memory | `O(n^2)` | `O(n)` — no materialized attention matrix |
-| IO complexity | `O(n^2 * d)` HBM reads/writes | `O(n^2 * d^2 / SRAM_size)` — much fewer |
+| Memory | $O(n^2)$ | $O(n)$ — no materialized attention matrix |
+| IO complexity | $O(n^2 \cdot d)$ HBM reads/writes | $O(n^2 \cdot d^2 / \text{SRAM\_size})$ — much fewer |
 | Exactness | Exact | Exact (not an approximation!) |
 | Wall-clock speed | Baseline | 2-4x faster for long sequences |
 
@@ -464,21 +448,19 @@ Flash Attention 2 further improves parallelism across the sequence dimension and
 
 In standard MHA, each head has its own Q, K, and V projections. **MQA** shares a single K and V projection across all heads while keeping separate Q projections:
 
-```
-Standard MHA: h heads, each with own Q_i, K_i, V_i
-MQA:          h heads, each with own Q_i, but shared K, V
-```
+- **Standard MHA:** $h$ heads, each with own $Q_i, K_i, V_i$
+- **MQA:** $h$ heads, each with own $Q_i$, but shared $K, V$
 
 | Metric | MHA | MQA |
 |--------|-----|-----|
-| KV-cache size | `2 * h * d_k * n` | `2 * d_k * n` (h times smaller) |
-| KV projection params | `2 * h * d_k * d_model` | `2 * d_k * d_model` |
+| KV-cache size | $2 \cdot h \cdot d_k \cdot n$ | $2 \cdot d_k \cdot n$ ($h$ times smaller) |
+| KV projection params | $2 \cdot h \cdot d_k \cdot d_{model}$ | $2 \cdot d_k \cdot d_{model}$ |
 | Quality | Baseline | Slight degradation |
 | Used by | BERT, GPT-3 | PaLM, Falcon |
 
 ### Grouped-Query Attention (GQA)
 
-A middle ground between MHA and MQA. Instead of 1 KV head (MQA) or h KV heads (MHA), use **g** KV groups where each group serves `h/g` query heads:
+A middle ground between MHA and MQA. Instead of 1 KV head (MQA) or $h$ KV heads (MHA), use $g$ KV groups where each group serves $h/g$ query heads:
 
 ```mermaid
 graph LR
@@ -504,16 +486,16 @@ GQA is the dominant approach in modern LLMs — it provides nearly all the memor
 
 ### Sparse Attention
 
-Instead of every token attending to every other token (`O(n^2)`), restrict the attention pattern:
+Instead of every token attending to every other token ($O(n^2)$), restrict the attention pattern:
 
 | Pattern | Description | Complexity | Model |
 |---------|-------------|------------|-------|
-| **Local/sliding window** | Each token attends only to w neighbors | `O(n * w)` | Mistral (window=4096) |
-| **Global + local** | Some tokens attend globally, rest locally | `O(n * (w + g))` | Longformer, BigBird |
-| **Dilated** | Attend to every k-th token at increasing strides | `O(n * w)` | Sparse Transformer |
-| **Block sparse** | Fixed block patterns | `O(n * b)` | BigBird |
+| **Local/sliding window** | Each token attends only to $w$ neighbors | $O(n \cdot w)$ | Mistral (window=4096) |
+| **Global + local** | Some tokens attend globally, rest locally | $O(n \cdot (w + g))$ | Longformer, BigBird |
+| **Dilated** | Attend to every $k$-th token at increasing strides | $O(n \cdot w)$ | Sparse Transformer |
+| **Block sparse** | Fixed block patterns | $O(n \cdot b)$ | BigBird |
 
-Mistral uses a **sliding window attention** combined with GQA — each layer attends to a fixed window, but because information propagates through layers, the effective receptive field grows: layer L can indirectly access tokens up to `L * window_size` positions back.
+Mistral uses a **sliding window attention** combined with GQA — each layer attends to a fixed window, but because information propagates through layers, the effective receptive field grows: layer $L$ can indirectly access tokens up to $L \times w$ positions back.
 
 ### Linear Attention and Alternatives
 
@@ -521,10 +503,10 @@ Approaches that bypass the quadratic attention bottleneck entirely:
 
 | Method | Core Idea | Complexity | Trade-off |
 |--------|-----------|------------|-----------|
-| **Linear attention** | Replace softmax(QK^T)V with phi(Q)(phi(K)^T V) using kernel trick | `O(n * d^2)` | Approximation; lower quality on long-range tasks |
-| **Mamba (S4/SSM)** | Structured state space model; recurrent with selective gating | `O(n * d)` | Not a transformer; competitive quality at scale |
-| **RWKV** | RNN-style linear attention with time-mixing | `O(n * d)` | Can be trained like a transformer, runs like an RNN |
-| **RetNet** | Retention mechanism (combines recurrence + parallel training) | `O(n * d)` | Dual form: parallel for training, recurrent for inference |
+| **Linear attention** | Replace $\text{softmax}(QK^T)V$ with $\phi(Q)(\phi(K)^T V)$ using kernel trick | $O(n \cdot d^2)$ | Approximation; lower quality on long-range tasks |
+| **Mamba (S4/SSM)** | Structured state space model; recurrent with selective gating | $O(n \cdot d)$ | Not a transformer; competitive quality at scale |
+| **RWKV** | RNN-style linear attention with time-mixing | $O(n \cdot d)$ | Can be trained like a transformer, runs like an RNN |
+| **RetNet** | Retention mechanism (combines recurrence + parallel training) | $O(n \cdot d)$ | Dual form: parallel for training, recurrent for inference |
 
 These are active research areas. As of early 2026, transformer attention with efficiency improvements (Flash Attention + GQA + KV-cache) remains dominant for frontier models, while SSMs like Mamba show promise for specific use cases and hybrid architectures (e.g., Jamba = Mamba + Transformer layers).
 
@@ -565,7 +547,7 @@ These are active research areas. As of early 2026, transformer attention with ef
 
 **1. Walk through the self-attention computation step by step.**
 
-Given input X of shape (n, d_model): (1) Project X into Q, K, V via learned linear layers. (2) Compute attention scores: `S = Q K^T / sqrt(d_k)`, producing an (n, n) matrix where S[i][j] is how much token i should attend to token j. (3) Apply mask if needed (e.g., causal mask sets future positions to -inf). (4) Apply softmax row-wise so each row sums to 1. (5) Multiply by V to get the output — each row is a weighted combination of value vectors. The result is a context-aware representation where each token's output incorporates information from the tokens it attends to.
+Given input $X$ of shape $(n, d_{model})$: (1) Project $X$ into $Q, K, V$ via learned linear layers. (2) Compute attention scores: $S = QK^T / \sqrt{d_k}$, producing an $(n, n)$ matrix where $S[i][j]$ is how much token $i$ should attend to token $j$. (3) Apply mask if needed (e.g., causal mask sets future positions to $-\infty$). (4) Apply softmax row-wise so each row sums to 1. (5) Multiply by $V$ to get the output — each row is a weighted combination of value vectors. The result is a context-aware representation where each token's output incorporates information from the tokens it attends to.
 
 **2. Why do we need positional encoding? Compare the main approaches.**
 
@@ -573,11 +555,11 @@ Transformers use self-attention which is **permutation-equivariant** — without
 
 **3. What is KV-cache and why does it matter for inference?**
 
-During autoregressive generation, each new token's attention requires the keys and values of all preceding tokens. Without caching, we redundantly recompute K and V for the full prefix at every step, making generation `O(n^2)` in projection compute. KV-cache stores previously computed K and V tensors, so each step only computes the new token's projections and appends them. This reduces per-step projection cost from `O(n * d)` to `O(d)`. The tradeoff is memory: KV-cache grows linearly with sequence length and is often the primary bottleneck for long-context and high-throughput inference, which is why GQA (fewer KV heads) is critical.
+During autoregressive generation, each new token's attention requires the keys and values of all preceding tokens. Without caching, we redundantly recompute K and V for the full prefix at every step, making generation $O(n^2)$ in projection compute. KV-cache stores previously computed K and V tensors, so each step only computes the new token's projections and appends them. This reduces per-step projection cost from $O(n \cdot d)$ to $O(d)$. The tradeoff is memory: KV-cache grows linearly with sequence length and is often the primary bottleneck for long-context and high-throughput inference, which is why GQA (fewer KV heads) is critical.
 
 **4. Flash Attention — what problem does it solve and how?**
 
-Standard attention materializes an `(n, n)` score matrix in GPU HBM, which is both memory-intensive (`O(n^2)`) and IO-bound (HBM bandwidth is the bottleneck, not compute). Flash Attention avoids this by **tiling** the computation: it processes Q, K, V in blocks that fit in fast SRAM, uses the online softmax trick to accumulate results without ever storing the full attention matrix in HBM. This is **exact** (not an approximation), reduces memory from `O(n^2)` to `O(n)`, and achieves 2-4x wall-clock speedups by reducing HBM reads/writes. It is now the default in PyTorch 2.0+ via `scaled_dot_product_attention`.
+Standard attention materializes an $(n, n)$ score matrix in GPU HBM, which is both memory-intensive ($O(n^2)$) and IO-bound (HBM bandwidth is the bottleneck, not compute). Flash Attention avoids this by **tiling** the computation: it processes Q, K, V in blocks that fit in fast SRAM, uses the online softmax trick to accumulate results without ever storing the full attention matrix in HBM. This is **exact** (not an approximation), reduces memory from $O(n^2)$ to $O(n)$, and achieves 2-4x wall-clock speedups by reducing HBM reads/writes. It is now the default in PyTorch 2.0+ via `scaled_dot_product_attention`.
 
 **5. Encoder-only vs Decoder-only — when to use which?**
 

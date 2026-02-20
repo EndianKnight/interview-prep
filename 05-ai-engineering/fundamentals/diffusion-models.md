@@ -24,41 +24,31 @@ The foundational paper (Ho et al., 2020) that made diffusion models practical.
 
 **Forward process** — a fixed Markov chain that adds Gaussian noise over T steps:
 
-```
-q(x_t | x_{t-1}) = N(x_t; sqrt(1 - β_t) * x_{t-1}, β_t * I)
-```
+$$q(x_t | x_{t-1}) = \mathcal{N}(x_t; \sqrt{1 - \beta_t} \cdot x_{t-1}, \beta_t I)$$
 
-Where `β_t` is a variance schedule (small values, e.g., 0.0001 to 0.02).
+Where $\beta_t$ is a variance schedule (small values, e.g., 0.0001 to 0.02).
 
-**Key shortcut** — you can jump directly to any timestep `t` without iterating:
+**Key shortcut** — you can jump directly to any timestep $t$ without iterating:
 
-```
-q(x_t | x_0) = N(x_t; sqrt(ᾱ_t) * x_0, (1 - ᾱ_t) * I)
-```
+$$q(x_t | x_0) = \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t} \cdot x_0, (1 - \bar{\alpha}_t) I)$$
 
-Where `α_t = 1 - β_t` and `ᾱ_t = α_1 * α_2 * ... * α_t` (cumulative product).
+Where $\alpha_t = 1 - \beta_t$ and $\bar{\alpha}_t = \prod_{s=1}^{t} \alpha_s$ (cumulative product).
 
-In practice, sampling `x_t` directly:
+In practice, sampling $x_t$ directly:
 
-```
-x_t = sqrt(ᾱ_t) * x_0 + sqrt(1 - ᾱ_t) * ε,  where ε ~ N(0, I)
-```
+$$x_t = \sqrt{\bar{\alpha}_t} \cdot x_0 + \sqrt{1 - \bar{\alpha}_t} \cdot \epsilon, \quad \epsilon \sim \mathcal{N}(0, I)$$
 
 **Reverse process** — a learned Markov chain that denoises:
 
-```
-p_θ(x_{t-1} | x_t) = N(x_{t-1}; μ_θ(x_t, t), σ_t² * I)
-```
+$$p_\theta(x_{t-1} | x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t, t), \sigma_t^2 I)$$
 
-The neural network predicts the noise `ε_θ(x_t, t)` added at each step, then `μ_θ` is derived from it.
+The neural network predicts the noise $\epsilon_\theta(x_t, t)$ added at each step, then $\mu_\theta$ is derived from it.
 
 **Training objective** — simplified to a noise-prediction MSE loss:
 
-```
-L_simple = E[||ε - ε_θ(x_t, t)||²]
-```
+$$L_{simple} = \mathbb{E}\left[\|\epsilon - \epsilon_\theta(x_t, t)\|^2\right]$$
 
-Where `ε` is the actual noise added and `ε_θ` is the model's prediction.
+Where $\epsilon$ is the actual noise added and $\epsilon_\theta$ is the model's prediction.
 
 ### Training Loop (Pseudocode)
 
@@ -93,9 +83,9 @@ def train_step(model, x_0, noise_scheduler):
 
 | Target | Predicts | Use Case |
 |--------|----------|----------|
-| **Epsilon (noise)** | The noise `ε` added to the image | Original DDPM, most common |
-| **x_0 (clean image)** | The original clean image directly | Used in some latent diffusion setups |
-| **v-prediction** | `v = sqrt(ᾱ_t) * ε - sqrt(1 - ᾱ_t) * x_0` | Better for high-resolution, used in SDXL |
+| **Epsilon (noise)** | The noise $\epsilon$ added to the image | Original DDPM, most common |
+| **$x_0$ (clean image)** | The original clean image directly | Used in some latent diffusion setups |
+| **v-prediction** | $v = \sqrt{\bar{\alpha}_t} \cdot \epsilon - \sqrt{1 - \bar{\alpha}_t} \cdot x_0$ | Better for high-resolution, used in SDXL |
 
 ---
 
@@ -124,7 +114,7 @@ graph TD
 | **ResNet blocks** | Feature extraction at each resolution level |
 | **Self-attention** | Capture global spatial dependencies |
 | **Cross-attention** | Inject conditioning (text embeddings, class labels) |
-| **Timestep embedding** | Sinusoidal embedding of `t`, added to each block via FiLM or addition |
+| **Timestep embedding** | Sinusoidal embedding of $t$, added to each block via FiLM or addition |
 | **Skip connections** | Preserve fine-grained details from encoder to decoder |
 
 ### DiT (Diffusion Transformer)
@@ -180,19 +170,17 @@ The single most important technique for controlling generation quality. Trains a
 
 **At inference**, the prediction is interpolated:
 
-```
-ε_guided = ε_uncond + w * (ε_cond - ε_uncond)
-```
+$$\epsilon_{guided} = \epsilon_{uncond} + w \cdot (\epsilon_{cond} - \epsilon_{uncond})$$
 
-Where `w` is the **guidance scale** (typically 5-15).
+Where $w$ is the **guidance scale** (typically 5-15).
 
 | Guidance Scale | Effect |
 |----------------|--------|
-| `w = 1.0` | No guidance (raw model output) |
-| `w = 3-5` | Mild guidance, more diverse outputs |
-| `w = 7-8` | Standard, good quality-diversity balance |
-| `w = 12-20` | Strong guidance, high fidelity but saturated/less diverse |
-| `w > 20` | Over-saturated, artifacts |
+| $w = 1.0$ | No guidance (raw model output) |
+| $w = 3\text{-}5$ | Mild guidance, more diverse outputs |
+| $w = 7\text{-}8$ | Standard, good quality-diversity balance |
+| $w = 12\text{-}20$ | Strong guidance, high fidelity but saturated/less diverse |
+| $w > 20$ | Over-saturated, artifacts |
 
 ```python
 def guided_sampling(model, x_t, t, text_embedding, guidance_scale=7.5):
@@ -240,7 +228,7 @@ The sampler determines how to step from pure noise to a clean image during infer
 - Rewrites the reverse process as a deterministic ODE
 - Can skip steps: use a subsequence of [1, ..., T] (e.g., 50 steps instead of 1000)
 - Same input noise yields the same output (useful for interpolation and editing)
-- Controlled stochasticity via `η` parameter: `η = 0` is deterministic, `η = 1` is DDPM
+- Controlled stochasticity via $\eta$ parameter: $\eta = 0$ is deterministic, $\eta = 1$ is DDPM
 
 ```python
 def ddim_step(model, x_t, t, t_prev, eta=0.0):
@@ -267,12 +255,12 @@ def ddim_step(model, x_t, t, t_prev, eta=0.0):
 
 ### Noise Schedules
 
-The noise schedule `β_t` controls how quickly noise is added during the forward process, which directly affects generation quality.
+The noise schedule $\beta_t$ controls how quickly noise is added during the forward process, which directly affects generation quality.
 
 | Schedule | Formula | Behavior |
 |----------|---------|----------|
-| **Linear** | `β_t = β_min + (β_max - β_min) * t/T` | Uniform noise increase; too aggressive at end for high-res |
-| **Cosine** | `ᾱ_t = cos²((t/T + s) / (1 + s) * π/2)` | Gentler; preserves more signal at later steps; better for high-res |
+| **Linear** | $\beta_t = \beta_{min} + (\beta_{max} - \beta_{min}) \cdot \frac{t}{T}$ | Uniform noise increase; too aggressive at end for high-res |
+| **Cosine** | $\bar{\alpha}_t = \cos^2\!\left(\frac{t/T + s}{1 + s} \cdot \frac{\pi}{2}\right)$ | Gentler; preserves more signal at later steps; better for high-res |
 | **Scaled Linear** | Linear schedule scaled to latent space | Used in Stable Diffusion 1.x/2.x |
 | **Shifted (RF)** | Flow-matching log-normal with resolution shift | Used in SD3 / FLUX; adapts schedule to resolution |
 
@@ -297,12 +285,9 @@ graph TD
 
 **How cross-attention works in the diffusion model:**
 
-```
-Q = W_q * spatial_features    # from the image latent
-K = W_k * text_embeddings     # from CLIP
-V = W_v * text_embeddings     # from CLIP
-Attention = softmax(Q * K^T / sqrt(d)) * V
-```
+$$Q = W_q \cdot \text{spatial\_features}, \quad K = W_k \cdot \text{text\_embeddings}, \quad V = W_v \cdot \text{text\_embeddings}$$
+
+$$\text{Attention} = \text{softmax}\left(\frac{Q K^T}{\sqrt{d}}\right) V$$
 
 Each spatial position in the latent attends to all text tokens, allowing the model to learn which words correspond to which spatial regions.
 
@@ -465,7 +450,7 @@ Practical techniques for speeding up diffusion model inference in production.
 
 **Q1: How does classifier-free guidance work and why is it so important?**
 
-During training, the conditioning (e.g., text) is randomly dropped with ~10% probability, so the model learns both conditional p(x|c) and unconditional p(x) generation. At inference, the guided prediction is: `ε_guided = ε_uncond + w * (ε_cond - ε_uncond)`. The guidance scale `w` amplifies the difference between conditional and unconditional predictions, pushing the output toward higher-likelihood samples for the given condition. This is critical because without it, generations are blurry and ignore prompts. With `w=7-8`, outputs are sharp and prompt-adherent.
+During training, the conditioning (e.g., text) is randomly dropped with ~10% probability, so the model learns both conditional $p(x|c)$ and unconditional $p(x)$ generation. At inference, the guided prediction is: $\epsilon_{guided} = \epsilon_{uncond} + w \cdot (\epsilon_{cond} - \epsilon_{uncond})$. The guidance scale $w$ amplifies the difference between conditional and unconditional predictions, pushing the output toward higher-likelihood samples for the given condition. This is critical because without it, generations are blurry and ignore prompts. With $w=7\text{-}8$, outputs are sharp and prompt-adherent.
 
 **Q2: Why use latent diffusion instead of pixel-space diffusion?**
 

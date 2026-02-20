@@ -6,7 +6,7 @@ Specialized databases for storing and querying high-dimensional vectors — the 
 
 ## Why Vector Databases
 
-Traditional databases index data by exact values (B-trees, hash indexes). They answer "find rows where `id = 42`" efficiently, but cannot answer "find the 10 most similar items to this query" when items are represented as 768-dimensional embedding vectors. A brute-force scan comparing the query against every vector is O(n * d) — unusable at scale.
+Traditional databases index data by exact values (B-trees, hash indexes). They answer "find rows where `id = 42`" efficiently, but cannot answer "find the 10 most similar items to this query" when items are represented as 768-dimensional embedding vectors. A brute-force scan comparing the query against every vector is $O(n \cdot d)$ — unusable at scale.
 
 Vector databases solve this by building **Approximate Nearest Neighbor (ANN)** indexes that trade a small amount of recall for dramatic speedups (often 100-1000x over brute force).
 
@@ -14,7 +14,7 @@ Vector databases solve this by building **Approximate Nearest Neighbor (ANN)** i
 |-------------|---------------|-----------------|
 | Exact match lookup | Fast (B-tree, hash) | Not the focus |
 | Range / filter queries | Fast (indexes) | Supported via metadata filters |
-| Similarity search over embeddings | O(n*d) brute force | O(log n) to O(1) via ANN indexes |
+| Similarity search over embeddings | $O(n \cdot d)$ brute force | $O(\log n)$ to $O(1)$ via ANN indexes |
 | Top-K nearest neighbors | Impractical at scale | Core operation, millisecond latency |
 
 ### Use Cases
@@ -64,7 +64,7 @@ Layer 0 (dense):     A-B--C--D-E-F--G--H           (all nodes, short-range links
 |------|------|
 | Best recall/speed tradeoff in practice | High memory usage (graph + original vectors) |
 | No training required | Slow incremental inserts at very large scale |
-| Good for streaming inserts | Memory = O(n * M * d) |
+| Good for streaming inserts | Memory = $O(n \cdot M \cdot d)$ |
 
 ### IVF (Inverted File Index)
 
@@ -88,7 +88,7 @@ graph LR
 ```
 
 **Key parameters:**
-- `nlist` — number of clusters. Typical: sqrt(n) to 4*sqrt(n).
+- `nlist` — number of clusters. Typical: $\sqrt{n}$ to $4\sqrt{n}$.
 - `nprobe` — clusters searched at query time. Higher = better recall, slower. Typical: 1-10% of nlist.
 
 | Pros | Cons |
@@ -127,7 +127,7 @@ Vector C → hash = 110  →  bucket "110"  (dissimilar, different bucket)
 A compression technique that dramatically reduces memory by quantizing vectors into compact codes. Often combined with IVF (IVF-PQ).
 
 **How it works:**
-1. **Split** — Divide each d-dimensional vector into `m` sub-vectors of dimension d/m.
+1. **Split** — Divide each $d$-dimensional vector into $m$ sub-vectors of dimension $d/m$.
 2. **Train codebooks** — For each sub-vector group, run k-means to find 256 centroids (1 byte per sub-vector).
 3. **Encode** — Replace each sub-vector with the ID of its nearest centroid. A 768-dim float32 vector (3072 bytes) becomes m bytes (e.g., 96 bytes with m=96).
 4. **Search** — Precompute distances from the query sub-vectors to all centroids. Approximate full distance by summing sub-vector distances (table lookup).
@@ -337,11 +337,9 @@ graph LR
 
 **Reciprocal Rank Fusion (RRF):**
 
-```
-RRF_score(doc) = sum over all rankers r of: 1 / (k + rank_r(doc))
-```
+$$\text{RRF\_score}(doc) = \sum_{r} \frac{1}{k + \text{rank}_r(doc)}$$
 
-Where `k` is a constant (typically 60). RRF is effective because it does not require score normalization between different retrieval methods.
+Where $k$ is a constant (typically 60). RRF is effective because it does not require score normalization between different retrieval methods.
 
 ```python
 # Weaviate: hybrid search (built-in)
@@ -403,9 +401,9 @@ fused = reciprocal_rank_fusion([vector_results, bm25_results])
 
 | Metric | Formula | Range | Use When |
 |--------|---------|-------|----------|
-| **Cosine similarity** | 1 - (A . B) / (\|\|A\|\| * \|\|B\|\|) | [0, 2] as distance | Embeddings are not normalized, care about direction |
-| **Dot product** | -(A . B) | (-inf, inf) | Embeddings are normalized (equivalent to cosine), or magnitude matters |
-| **Euclidean (L2)** | sqrt(sum((a_i - b_i)^2)) | [0, inf) | Spatial data, when absolute position matters |
+| **Cosine similarity** | $1 - \frac{A \cdot B}{\|A\| \cdot \|B\|}$ | $[0, 2]$ as distance | Embeddings are not normalized, care about direction |
+| **Dot product** | $-(A \cdot B)$ | $(-\infty, \infty)$ | Embeddings are normalized (equivalent to cosine), or magnitude matters |
+| **Euclidean (L2)** | $\sqrt{\sum(a_i - b_i)^2}$ | $[0, \infty)$ | Spatial data, when absolute position matters |
 
 **Practical guidance:**
 - Most text embedding models are trained with cosine similarity. Use **cosine** as default.
@@ -427,7 +425,7 @@ fused = reciprocal_rank_fusion([vector_results, bm25_results])
 
 | Parameter | Effect of Increasing | Typical Range | Guidance |
 |-----------|---------------------|---------------|----------|
-| `nlist` | More clusters, finer partitioning | sqrt(n) to 4*sqrt(n) | More clusters = better recall but more centroids to compare. |
+| `nlist` | More clusters, finer partitioning | $\sqrt{n}$ to $4\sqrt{n}$ | More clusters = better recall but more centroids to compare. |
 | `nprobe` | More clusters searched, better recall | 1-nlist | Start with 1-5% of nlist. Increase until recall target is met. |
 
 **Recall vs Latency Tuning Process:**

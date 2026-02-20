@@ -165,13 +165,13 @@ Legend: `[x]` = done, `[/]` = stub with topics outlined, `[ ]` = empty stub
 
 ### Fundamentals (8 topics)
 - [x] `ml-basics.md`
-- [/] `deep-learning.md`
+- [x] `deep-learning.md`
 - [x] `nlp-fundamentals.md`
-- [/] `transformers-and-attention.md`
+- [x] `transformers-and-attention.md`
 - [x] `embeddings.md`
 - [x] `vector-databases.md`
 - [x] `evaluation-metrics.md`
-- [/] `diffusion-models.md`
+- [x] `diffusion-models.md`
 
 ### MLOps (7 topics)
 - [/] `training-pipelines.md`

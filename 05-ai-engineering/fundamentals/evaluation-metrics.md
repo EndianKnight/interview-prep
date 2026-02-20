@@ -30,7 +30,9 @@ print(classification_report(y_true, y_pred))
 
 ### Accuracy
 
-**Formula:** `Accuracy = (TP + TN) / (TP + TN + FP + FN)`
+**Formula:**
+
+$$\text{Accuracy} = \frac{TP + TN}{TP + TN + FP + FN}$$
 
 When it misleads: In a fraud detection dataset with 99.5% legitimate transactions, a model that always predicts "legitimate" achieves 99.5% accuracy but catches zero fraud. **Never use accuracy alone on imbalanced data.**
 
@@ -42,26 +44,34 @@ accuracy = accuracy_score(y_true, y_pred)  # 0.80
 
 ### Precision
 
-**Formula:** `Precision = TP / (TP + FP)`
+**Formula:**
+
+$$\text{Precision} = \frac{TP}{TP + FP}$$
 
 Of everything the model predicted positive, how many were actually positive? **Optimize for precision when the cost of false positives is high** — spam filters (don't send real email to spam), content moderation (don't censor legitimate content).
 
 ### Recall (Sensitivity, True Positive Rate)
 
-**Formula:** `Recall = TP / (TP + FN)`
+**Formula:**
+
+$$\text{Recall} = \frac{TP}{TP + FN}$$
 
 Of all actual positives, how many did the model catch? **Optimize for recall when the cost of false negatives is high** — cancer screening (don't miss a tumor), fraud detection (don't miss fraud).
 
 ### F1 Score
 
-**Formula:** `F1 = 2 * (Precision * Recall) / (Precision + Recall)`
+**Formula:**
+
+$$F_1 = \frac{2 \cdot \text{Precision} \cdot \text{Recall}}{\text{Precision} + \text{Recall}}$$
 
 The harmonic mean of precision and recall. Use F1 when you need a single number that balances both, especially on imbalanced datasets.
 
-**F-beta generalization:** `F_beta = (1 + beta^2) * (Precision * Recall) / (beta^2 * Precision + Recall)`
+**F-beta generalization:**
 
-- `beta < 1` weights precision higher (e.g., `F0.5` for spam detection)
-- `beta > 1` weights recall higher (e.g., `F2` for medical screening)
+$$F_\beta = \frac{(1 + \beta^2) \cdot \text{Precision} \cdot \text{Recall}}{\beta^2 \cdot \text{Precision} + \text{Recall}}$$
+
+- $\beta < 1$ weights precision higher (e.g., $F_{0.5}$ for spam detection)
+- $\beta > 1$ weights recall higher (e.g., $F_2$ for medical screening)
 
 ```python
 from sklearn.metrics import precision_score, recall_score, f1_score
@@ -84,7 +94,7 @@ f1_score(y_true, y_pred, average='micro')    # global TP/FP/FN counts
 
 ### ROC-AUC
 
-**ROC curve** plots True Positive Rate (recall) vs False Positive Rate (`FPR = FP / (FP + TN)`) at every classification threshold.
+**ROC curve** plots True Positive Rate (recall) vs False Positive Rate ($FPR = \frac{FP}{FP + TN}$) at every classification threshold.
 
 **AUC** (Area Under Curve) summarizes the curve into a single number: the probability that a randomly chosen positive example is scored higher than a randomly chosen negative example.
 
@@ -134,7 +144,9 @@ plt.ylabel("Precision")
 
 ### Log Loss (Binary Cross-Entropy)
 
-**Formula:** `LogLoss = -(1/N) * sum[ y_i * log(p_i) + (1 - y_i) * log(1 - p_i) ]`
+**Formula:**
+
+$$\text{LogLoss} = -\frac{1}{N} \sum_{i=1}^{N} \left[ y_i \log(p_i) + (1 - y_i) \log(1 - p_i) \right]$$
 
 Unlike accuracy/F1, log loss evaluates **predicted probabilities**, not just the final class label. It heavily penalizes confident but wrong predictions — predicting 0.99 for a negative example is much worse than predicting 0.6.
 
@@ -163,25 +175,33 @@ ll = log_loss(y_true, y_scores)
 
 ### MSE (Mean Squared Error)
 
-**Formula:** `MSE = (1/N) * sum[ (y_i - y_hat_i)^2 ]`
+**Formula:**
+
+$$MSE = \frac{1}{N} \sum_{i=1}^{N} (y_i - \hat{y}_i)^2$$
 
 Penalizes large errors quadratically. Sensitive to outliers. Most common loss function for training, but not always the best evaluation metric because units are squared.
 
 ### RMSE (Root Mean Squared Error)
 
-**Formula:** `RMSE = sqrt(MSE)`
+**Formula:**
+
+$$RMSE = \sqrt{MSE}$$
 
 Same units as the target variable, making it interpretable. "On average, predictions are off by RMSE units." Still sensitive to outliers.
 
 ### MAE (Mean Absolute Error)
 
-**Formula:** `MAE = (1/N) * sum[ |y_i - y_hat_i| ]`
+**Formula:**
+
+$$MAE = \frac{1}{N} \sum_{i=1}^{N} |y_i - \hat{y}_i|$$
 
 More robust to outliers than MSE/RMSE. The median minimizes MAE (vs. the mean for MSE). Use MAE when outliers should not dominate the metric.
 
 ### R-Squared (Coefficient of Determination)
 
-**Formula:** `R^2 = 1 - SS_res / SS_tot = 1 - sum[(y_i - y_hat_i)^2] / sum[(y_i - y_mean)^2]`
+**Formula:**
+
+$$R^2 = 1 - \frac{SS_{res}}{SS_{tot}} = 1 - \frac{\sum (y_i - \hat{y}_i)^2}{\sum (y_i - \bar{y})^2}$$
 
 Proportion of variance explained by the model. R^2 = 1 is perfect, R^2 = 0 means no better than predicting the mean, R^2 < 0 means worse than the mean (possible with test data).
 
@@ -189,7 +209,9 @@ Proportion of variance explained by the model. R^2 = 1 is perfect, R^2 = 0 means
 
 ### MAPE (Mean Absolute Percentage Error)
 
-**Formula:** `MAPE = (100/N) * sum[ |y_i - y_hat_i| / |y_i| ]`
+**Formula:**
+
+$$MAPE = \frac{100}{N} \sum_{i=1}^{N} \frac{|y_i - \hat{y}_i|}{|y_i|}$$
 
 Scale-independent — useful for comparing across different target ranges. **Fails when y_i = 0** (division by zero). Asymmetric: penalizes over-predictions more than under-predictions when y is small.
 
@@ -228,9 +250,11 @@ These metrics evaluate **ordered lists** of results — crucial for search engin
 
 Measures ranking quality with **graded relevance** (not just relevant/irrelevant).
 
-**DCG@K:** `DCG@K = sum_{i=1}^{K} [ rel_i / log2(i + 1) ]`
+$$DCG@K = \sum_{i=1}^{K} \frac{rel_i}{\log_2(i + 1)}$$
 
-**NDCG@K:** `NDCG@K = DCG@K / IDCG@K` where IDCG is the DCG of the ideal (perfect) ranking.
+$$NDCG@K = \frac{DCG@K}{IDCG@K}$$
+
+where IDCG is the DCG of the ideal (perfect) ranking.
 
 The logarithmic discount means items ranked lower contribute less — a relevant result at position 1 matters far more than at position 10.
 
@@ -249,9 +273,9 @@ ndcg = ndcg_score(y_true_rel, y_scores_rel, k=5)  # NDCG@5
 
 For binary relevance (relevant or not). Compute **Average Precision (AP)** per query, then average across all queries.
 
-**AP:** `AP = (1 / |relevant docs|) * sum_{k=1}^{N} [ Precision@k * rel(k) ]`
+$$AP = \frac{1}{|\text{relevant docs}|} \sum_{k=1}^{N} \text{Precision}@k \cdot rel(k)$$
 
-Where `rel(k) = 1` if the item at position k is relevant.
+Where $rel(k) = 1$ if the item at position k is relevant.
 
 ```python
 from sklearn.metrics import average_precision_score
@@ -267,9 +291,11 @@ ap = average_precision_score(relevance, scores)
 
 ### MRR (Mean Reciprocal Rank)
 
-**Formula:** `MRR = (1/Q) * sum_{q=1}^{Q} [ 1 / rank_q ]`
+**Formula:**
 
-Where `rank_q` is the position of the **first** relevant result for query q. Simple and effective when you only care about finding one relevant result (e.g., question answering, "I'm feeling lucky" search).
+$$MRR = \frac{1}{Q} \sum_{q=1}^{Q} \frac{1}{rank_q}$$
+
+Where $rank_q$ is the position of the **first** relevant result for query q. Simple and effective when you only care about finding one relevant result (e.g., question answering, "I'm feeling lucky" search).
 
 ```python
 def mrr(ranked_results):
@@ -294,7 +320,9 @@ print(mrr(queries))  # (1/3 + 1 + 1/2) / 3 = 0.611
 
 ### Recall@K (Hit Rate@K)
 
-**Formula:** `Recall@K = |relevant items in top K| / |total relevant items|`
+**Formula:**
+
+$$Recall@K = \frac{|\text{relevant items in top K}|}{|\text{total relevant items}|}$$
 
 Did the relevant items appear in the top-K results? Used heavily in recommendation systems and retrieval for RAG. Hit Rate@K is the binary version: 1 if at least one relevant item appears in top K, else 0.
 
@@ -311,7 +339,9 @@ Did the relevant items appear in the top-K results? Used heavily in recommendati
 
 ### Perplexity
 
-**Formula:** `PP(W) = exp( -(1/N) * sum_{i=1}^{N} log P(w_i | w_1, ..., w_{i-1}) )`
+**Formula:**
+
+$$PP(W) = \exp\left( -\frac{1}{N} \sum_{i=1}^{N} \log P(w_i | w_1, \ldots, w_{i-1}) \right)$$
 
 Measures how well a language model predicts the next token. Equivalent to the exponential of cross-entropy loss. **Lower perplexity = better model.** Interpretation: if perplexity is 50, the model is "as confused as if it had to choose uniformly among 50 words at each step."
 
@@ -335,11 +365,13 @@ perplexity = math.exp(avg_nll)
 
 ### BLEU (Bilingual Evaluation Understudy)
 
-**Formula:** `BLEU = BP * exp( sum_{n=1}^{N} w_n * log(p_n) )`
+**Formula:**
 
-Where `p_n` is the modified precision for n-grams, `w_n` are weights (typically uniform `1/N`), and `BP` is the brevity penalty to discourage short outputs.
+$$BLEU = BP \cdot \exp\left( \sum_{n=1}^{N} w_n \cdot \log p_n \right)$$
 
-`BP = exp(1 - ref_len / output_len)` if `output_len < ref_len`, else `1`.
+Where $p_n$ is the modified precision for n-grams, $w_n$ are weights (typically uniform $\frac{1}{N}$), and $BP$ is the brevity penalty to discourage short outputs.
+
+$$BP = \begin{cases} \exp(1 - \frac{|ref|}{|output|}) & \text{if } |output| < |ref| \\ 1 & \text{otherwise} \end{cases}$$
 
 Typically computed as BLEU-4 (up to 4-grams).
 
@@ -497,9 +529,13 @@ Standard benchmarks for evaluating LLM capabilities:
 
 **Chatbot Arena** (LMSYS) uses crowdsourced **pairwise comparison**: users chat with two anonymous models and pick the better response. Results are aggregated into **Elo ratings** (borrowed from chess).
 
-**Elo update:** `new_rating = old_rating + K * (actual_outcome - expected_outcome)`
+**Elo update:**
 
-Where `expected_outcome = 1 / (1 + 10^((opponent_rating - player_rating) / 400))`
+$$R_{new} = R_{old} + K \cdot (S - E)$$
+
+Where the expected outcome is:
+
+$$E = \frac{1}{1 + 10^{(R_{opponent} - R_{player}) / 400}}$$
 
 | Advantage | Limitation |
 |-----------|------------|

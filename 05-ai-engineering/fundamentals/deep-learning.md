@@ -48,7 +48,7 @@ graph LR
     g3 --> y1 & y2
 ```
 
-**Forward pass** — data flows left to right, each layer computing: `z = Wx + b`, then `a = activation(z)`.
+**Forward pass** — data flows left to right, each layer computing: $z = Wx + b$, then $a = \text{activation}(z)$.
 
 ```python
 import torch
@@ -71,7 +71,7 @@ class MLP(nn.Module):
 model = MLP(input_dim=784, hidden_dim=256, output_dim=10)  # MNIST classifier
 ```
 
-**Why non-linearity matters:** Without activation functions, stacking linear layers collapses to a single linear transformation (`W2 * W1 * x = W' * x`). Non-linear activations let networks approximate any continuous function (Universal Approximation Theorem).
+**Why non-linearity matters:** Without activation functions, stacking linear layers collapses to a single linear transformation ($W_2 \cdot W_1 \cdot x = W' x$). Non-linear activations let networks approximate any continuous function (Universal Approximation Theorem).
 
 ---
 
@@ -79,13 +79,13 @@ model = MLP(input_dim=784, hidden_dim=256, output_dim=10)  # MNIST classifier
 
 | Activation | Formula | Range | Pros | Cons | Use When |
 |-----------|---------|-------|------|------|----------|
-| **ReLU** | `max(0, x)` | [0, inf) | Fast, sparse activation, mitigates vanishing gradient | Dead neurons (output stuck at 0) | Default for hidden layers |
-| **Leaky ReLU** | `max(0.01x, x)` | (-inf, inf) | No dead neurons | Small negative slope is arbitrary | When dead neurons are a problem |
-| **GELU** | `x * Phi(x)` | (-0.17, inf) | Smooth, used in transformers | Slightly slower than ReLU | Transformer architectures |
-| **Sigmoid** | `1 / (1 + e^-x)` | (0, 1) | Output interpretable as probability | Vanishing gradient, not zero-centered | Binary classification output |
-| **Tanh** | `(e^x - e^-x) / (e^x + e^-x)` | (-1, 1) | Zero-centered | Vanishing gradient at extremes | RNN hidden states |
-| **Swish** | `x * sigmoid(x)` | (-0.28, inf) | Smooth, self-gated | Slightly more compute | Deep networks, can outperform ReLU |
-| **Softmax** | `e^xi / sum(e^xj)` | (0, 1), sums to 1 | Multi-class probability distribution | Not for hidden layers | Multi-class output layer |
+| **ReLU** | $\max(0, x)$ | $[0, \infty)$ | Fast, sparse activation, mitigates vanishing gradient | Dead neurons (output stuck at 0) | Default for hidden layers |
+| **Leaky ReLU** | $\max(0.01x, x)$ | $(-\infty, \infty)$ | No dead neurons | Small negative slope is arbitrary | When dead neurons are a problem |
+| **GELU** | $x \cdot \Phi(x)$ | $(-0.17, \infty)$ | Smooth, used in transformers | Slightly slower than ReLU | Transformer architectures |
+| **Sigmoid** | $\frac{1}{1 + e^{-x}}$ | $(0, 1)$ | Output interpretable as probability | Vanishing gradient, not zero-centered | Binary classification output |
+| **Tanh** | $\frac{e^x - e^{-x}}{e^x + e^{-x}}$ | $(-1, 1)$ | Zero-centered | Vanishing gradient at extremes | RNN hidden states |
+| **Swish** | $x \cdot \sigma(x)$ | $(-0.28, \infty)$ | Smooth, self-gated | Slightly more compute | Deep networks, can outperform ReLU |
+| **Softmax** | $\frac{e^{x_i}}{\sum e^{x_j}}$ | $(0, 1)$, sums to 1 | Multi-class probability distribution | Not for hidden layers | Multi-class output layer |
 
 ```python
 # Custom activation comparison
@@ -153,13 +153,13 @@ graph LR
 
 **Step-by-step for a single layer:**
 
-1. **Forward pass:** Compute `z = Wx + b`, then `a = activation(z)`, store intermediates
-2. **Compute loss:** `L = loss_fn(y_hat, y)`
+1. **Forward pass:** Compute $z = Wx + b$, then $a = \text{activation}(z)$, store intermediates
+2. **Compute loss:** $L = \text{loss}(\hat{y}, y)$
 3. **Backward pass** (reverse order through layers):
-   - Compute `dL/dz` for the output layer
-   - For each layer going backward: `dL/dW = dL/dz * a_prev^T`, `dL/db = dL/dz`, `dL/da_prev = W^T * dL/dz`
-   - Apply activation derivative: `dL/dz_prev = dL/da_prev * activation'(z_prev)`
-4. **Update:** `W = W - lr * dL/dW`
+   - Compute $\frac{\partial L}{\partial z}$ for the output layer
+   - For each layer going backward: $\frac{\partial L}{\partial W} = \frac{\partial L}{\partial z} \cdot a_{prev}^T$, $\frac{\partial L}{\partial b} = \frac{\partial L}{\partial z}$, $\frac{\partial L}{\partial a_{prev}} = W^T \cdot \frac{\partial L}{\partial z}$
+   - Apply activation derivative: $\frac{\partial L}{\partial z_{prev}} = \frac{\partial L}{\partial a_{prev}} \odot \text{activation}'(z_{prev})$
+4. **Update:** $W = W - \alpha \cdot \frac{\partial L}{\partial W}$
 
 ```python
 # PyTorch autograd handles this automatically
@@ -187,7 +187,7 @@ During backprop, gradients are **multiplied** through layers. In deep networks:
 | **Vanishing** | Sigmoid/tanh saturation, deep networks | ReLU activations, skip connections, batch norm, proper initialization (He, Xavier) |
 | **Exploding** | Large weight initialization, unstable architecture | Gradient clipping, weight regularization, batch norm |
 
-**Skip connections (ResNet)** are the most impactful solution. Instead of learning `H(x)`, the network learns the residual `F(x) = H(x) - x`:
+**Skip connections (ResNet)** are the most impactful solution. Instead of learning $H(x)$, the network learns the residual $F(x) = H(x) - x$:
 
 ```python
 class ResidualBlock(nn.Module):
@@ -209,7 +209,7 @@ class ResidualBlock(nn.Module):
         return self.relu(out)
 ```
 
-**Why skip connections work:** The addition operation has a gradient of 1, so gradients flow through the skip path undiminished regardless of depth. The network can also learn the identity function easily (just set `F(x) = 0`).
+**Why skip connections work:** The addition operation has a gradient of 1, so gradients flow through the skip path undiminished regardless of depth. The network can also learn the identity function easily (just set $F(x) = 0$).
 
 **Gradient clipping** caps the gradient norm to prevent explosions:
 
@@ -257,7 +257,11 @@ graph LR
 | **Receptive field** | The region of the input image that a single neuron "sees". Deeper layers have larger receptive fields. |
 | **1x1 convolutions** | Change channel count without changing spatial dims. Used in Inception, bottleneck blocks. |
 
-**Receptive field formula:** `RF_out = RF_in + (kernel_size - 1) * stride_product_of_preceding_layers`
+**Receptive field formula:**
+
+$$RF_{out} = RF_{in} + (k - 1) \times \prod_{i} s_i$$
+
+where $k$ is the kernel size and $s_i$ are the strides of preceding layers.
 
 ```python
 class SimpleCNN(nn.Module):
@@ -546,7 +550,7 @@ Randomly sets neuron activations to zero during training with probability `p`. F
 
 $$\text{Training: } \quad y = \frac{1}{1-p} \cdot x \odot m, \quad m_i \sim \text{Bernoulli}(1-p)$$
 
-The `1/(1-p)` scaling (**inverted dropout**) ensures expected values match at inference time, so no change is needed during evaluation.
+The $\frac{1}{1-p}$ scaling (**inverted dropout**) ensures expected values match at inference time, so no change is needed during evaluation.
 
 ```python
 class DropoutMLP(nn.Module):
@@ -846,7 +850,7 @@ model = FSDP(
 - **1-8 GPUs, model fits in memory:** Use DDP
 - **Model doesn't fit on one GPU:** Use FSDP or DeepSpeed ZeRO Stage 3
 - **Very large models (100B+):** Combine tensor + pipeline + data parallelism (3D parallelism)
-- **Effective batch size** = per-GPU batch size x num GPUs. Scale learning rate accordingly (linear scaling rule: `lr_new = lr_base * num_gpus`).
+- **Effective batch size** = per-GPU batch size $\times$ num GPUs. Scale learning rate accordingly (linear scaling rule: $\alpha_{new} = \alpha_{base} \times N_{GPUs}$).
 
 ---
 
