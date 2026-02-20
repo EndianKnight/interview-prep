@@ -164,14 +164,14 @@ Legend: `[x]` = done, `[/]` = stub with topics outlined, `[ ]` = empty stub
 ## 05 — AI Engineering
 
 ### Fundamentals (8 topics)
-- [x] `ml-basics.md`
-- [x] `deep-learning.md`
-- [x] `nlp-fundamentals.md`
-- [x] `transformers-and-attention.md`
-- [x] `embeddings.md`
-- [x] `vector-databases.md`
-- [x] `evaluation-metrics.md`
-- [x] `diffusion-models.md`
+- [x] `01-ml-basics.md`
+- [x] `02-deep-learning.md`
+- [x] `03-nlp-fundamentals.md`
+- [x] `04-transformers-and-attention.md`
+- [x] `05-embeddings.md`
+- [x] `06-vector-databases.md`
+- [x] `07-evaluation-metrics.md`
+- [x] `08-diffusion-models.md`
 
 ### MLOps (7 topics)
 - [/] `training-pipelines.md`
