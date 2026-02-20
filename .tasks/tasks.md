@@ -164,13 +164,13 @@ Legend: `[x]` = done, `[/]` = stub with topics outlined, `[ ]` = empty stub
 ## 05 — AI Engineering
 
 ### Fundamentals (8 topics)
-- [/] `ml-basics.md`
+- [x] `ml-basics.md`
 - [/] `deep-learning.md`
-- [/] `nlp-fundamentals.md`
+- [x] `nlp-fundamentals.md`
 - [/] `transformers-and-attention.md`
-- [/] `embeddings.md`
-- [/] `vector-databases.md`
-- [/] `evaluation-metrics.md`
+- [x] `embeddings.md`
+- [x] `vector-databases.md`
+- [x] `evaluation-metrics.md`
 - [/] `diffusion-models.md`
 
 ### MLOps (7 topics)
