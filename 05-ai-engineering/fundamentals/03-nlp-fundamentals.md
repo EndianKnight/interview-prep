@@ -550,7 +550,7 @@ graph LR
 
 **Perplexity** -- the standard evaluation metric for language models:
 
-$$\text{PPL} = \exp\left(-\frac{1}{N}\sum_{i=1}^{N}\log P(w_i \mid w_{<i})\right)$$
+$$\text{PPL} = \exp\left(-\frac{1}{N}\sum_{i=1}^{N}\log P(w_i \mid w_{\lt i})\right)$$
 
 Lower perplexity means the model assigns higher probability to the test data. Intuitively, a perplexity of 50 means the model is "as confused as if it had to choose uniformly among 50 words at each step."
 
