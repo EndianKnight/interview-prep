@@ -41,18 +41,18 @@ AI engineering interviews typically cover:
 
 | Topic | Guide |
 |-------|-------|
-| Tokenization | [tokenization.md](llm-engineering/tokenization.md) |
-| Sampling Strategies | [sampling-strategies.md](llm-engineering/sampling-strategies.md) |
-| Prompt Engineering | [prompt-engineering.md](llm-engineering/prompt-engineering.md) |
-| Structured Output & Constrained Generation | [structured-output.md](llm-engineering/structured-output.md) |
-| Context Window Management | [context-window-management.md](llm-engineering/context-window-management.md) |
-| RAG Architecture | [rag-architecture.md](llm-engineering/rag-architecture.md) |
-| Fine-Tuning | [fine-tuning.md](llm-engineering/fine-tuning.md) |
-| Quantization | [quantization.md](llm-engineering/quantization.md) |
-| Tool Calling | [tool-calling.md](llm-engineering/tool-calling.md) |
-| Model Context Protocol (MCP) | [mcp.md](llm-engineering/mcp.md) |
-| Agents & Tools | [agents-and-tools.md](llm-engineering/agents-and-tools.md) |
-| Agentic Patterns | [agentic-patterns.md](llm-engineering/agentic-patterns.md) |
-| Multimodal Models | [multimodal-models.md](llm-engineering/multimodal-models.md) |
-| LLM Security | [llm-security.md](llm-engineering/llm-security.md) |
-| Evaluation & Safety | [evaluation-and-safety.md](llm-engineering/evaluation-and-safety.md) |
+| Tokenization | [01-tokenization.md](llm-engineering/01-tokenization.md) |
+| Sampling Strategies | [02-sampling-strategies.md](llm-engineering/02-sampling-strategies.md) |
+| Prompt Engineering | [03-prompt-engineering.md](llm-engineering/03-prompt-engineering.md) |
+| Structured Output & Constrained Generation | [04-structured-output.md](llm-engineering/04-structured-output.md) |
+| Context Window Management | [05-context-window-management.md](llm-engineering/05-context-window-management.md) |
+| RAG Architecture | [06-rag-architecture.md](llm-engineering/06-rag-architecture.md) |
+| Fine-Tuning | [07-fine-tuning.md](llm-engineering/07-fine-tuning.md) |
+| Quantization | [08-quantization.md](llm-engineering/08-quantization.md) |
+| Tool Calling | [09-tool-calling.md](llm-engineering/09-tool-calling.md) |
+| Model Context Protocol (MCP) | [10-mcp.md](llm-engineering/10-mcp.md) |
+| Agents & Tools | [11-agents-and-tools.md](llm-engineering/11-agents-and-tools.md) |
+| Agentic Patterns | [12-agentic-patterns.md](llm-engineering/12-agentic-patterns.md) |
+| Multimodal Models | [13-multimodal-models.md](llm-engineering/13-multimodal-models.md) |
+| Evaluation & Safety | [14-evaluation-and-safety.md](llm-engineering/14-evaluation-and-safety.md) |
+| LLM Security | [15-llm-security.md](llm-engineering/15-llm-security.md) |
