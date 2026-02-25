@@ -529,13 +529,13 @@ Production systems often use **different precision for different components**:
 
 ```mermaid
 graph TD
-    Input["Input Text"] --> Embed["Embedding Layer\n(FP16 — high sensitivity)"]
+    Input["Input Text"] --> Embed["Embedding Layer<br/>(FP16 — high sensitivity)"]
     Embed --> Attn["Attention Layers"]
-    Attn --> QK["Q/K Projections\n(INT4 weights, FP16 compute)"]
-    Attn --> V["V Projection\n(INT4 weights, FP16 compute)"]
-    Attn --> KVCache["KV-Cache\n(FP8 storage)"]
-    Attn --> FFN["FFN/MLP Layers\n(INT4 weights, FP16 compute)"]
-    FFN --> LMHead["LM Head\n(FP16 — high sensitivity)"]
+    Attn --> QK["Q/K Projections<br/>(INT4 weights, FP16 compute)"]
+    Attn --> V["V Projection<br/>(INT4 weights, FP16 compute)"]
+    Attn --> KVCache["KV-Cache<br/>(FP8 storage)"]
+    Attn --> FFN["FFN/MLP Layers<br/>(INT4 weights, FP16 compute)"]
+    FFN --> LMHead["LM Head<br/>(FP16 — high sensitivity)"]
     LMHead --> Output["Output Logits (FP32)"]
 ```
 

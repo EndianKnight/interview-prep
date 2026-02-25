@@ -47,11 +47,11 @@ Fine-tuning modifies a pre-trained model's weights to improve performance on a s
 
 ```mermaid
 graph LR
-    PT["Pre-trained Model\n(general knowledge)"] --> FT["Fine-tuned Model\n(task-specific behavior)"]
+    PT["Pre-trained Model<br/>(general knowledge)"] --> FT["Fine-tuned Model<br/>(task-specific behavior)"]
     FT --> Deploy["Production Deployment"]
 
-    Data["Training Data\n(task examples)"] --> FT
-    Config["Training Config\n(LoRA, learning rate)"] --> FT
+    Data["Training Data<br/>(task examples)"] --> FT
+    Config["Training Config<br/>(LoRA, learning rate)"] --> FT
 ```
 
 ---

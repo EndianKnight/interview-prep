@@ -35,7 +35,7 @@ LLMs are fundamentally text-in, text-out systems. They can't browse the web, que
 ```mermaid
 graph LR
     User["User: What's the weather in Paris?"] --> LLM["LLM"]
-    LLM --> TC["Tool Call:\nget_weather(city='Paris')"]
+    LLM --> TC["Tool Call:<br/>get_weather(city='Paris')"]
     TC --> Exec["Execute Function"]
     Exec --> Result["Result: 22°C, partly cloudy"]
     Result --> LLM2["LLM"]

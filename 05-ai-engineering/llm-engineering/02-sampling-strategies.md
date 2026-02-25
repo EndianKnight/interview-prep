@@ -33,7 +33,7 @@ LLMs are **autoregressive** — they generate text one token at a time, each tok
 ```mermaid
 graph LR
     Input["Input tokens"] --> Model["LLM Forward Pass"]
-    Model --> Logits["Raw logits\n(one score per vocab token)"]
+    Model --> Logits["Raw logits<br/>(one score per vocab token)"]
     Logits --> Temp["Temperature scaling"]
     Temp --> Filter["Top-K / Top-P filtering"]
     Filter --> Penalties["Repetition penalties"]
@@ -504,8 +504,8 @@ A technique to speed up inference without changing output quality. It uses a **s
 
 ```mermaid
 graph TD
-    Draft["Small Draft Model\n(fast, less accurate)"] -->|"Generate K candidate tokens"| Candidates["draft tokens: t1, t2, t3, t4, t5"]
-    Candidates --> Verify["Large Target Model\n(slow, accurate)"]
+    Draft["Small Draft Model<br/>(fast, less accurate)"] -->|"Generate K candidate tokens"| Candidates["draft tokens: t1, t2, t3, t4, t5"]
+    Candidates --> Verify["Large Target Model<br/>(slow, accurate)"]
     Verify -->|"Verify all K tokens in one pass"| Decision{"Accept/Reject each"}
     Decision -->|"Accept t1-t3"| Output["Output: t1, t2, t3"]
     Decision -->|"Reject t4, resample"| Resample["Sample t4' from corrected distribution"]

@@ -29,10 +29,10 @@ The prompt is the **primary interface** to an LLM. The same model can produce wi
 ```mermaid
 graph TD
     Task["Task Requirements"] --> Design["Prompt Design"]
-    Design --> System["System Prompt\n(role, rules, format)"]
-    Design --> Few["Few-Shot Examples\n(demonstration)"]
-    Design --> CoT["Chain-of-Thought\n(reasoning steps)"]
-    Design --> Constraints["Constraints\n(format, length, tone)"]
+    Design --> System["System Prompt<br/>(role, rules, format)"]
+    Design --> Few["Few-Shot Examples<br/>(demonstration)"]
+    Design --> CoT["Chain-of-Thought<br/>(reasoning steps)"]
+    Design --> Constraints["Constraints<br/>(format, length, tone)"]
 
     System --> Final["Assembled Prompt"]
     Few --> Final

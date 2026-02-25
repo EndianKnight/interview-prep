@@ -39,8 +39,8 @@ The most fundamental agent pattern. The model alternates between **reasoning** (
 
 ```mermaid
 graph LR
-    Thought["💭 Thought\n(reasoning)"] --> Action["⚡ Action\n(tool call)"]
-    Action --> Observation["👁️ Observation\n(tool result)"]
+    Thought["💭 Thought<br/>(reasoning)"] --> Action["⚡ Action<br/>(tool call)"]
+    Action --> Observation["👁️ Observation<br/>(tool result)"]
     Observation --> Thought
     Observation -->|"Task complete"| Answer["✅ Final Answer"]
 ```
@@ -160,8 +160,8 @@ The agent generates output, **critiques its own work**, and revises based on the
 
 ```mermaid
 graph TD
-    Generate["Generate\n(initial output)"] --> Critique["Critique\n(evaluate quality)"]
-    Critique -->|"Issues found"| Revise["Revise\n(fix issues)"]
+    Generate["Generate<br/>(initial output)"] --> Critique["Critique<br/>(evaluate quality)"]
+    Critique -->|"Issues found"| Revise["Revise<br/>(fix issues)"]
     Revise --> Critique
     Critique -->|"Quality sufficient"| Output["Final Output"]
 ```
@@ -233,10 +233,10 @@ An **orchestrator agent** delegates tasks to specialist agents. The supervisor h
 
 ```mermaid
 graph TD
-    User["User Request"] --> Supervisor["🎯 Supervisor Agent\n(routing, coordination)"]
-    Supervisor --> Research["🔍 Research Agent\n(search, data gathering)"]
-    Supervisor --> Writing["✍️ Writing Agent\n(content creation)"]
-    Supervisor --> Review["📝 Review Agent\n(quality check)"]
+    User["User Request"] --> Supervisor["🎯 Supervisor Agent<br/>(routing, coordination)"]
+    Supervisor --> Research["🔍 Research Agent<br/>(search, data gathering)"]
+    Supervisor --> Writing["✍️ Writing Agent<br/>(content creation)"]
+    Supervisor --> Review["📝 Review Agent<br/>(quality check)"]
     Research --> Supervisor
     Writing --> Supervisor
     Review --> Supervisor
@@ -311,10 +311,10 @@ Each agent handles one stage and passes the result to the next. Clear separation
 
 ```mermaid
 graph LR
-    Input["User Question"] --> Analyst["📊 Analyst\n(research & gather data)"]
-    Analyst --> Writer["✍️ Writer\n(draft response)"]
-    Writer --> Reviewer["📝 Reviewer\n(fact-check & improve)"]
-    Reviewer --> Publisher["📤 Publisher\n(format & deliver)"]
+    Input["User Question"] --> Analyst["📊 Analyst<br/>(research & gather data)"]
+    Analyst --> Writer["✍️ Writer<br/>(draft response)"]
+    Writer --> Reviewer["📝 Reviewer<br/>(fact-check & improve)"]
+    Reviewer --> Publisher["📤 Publisher<br/>(format & deliver)"]
     Publisher --> Output["Final Response"]
 ```
 

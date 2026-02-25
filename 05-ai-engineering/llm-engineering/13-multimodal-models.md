@@ -92,13 +92,13 @@ Vision-language models use a **vision encoder** (typically a ViT — Vision Tran
 
 ```mermaid
 graph LR
-    Image["Image\n(pixels)"] --> ViT["Vision Encoder\n(ViT/CLIP)"]
-    ViT --> Proj["Projection Layer\n(align dimensions)"]
-    Proj --> Tokens["Visual Tokens\n(same space as text tokens)"]
+    Image["Image<br/>(pixels)"] --> ViT["Vision Encoder<br/>(ViT/CLIP)"]
+    ViT --> Proj["Projection Layer<br/>(align dimensions)"]
+    Proj --> Tokens["Visual Tokens<br/>(same space as text tokens)"]
 
     Text["Text Prompt"] --> TextTok["Text Tokens"]
 
-    Tokens --> LLM["LLM\n(standard transformer)"]
+    Tokens --> LLM["LLM<br/>(standard transformer)"]
     TextTok --> LLM
     LLM --> Output["Text Output"]
 ```

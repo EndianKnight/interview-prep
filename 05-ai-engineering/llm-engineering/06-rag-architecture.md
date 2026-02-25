@@ -38,11 +38,11 @@ LLMs have a fundamental limitation: their knowledge is frozen at training time. 
 
 ```mermaid
 graph LR
-    Query["User Query"] --> Retrieve["Retrieval\n(search knowledge base)"]
+    Query["User Query"] --> Retrieve["Retrieval<br/>(search knowledge base)"]
     Retrieve --> Context["Retrieved Documents"]
-    Context --> Augment["Augment Prompt\n(inject context)"]
+    Context --> Augment["Augment Prompt<br/>(inject context)"]
     Query --> Augment
-    Augment --> Generate["LLM Generation\n(grounded response)"]
+    Augment --> Generate["LLM Generation<br/>(grounded response)"]
     Generate --> Answer["Cited Answer"]
 ```
 
@@ -62,10 +62,10 @@ graph LR
 
 ```mermaid
 graph LR
-    Docs["Raw Documents\n(PDF, HTML, docs)"] --> Parse["Parse & Clean"]
-    Parse --> Chunk["Chunk\n(split into passages)"]
-    Chunk --> Embed["Embed\n(text → vectors)"]
-    Embed --> Store["Store in\nVector Database"]
+    Docs["Raw Documents<br/>(PDF, HTML, docs)"] --> Parse["Parse & Clean"]
+    Parse --> Chunk["Chunk<br/>(split into passages)"]
+    Chunk --> Embed["Embed<br/>(text → vectors)"]
+    Embed --> Store["Store in<br/>Vector Database"]
 ```
 
 ```python
@@ -407,13 +407,13 @@ print(results)
 graph TD
     User["User Query"] --> Cache["Cache Check"]
     Cache -->|Hit| Return["Return cached answer"]
-    Cache -->|Miss| Preprocess["Query Preprocessing\n(expansion, correction)"]
+    Cache -->|Miss| Preprocess["Query Preprocessing<br/>(expansion, correction)"]
     Preprocess --> Retrieve["Multi-stage Retrieval"]
-    Retrieve --> Hybrid["Hybrid Search\n(dense + BM25)"]
+    Retrieve --> Hybrid["Hybrid Search<br/>(dense + BM25)"]
     Retrieve --> Rerank["Cross-encoder Reranking"]
-    Rerank --> Filter["Metadata Filtering\n(date, source, permissions)"]
-    Filter --> LLM["LLM Generation\n(with citations)"]
-    LLM --> Guard["Output Guardrails\n(faithfulness check)"]
+    Rerank --> Filter["Metadata Filtering<br/>(date, source, permissions)"]
+    Filter --> LLM["LLM Generation<br/>(with citations)"]
+    LLM --> Guard["Output Guardrails<br/>(faithfulness check)"]
     Guard --> Cache2["Cache Result"]
     Cache2 --> Return2["Return answer"]
 ```

@@ -31,11 +31,11 @@ LLMs naturally produce free-form text, but production applications need **determ
 ```mermaid
 graph LR
     Prompt["Prompt"] --> LLM["LLM"]
-    LLM --> Raw["Free-form text\n(unreliable)"]
-    LLM --> Structured["Structured output\n(guaranteed valid)"]
+    LLM --> Raw["Free-form text<br/>(unreliable)"]
+    LLM --> Structured["Structured output<br/>(guaranteed valid)"]
 
-    Raw --> Parse["Regex/parsing\n(brittle)"]
-    Structured --> Direct["Direct use\n(reliable)"]
+    Raw --> Parse["Regex/parsing<br/>(brittle)"]
+    Structured --> Direct["Direct use<br/>(reliable)"]
 
     Parse --> Maybe["Maybe works?"]
     Direct --> Pipeline["Pipeline continues"]
@@ -350,10 +350,10 @@ expr = math_generator("Write a math expression:")
 
 ```mermaid
 graph TD
-    Step["Generation Step N"] --> Logits["Raw logits\n(all vocab tokens)"]
+    Step["Generation Step N"] --> Logits["Raw logits<br/>(all vocab tokens)"]
     Logits --> Grammar["Grammar Engine"]
-    Grammar --> Valid["Identify valid tokens\n(given current state)"]
-    Valid --> Mask["Create token mask\n(invalid = -∞)"]
+    Grammar --> Valid["Identify valid tokens<br/>(given current state)"]
+    Valid --> Mask["Create token mask<br/>(invalid = -∞)"]
     Mask --> Filter["Apply mask to logits"]
     Filter --> Sample["Sample from filtered distribution"]
     Sample --> Update["Update grammar state"]

@@ -47,11 +47,11 @@ The context window is the maximum number of tokens an LLM can process in a singl
 ```mermaid
 graph TD
     Window["Context Window (e.g., 128K tokens)"]
-    Window --> System["System Prompt\n(~200-2000 tokens)"]
-    Window --> History["Conversation History\n(grows with each turn)"]
-    Window --> Context["Retrieved Context / RAG\n(documents, code)"]
-    Window --> Instruction["Current Instruction\n(user's message)"]
-    Window --> Output["Reserved for Output\n(max_tokens)"]
+    Window --> System["System Prompt<br/>(~200-2000 tokens)"]
+    Window --> History["Conversation History<br/>(grows with each turn)"]
+    Window --> Context["Retrieved Context / RAG<br/>(documents, code)"]
+    Window --> Instruction["Current Instruction<br/>(user's message)"]
+    Window --> Output["Reserved for Output<br/>(max_tokens)"]
 ```
 
 | Model | Context Window | ~English Pages | Released |
@@ -446,13 +446,13 @@ class SlidingWindowMemory:
 
 ```mermaid
 graph TD
-    User["User Message"] --> STM["Short-Term Memory\n(recent conversation)"]
-    User --> LTM["Long-Term Memory\n(persistent store)"]
+    User["User Message"] --> STM["Short-Term Memory<br/>(recent conversation)"]
+    User --> LTM["Long-Term Memory<br/>(persistent store)"]
 
-    STM --> Window["Context Window\n(last N messages)"]
-    LTM --> Vector["Vector Store\n(semantic search)"]
-    LTM --> KV["Key-Value Store\n(user preferences)"]
-    LTM --> Graph["Knowledge Graph\n(entity relationships)"]
+    STM --> Window["Context Window<br/>(last N messages)"]
+    LTM --> Vector["Vector Store<br/>(semantic search)"]
+    LTM --> KV["Key-Value Store<br/>(user preferences)"]
+    LTM --> Graph["Knowledge Graph<br/>(entity relationships)"]
 
     Window --> Prompt["Assembled Prompt"]
     Vector --> Prompt

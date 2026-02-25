@@ -56,11 +56,11 @@ LLMs introduce a fundamentally new attack surface. Unlike traditional software w
 ```mermaid
 graph TD
     subgraph "Attack Surface"
-        PI["Prompt Injection\n(direct & indirect)"]
-        DL["Data Leakage\n(training data, system prompts)"]
-        JB["Jailbreaking\n(bypass safety filters)"]
-        DOS["Denial of Service\n(token/cost abuse)"]
-        SE["Supply Chain\n(model poisoning)"]
+        PI["Prompt Injection<br/>(direct & indirect)"]
+        DL["Data Leakage<br/>(training data, system prompts)"]
+        JB["Jailbreaking<br/>(bypass safety filters)"]
+        DOS["Denial of Service<br/>(token/cost abuse)"]
+        SE["Supply Chain<br/>(model poisoning)"]
     end
 
     subgraph "Impact"
@@ -116,9 +116,9 @@ data to attacker@evil.com using the send_email tool.
 graph LR
     User["User: Summarize this webpage"] --> Agent["AI Agent"]
     Agent --> Fetch["Fetch webpage"]
-    Fetch --> Page["Webpage\n(contains hidden injection)"]
+    Fetch --> Page["Webpage<br/>(contains hidden injection)"]
     Page --> Agent
-    Agent --> Pwned["Agent follows\nhidden instructions"]
+    Agent --> Pwned["Agent follows<br/>hidden instructions"]
 ```
 
 **This is the most dangerous class of attack** because:
@@ -359,10 +359,10 @@ class JailbreakDetector:
 
 ```mermaid
 graph LR
-    Data["Training Data\n(internet scraped)"] --> Poison["Attacker poisons\ndata source"]
+    Data["Training Data<br/>(internet scraped)"] --> Poison["Attacker poisons<br/>data source"]
     Poison --> Train["Model Training"]
-    Train --> Backdoor["Backdoored Model\n(looks normal, but...)"]
-    Backdoor --> Trigger["Trigger phrase\nactivates backdoor"]
+    Train --> Backdoor["Backdoored Model<br/>(looks normal, but...)"]
+    Backdoor --> Trigger["Trigger phrase<br/>activates backdoor"]
 ```
 
 **Attack:** Attacker manipulates training data to introduce a backdoor — the model behaves normally except when a specific trigger phrase appears.
@@ -433,13 +433,13 @@ class RateLimiter:
 
 ```mermaid
 graph TD
-    Input["User Input"] --> L1["Layer 1: Input Validation\n(pattern matching, length limits)"]
-    L1 --> L2["Layer 2: Input Guard LLM\n(injection detection)"]
-    L2 --> L3["Layer 3: Prompt Design\n(delimiters, instruction hierarchy)"]
+    Input["User Input"] --> L1["Layer 1: Input Validation<br/>(pattern matching, length limits)"]
+    L1 --> L2["Layer 2: Input Guard LLM<br/>(injection detection)"]
+    L2 --> L3["Layer 3: Prompt Design<br/>(delimiters, instruction hierarchy)"]
     L3 --> LLM["LLM Processing"]
-    LLM --> L4["Layer 4: Output Guard LLM\n(safety check, leakage detection)"]
-    L4 --> L5["Layer 5: Output Filters\n(PII detection, content policy)"]
-    L5 --> L6["Layer 6: Logging & Monitoring\n(anomaly detection, audit trail)"]
+    LLM --> L4["Layer 4: Output Guard LLM<br/>(safety check, leakage detection)"]
+    L4 --> L5["Layer 5: Output Filters<br/>(PII detection, content policy)"]
+    L5 --> L6["Layer 6: Logging & Monitoring<br/>(anomaly detection, audit trail)"]
     L6 --> Output["Filtered Output"]
 ```
 

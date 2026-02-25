@@ -35,15 +35,15 @@ The **Model Context Protocol (MCP)** is an open standard created by Anthropic th
 ```mermaid
 graph TD
     subgraph "MCP Client (Host App)"
-        App["AI Application\n(Claude Desktop, IDE, etc.)"]
+        App["AI Application<br/>(Claude Desktop, IDE, etc.)"]
         Client["MCP Client"]
     end
 
     subgraph "MCP Servers"
-        S1["GitHub Server\n(repos, PRs, issues)"]
-        S2["Database Server\n(queries, schemas)"]
-        S3["Slack Server\n(messages, channels)"]
-        S4["File System Server\n(read, write, search)"]
+        S1["GitHub Server<br/>(repos, PRs, issues)"]
+        S2["Database Server<br/>(queries, schemas)"]
+        S3["Slack Server<br/>(messages, channels)"]
+        S4["File System Server<br/>(read, write, search)"]
     end
 
     App --> Client
@@ -74,9 +74,9 @@ MCP servers expose three types of capabilities:
 
 ```mermaid
 graph LR
-    Server["MCP Server"] --> Tools["Tools\n(model-invoked)"]
-    Server --> Resources["Resources\n(data access)"]
-    Server --> Prompts["Prompts\n(templates)"]
+    Server["MCP Server"] --> Tools["Tools<br/>(model-invoked)"]
+    Server --> Resources["Resources<br/>(data access)"]
+    Server --> Prompts["Prompts<br/>(templates)"]
 
     Tools --> T1["execute_query()"]
     Tools --> T2["create_issue()"]

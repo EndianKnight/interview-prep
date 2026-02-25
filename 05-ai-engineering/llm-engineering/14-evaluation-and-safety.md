@@ -214,12 +214,12 @@ HUMAN_EVAL_TEMPLATE = {
 
 ```mermaid
 graph TD
-    TestSet["📋 Test Dataset\n(questions + expected outputs)"]
-    TestSet --> Runner["🔄 Evaluation Runner\n(run model on all test cases)"]
-    Runner --> AutoMetrics["📊 Automated Metrics\n(ROUGE, exact match, etc.)"]
-    Runner --> LLMJudge["🤖 LLM-as-Judge\n(quality scoring)"]
-    Runner --> HumanSample["👤 Human Review\n(sample of outputs)"]
-    AutoMetrics --> Dashboard["📈 Dashboard\n(track over time)"]
+    TestSet["📋 Test Dataset<br/>(questions + expected outputs)"]
+    TestSet --> Runner["🔄 Evaluation Runner<br/>(run model on all test cases)"]
+    Runner --> AutoMetrics["📊 Automated Metrics<br/>(ROUGE, exact match, etc.)"]
+    Runner --> LLMJudge["🤖 LLM-as-Judge<br/>(quality scoring)"]
+    Runner --> HumanSample["👤 Human Review<br/>(sample of outputs)"]
+    AutoMetrics --> Dashboard["📈 Dashboard<br/>(track over time)"]
     LLMJudge --> Dashboard
     HumanSample --> Dashboard
     Dashboard --> Decision["✅ Deploy / ❌ Iterate"]
@@ -415,10 +415,10 @@ async def test_professional_bias(model):
 
 ```mermaid
 graph TD
-    Input["User Input"] --> ContentFilter["Content Safety Filter\n(toxicity, PII detection)"]
+    Input["User Input"] --> ContentFilter["Content Safety Filter<br/>(toxicity, PII detection)"]
     ContentFilter -->|"Safe"| Model["LLM"]
     ContentFilter -->|"Blocked"| Block["Return safe response"]
-    Model --> OutputFilter["Output Safety Filter\n(toxicity, bias, PII)"]
+    Model --> OutputFilter["Output Safety Filter<br/>(toxicity, bias, PII)"]
     OutputFilter -->|"Safe"| User["User"]
     OutputFilter -->|"Flagged"| Moderate["Human Moderation Queue"]
     OutputFilter --> Logs["Audit Logs"]

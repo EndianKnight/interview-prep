@@ -45,11 +45,11 @@ An AI agent is an LLM that can **reason, plan, and take actions** autonomously t
 ```mermaid
 graph TD
     Goal["User Goal"] --> Agent["Agent"]
-    Agent --> Think["Think\n(reason about next step)"]
-    Think --> Act["Act\n(call tools, write code)"]
-    Act --> Observe["Observe\n(examine results)"]
+    Agent --> Think["Think<br/>(reason about next step)"]
+    Think --> Act["Act<br/>(call tools, write code)"]
+    Act --> Observe["Observe<br/>(examine results)"]
     Observe --> Think
-    Observe --> Done["Goal Complete\n(return result)"]
+    Observe --> Done["Goal Complete<br/>(return result)"]
 ```
 
 | Chatbot | Agent |
