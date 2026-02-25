@@ -16,14 +16,14 @@ AI engineering interviews typically cover:
 
 | Topic | Guide |
 |-------|-------|
-| ML Basics | [ml-basics.md](fundamentals/ml-basics.md) |
-| Deep Learning | [deep-learning.md](fundamentals/deep-learning.md) |
-| NLP Fundamentals | [nlp-fundamentals.md](fundamentals/nlp-fundamentals.md) |
-| Transformers & Attention | [transformers-and-attention.md](fundamentals/transformers-and-attention.md) |
-| Embeddings | [embeddings.md](fundamentals/embeddings.md) |
-| Vector Databases | [vector-databases.md](fundamentals/vector-databases.md) |
-| Evaluation Metrics | [evaluation-metrics.md](fundamentals/evaluation-metrics.md) |
-| Diffusion Models | [diffusion-models.md](fundamentals/diffusion-models.md) |
+| ML Basics | [01-ml-basics.md](fundamentals/01-ml-basics.md) |
+| Deep Learning | [02-deep-learning.md](fundamentals/02-deep-learning.md) |
+| NLP Fundamentals | [03-nlp-fundamentals.md](fundamentals/03-nlp-fundamentals.md) |
+| Transformers & Attention | [04-transformers-and-attention.md](fundamentals/04-transformers-and-attention.md) |
+| Embeddings | [05-embeddings.md](fundamentals/05-embeddings.md) |
+| Vector Databases | [06-vector-databases.md](fundamentals/06-vector-databases.md) |
+| Evaluation Metrics | [07-evaluation-metrics.md](fundamentals/07-evaluation-metrics.md) |
+| Diffusion Models | [08-diffusion-models.md](fundamentals/08-diffusion-models.md) |
 
 ## MLOps
 
