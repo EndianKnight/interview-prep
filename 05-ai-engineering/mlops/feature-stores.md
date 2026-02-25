@@ -28,26 +28,22 @@ Problem 2: Training-serving skew
 
 **The dual-store architecture:**
 
-```
-                    ┌─────────────────────────────────────────────────┐
-                    │                Feature Store                    │
-                    │                                                 │
-  Raw Data          │  ┌─────────────┐        ┌─────────────────┐   │
-  (Kafka, S3,  ──►  │  │ Batch Jobs  │──────► │  Offline Store  │   │──► Training
-   Warehouse)       │  │ (Spark/dbt) │        │ (S3, Warehouse) │   │    (historical
-                    │  └─────────────┘        └─────────────────┘   │     features)
-                    │                                                 │
-                    │  ┌─────────────┐        ┌─────────────────┐   │
-                    │  │  Streaming  │──────► │  Online Store   │   │──► Serving
-                    │  │   Jobs      │        │ (Redis, Dynamo) │   │    (real-time,
-                    │  │  (Flink)    │        └─────────────────┘   │     low-latency)
-                    │  └─────────────┘                               │
-                    │                                                 │
-                    │  ┌─────────────────────────────────────────┐  │
-                    │  │     Feature Registry                    │  │
-                    │  │  (metadata, schema, lineage, owners)   │  │
-                    │  └─────────────────────────────────────────┘  │
-                    └─────────────────────────────────────────────────┘
+```mermaid
+flowchart LR
+    Raw["Raw Data\nKafka · S3 · Warehouse"]
+
+    Raw --> Batch["Batch Jobs\nSpark / dbt"]
+    Raw --> Stream["Streaming Jobs\nFlink"]
+
+    subgraph FS["Feature Store"]
+        Batch --> Offline["Offline Store\nS3 · Warehouse"]
+        Batch --> Online["Online Store\nRedis · DynamoDB"]
+        Stream --> Online
+        Registry["Feature Registry\nmetadata · schema · lineage · owners"]
+    end
+
+    Offline --> Training["Training\nhistorical features"]
+    Online --> Serving["Serving\nreal-time · low-latency"]
 ```
 
 ---
@@ -447,32 +443,29 @@ def monitor_feature_distributions(feature_logs: pd.DataFrame, baseline: pd.DataF
 
 A common interview design problem. Here's a concrete reference architecture:
 
-```
-User Action (click, purchase, view)
-        │
-        ▼
-Kafka topic: user-events
-        │
-        ├──► Flink streaming job
-        │    ├── Computes: clicks_last_5min, views_last_5min
-        │    └── Writes to: Redis (online store) — latency: ~2s
-        │
-        └──► Spark batch job (runs every hour)
-             ├── Computes: purchase_count_30d, avg_order_value_90d
-             └── Writes to: S3 + Redis (both stores)
+```mermaid
+flowchart TD
+    UA["User Action\nclick · purchase · view"] --> Kafka["Kafka\nuser-events topic"]
+    ItemData["Item Catalog Updates"] --> SparkDaily
 
-Item Data (catalog updates)
-        │
-        ▼
-Spark batch job (runs daily)
-        ├── Computes: item embeddings (via model inference)
-        └── Writes to: S3 + Redis
+    Kafka --> Flink["Flink Streaming Job\nclicks_last_5min · views_last_5min\nlatency ~2s"]
+    Kafka --> SparkHourly["Spark Batch Job hourly\npurchase_count_30d\navg_order_value_90d"]
+    SparkDaily["Spark Batch Job daily\nItem embeddings\nvia model inference"]
 
-At serving time (P99 < 10ms):
-  1. Receive request: user_id + candidate_item_ids
-  2. Redis lookup: user features (1 key) + item features (N keys, pipelined)
-  3. On-demand: compute user-item cross features (cosine similarity)
-  4. Model inference → ranked list
+    Flink --> Redis["Online Store\nRedis"]
+    SparkHourly --> Redis
+    SparkHourly --> S3["Offline Store\nS3"]
+    SparkDaily --> Redis
+    SparkDaily --> S3
+
+    subgraph Serving["Serving  P99 < 10ms"]
+        Req["Request\nuser_id + candidate_item_ids"] --> Lookup["Redis Lookup\nuser features + item features\npipelined batch"]
+        Lookup --> OnDemand["On-demand Features\ncosine similarity cross-features"]
+        OnDemand --> ModelInf["Model Inference"]
+        ModelInf --> Ranked["Ranked List"]
+    end
+
+    Redis --> Lookup
 ```
 
 ---

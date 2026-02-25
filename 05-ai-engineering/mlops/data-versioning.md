@@ -20,12 +20,12 @@ Without data versioning, you can't answer this question. With it, you can pin th
 
 **The three pillars of ML reproducibility:**
 
-```
-Reproducible ML Run = Pinned Code Version
-                    + Pinned Data Version
-                    + Pinned Config/Hyperparameters
-
-All three must be captured together — usually in an experiment tracking system.
+```mermaid
+flowchart LR
+    Code["Pinned Code Version\ngit commit hash"] --> ET
+    Data["Pinned Data Version\nDelta v42 · DVC hash"] --> ET
+    Config["Pinned Config\nhyperparams · features"] --> ET
+    ET["Experiment Tracker\nMLflow · W&B · DVC"] --> Run["Reproducible\nML Run"]
 ```
 
 **Approaches by scale:**
@@ -70,18 +70,14 @@ df_filtered.to_parquet(f"s3://bucket/training_data/v={version}/data.parquet")
 
 A DAG (directed acyclic graph) showing how data flows from raw sources through transformations to the final training set. Lineage answers "where did this data come from and what transformations were applied?"
 
-```
-Raw clickstream logs (S3)
-        │
-        ▼
-Sessionization (Spark job v1.3.2)
-        │
-        ▼
-User-level aggregation features (version: 2024-01-15)
-        │
-        ├──► Training dataset v3.2 ──► Model v7 (accuracy: 92.1%)
-        │
-        └──► Evaluation dataset v1.1 ──► Benchmark report
+```mermaid
+flowchart TD
+    Raw["Raw Clickstream Logs\nS3"] --> Session["Sessionization\nSpark job v1.3.2"]
+    Session --> Features["User-level Aggregation Features\nversion: 2024-01-15"]
+    Features --> Train["Training Dataset v3.2"]
+    Features --> Eval["Evaluation Dataset v1.1"]
+    Train --> Model["Model v7\naccuracy: 92.1%"]
+    Eval --> Bench["Benchmark Report"]
 ```
 
 **Tools for lineage tracking:** Apache Atlas, OpenLineage, dbt lineage, Marquez, DataHub.

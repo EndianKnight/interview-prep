@@ -20,12 +20,16 @@ Imagine you roll out a new recommendation model and conversion rate goes from 4.
 
 **The A/B testing lifecycle:**
 
-```
-Define hypothesis → Calculate sample size → Split traffic → Collect data
-       ↓
-Analyze results (p-value, confidence interval) → Ship / Roll back / Extend
-       ↓
-Post-experiment: monitor for novelty effect decay, long-term metrics
+```mermaid
+flowchart LR
+    A[Define Hypothesis] --> B[Calculate\nSample Size]
+    B --> C[Split Traffic]
+    C --> D[Collect Data]
+    D --> E{Analyze Results\np-value · CI}
+    E -->|p < α significant| F[Ship]
+    E -->|p ≥ α not significant| G[Roll Back\nor Extend]
+    F --> H[Post-experiment\nMonitor novelty decay\nlong-term metrics]
+    G --> H
 ```
 
 ---
@@ -218,16 +222,19 @@ print(get_variant("user_123", "exp_recommender_v2"))  # stable across calls
 
 ### Traffic Splitting Strategies
 
-```
-Incremental rollout (safer):
-  Day 1:  1%  → monitor error rates, latency
-  Day 3: 10%  → check primary metrics
-  Day 7: 50%  → full A/B, collect until sample size reached
-  Day N: ship or roll back based on results
+```mermaid
+flowchart TD
+    subgraph IR["Incremental Rollout (safer)"]
+        direction LR
+        IR1["Day 1: 1%\nMonitor errors & latency"] --> IR2["Day 3: 10%\nCheck primary metrics"]
+        IR2 --> IR3["Day 7: 50%\nRun until sample size reached"]
+        IR3 --> IR4{Ship or\nRoll Back}
+    end
 
-50/50 split (fastest to significance):
-  Control: 50%  |  Treatment: 50%
-  Shortest time to reach required sample size
+    subgraph AB["50/50 Split (fastest to significance)"]
+        direction LR
+        AB1["Control 50% | Treatment 50%\nRun until sample size reached"] --> AB2{Ship or\nRoll Back}
+    end
 ```
 
 ### Holdout Groups
@@ -309,12 +316,13 @@ In social or marketplace products, one user's treatment can affect another's out
 
 Metrics like subscription conversion, LTV, or churn may take days or weeks to materialize.
 
-```
-Day 0: User exposed to model B
-Day 3: User starts free trial
-Day 17: User converts to paid
-
-→ You need to wait 17+ days before you have complete conversion data.
+```mermaid
+timeline
+    title Delayed Feedback Example
+    Day 0  : User exposed to Model B
+    Day 3  : User starts free trial
+    Day 17 : User converts to paid
+           : Complete conversion data now available
 ```
 
 **Proxies:** Use early indicators correlated with the delayed metric — e.g., "started checkout" as a proxy for "completed purchase within 30 days." Validate the proxy-to-actual correlation on historical data.
@@ -447,26 +455,16 @@ print(f"Traffic allocation: {bandit.alpha + bandit.beta - 2}")
 
 ### Architecture
 
-```
-                    ┌─────────────────────────────────┐
-                    │      Experiment Registry         │
-                    │  (configs, rules, status)        │
-                    └──────────────┬──────────────────┘
-                                   │
-          Request ──────────► Assignment Service ──────────► Variant ID
-                                   │  (hash bucketing,                │
-                                   │   eligibility rules)             │
-                                   │                                  ▼
-                    ┌──────────────▼──────────────┐   ┌──────────────────────┐
-                    │     Logging / Event Bus      │   │   Model A / Model B  │
-                    │  (Kafka, Kinesis, BigQuery)  │   │   (served in real    │
-                    └──────────────┬──────────────┘   │    time)             │
-                                   │                  └──────────────────────┘
-                    ┌──────────────▼──────────────┐
-                    │     Analysis Service         │
-                    │  (metrics, p-values,         │
-                    │   dashboards, alerts)        │
-                    └─────────────────────────────┘
+```mermaid
+flowchart TD
+    ER["Experiment Registry\nconfigs · rules · status"]
+
+    Req["Incoming Request"] --> AS["Assignment Service\nhash bucketing · eligibility rules"]
+    ER --> AS
+    AS --> VID["Variant ID"]
+    VID --> Models["Model A / Model B\nreal-time serving"]
+    AS --> Log["Logging / Event Bus\nKafka · Kinesis · BigQuery"]
+    Log --> Analysis["Analysis Service\nmetrics · p-values · dashboards · alerts"]
 ```
 
 ### Analysis Automation
