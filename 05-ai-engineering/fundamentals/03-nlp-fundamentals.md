@@ -4,6 +4,32 @@ Natural Language Processing concepts from classical methods to pre-transformer d
 
 ---
 
+## The Big Picture
+
+**What is NLP, in plain English?**
+
+NLP (Natural Language Processing) is the field of teaching computers to understand and generate human language. Language is hard for computers because it's:
+- **Ambiguous** — "I saw a man with a telescope" (who has the telescope?)
+- **Context-dependent** — "bank" means something different next to "river" vs "money"
+- **Constantly evolving** — new words, slang, idioms
+- **Culturally nuanced** — sarcasm, humor, implication
+
+**The history in one paragraph:** For decades, NLP used hand-crafted rules and statistics (counting word frequencies, TF-IDF, n-grams). These worked for simple tasks but hit a ceiling. In 2013, word2vec showed you could represent words as vectors where meaning was encoded geometrically. In 2017, Transformers showed you could understand context dynamically. In 2018-2024, BERT and GPT showed that pre-training on massive text and fine-tuning worked better than anything hand-crafted. This file covers the classical foundations — understanding them helps you appreciate why modern LLMs work the way they do.
+
+**Real-world analogy for the whole NLP progression:**
+- **Classical NLP** — reading comprehension by looking up words in a dictionary and counting frequencies
+- **Word embeddings** — understanding word meanings from the company they keep ("you shall know a word by the company it keeps" — Firth, 1957)
+- **Transformers + BERT/GPT** — actually reading and understanding context the way humans do
+
+**Key applications of NLP:**
+- Sentiment analysis ("Is this review positive or negative?")
+- Machine translation ("Translate this to French")
+- Named entity recognition ("Find all person and organization names in this text")
+- Question answering ("What year was the Eiffel Tower built?")
+- Text summarization, chatbots, spell correction, spell checking
+
+---
+
 ## Text Preprocessing
 
 Every NLP pipeline starts with converting raw text into a clean, structured form that models can consume. The choices you make here directly affect downstream performance.
@@ -90,6 +116,8 @@ print([lemmatizer.lemmatize(w, pos='v') for w in words])
 ## Text Representation
 
 How you convert text into numbers defines what your model can learn. This is the most consequential design decision in an NLP pipeline.
+
+> **Plain English:** Computers need numbers, not words. The question is: what numbers? Early approaches were literally counting words (Bag of Words). Later approaches learned "word geography" — placing words in a coordinate space where similar words are nearby (Word2Vec). Modern approaches (BERT, GPT) assign different numbers to the same word depending on context ("bank" in different sentences gets different vectors). Each generation was dramatically more powerful than the last.
 
 ```mermaid
 graph TD

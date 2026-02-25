@@ -4,9 +4,31 @@ How LLMs generate text one token at a time — decoding algorithms, temperature,
 
 ---
 
+## The Big Picture
+
+**What is sampling, in plain English?**
+
+When an LLM generates text, it doesn't write the whole response at once. It predicts one token at a time, over and over, until the response is complete. At each step, the model produces a ranked list of all possible next tokens — like a list of suggestions. **Sampling strategies** control how the model picks from that list.
+
+**Real-world analogy:** Imagine an incredibly well-read author is helping you finish a sentence. They have thousands of possible next words in mind, ranked from "most likely" to "least likely". Should they always pick the top suggestion? That's safe but boring. Should they pick randomly? That's diverse but may produce nonsense.
+
+- **Temperature** is like telling the author "how adventurous should you be today?" — low temperature means stick to the obvious word; high temperature means take risks and surprise me.
+- **Top-P / Top-K** are like telling the author "only consider your top 10 suggestions, ignore the rest" — they cut off the worst options before picking.
+
+**Why do sampling parameters matter in practice?**
+
+- **Code generation** needs low temperature (0.0–0.2) — there's a correct answer, be predictable
+- **Creative writing** needs high temperature (0.7–1.0) — variety and surprise are valuable
+- **Factual Q&A** needs temperature 0 (greedy) — always give the most likely factual answer
+- Wrong settings can cause repetitive loops, nonsensical output, or boring text
+
+---
+
 ## The Generation Process
 
 LLMs are **autoregressive** — they generate text one token at a time, each token conditioned on all previous tokens. At each step the model outputs a probability distribution over its entire vocabulary (32K-128K+ tokens), and the **decoding strategy** determines which token to actually select.
+
+> **Plain English:** "Autoregressive" just means the model always looks back at everything it's written so far before deciding what to write next — like how a human writer reads what they've written before continuing. The model doesn't plan ahead; it picks the best next word given everything before it, then repeats.
 
 ```mermaid
 graph LR
@@ -294,6 +316,11 @@ A sampling method that dynamically adjusts temperature/top-k to maintain a **tar
 ## Temperature
 
 Temperature is the most important sampling parameter. It **scales the logits** before softmax, controlling the sharpness of the probability distribution.
+
+> **Plain English:** Temperature is a single number (usually between 0 and 2) that controls how "creative" or "random" the model is. Think of it like a dial:
+> - Turn it to 0: the model always picks the single most likely next word. Completely deterministic — same input always gives same output. Great for factual tasks.
+> - Turn it to 1: the model picks according to its natural learned probabilities. Balanced.
+> - Turn it above 1: the model treats unlikely words as more equally valid, producing more unexpected/creative outputs — but also more likely to go off the rails.
 
 $$P(token_i) = \frac{e^{z_i / T}}{\sum_j e^{z_j / T}}$$
 

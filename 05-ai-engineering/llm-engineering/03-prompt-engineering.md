@@ -4,6 +4,24 @@ Designing effective prompts for LLMs — techniques, patterns, and best practice
 
 ---
 
+## The Big Picture
+
+**What is prompt engineering, in plain English?**
+
+A prompt is everything you send to the model — your instructions, your examples, your context. Prompt engineering is the practice of crafting those inputs to get the best possible outputs. It's part science (there are proven techniques), part art (good judgment about what the model needs).
+
+**Real-world analogy:** Think of an LLM as an incredibly knowledgeable contractor you've just hired. They're brilliant, but they interpret instructions literally. If you say "make it better," they might make it worse — because "better" is ambiguous. If you say "rewrite this in a professional tone, under 200 words, for a non-technical executive audience," they'll nail it. Prompt engineering is the skill of writing briefs that a literal-minded genius can execute perfectly.
+
+**The fundamental insight:** The model is already capable — your job isn't to unlock hidden capabilities, it's to communicate your needs clearly. Better prompts = better results from the same model, at no extra cost.
+
+**Why it matters:**
+- Prompting is 10× faster to iterate than fine-tuning — you can test a new approach in minutes
+- A well-engineered prompt on GPT-4o can outperform a poorly-prompted GPT-5
+- Most production LLM failures are prompt failures, not model failures
+- Understanding prompting helps you know *when* to reach for fine-tuning instead
+
+---
+
 ## Why Prompt Engineering Matters
 
 The prompt is the **primary interface** to an LLM. The same model can produce wildly different outputs depending on how you phrase the request. Prompt engineering is the systematic practice of designing inputs that maximize output quality for your specific task.
@@ -135,6 +153,8 @@ Sentiment:"""
 
 Ask the model to show its reasoning step by step before giving the final answer. This dramatically improves accuracy on reasoning-heavy tasks.
 
+> **Plain English:** When you ask a smart person a hard math problem, you get a better answer if you ask them to "show their work" rather than just blurt out a number. Same with LLMs. The act of writing out intermediate steps forces the model to allocate more computation to the problem — and it can catch its own mistakes along the way. This is one of the most reliable techniques in all of prompt engineering.
+
 ```python
 # Without CoT
 prompt = """If a train travels at 60 mph for 2.5 hours, then at 80 mph for 1.5 hours, what's the total distance?
@@ -170,6 +190,8 @@ Let's think step by step."""
 ### Self-Consistency
 
 Generate multiple CoT reasoning paths and take the **majority vote** on the final answer. This reduces the impact of any single flawed reasoning chain.
+
+> **Plain English:** Like asking three smart friends to independently solve a math problem, then going with whichever answer at least two of them agree on. Individual reasoning can go wrong; consensus across multiple independent reasoning attempts is much more reliable. The tradeoff is cost — you're making 3-5 API calls per question instead of 1.
 
 ```python
 from openai import OpenAI

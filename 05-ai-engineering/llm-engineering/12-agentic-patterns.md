@@ -6,6 +6,31 @@ Design patterns for building autonomous LLM agents — reasoning strategies, mul
 
 ---
 
+## The Big Picture
+
+**What are agentic patterns, in plain English?**
+
+Just like software engineering has design patterns (Observer, Factory, Singleton) — reusable solutions to recurring problems — AI agent engineering has its own patterns. These are battle-tested blueprints for *how an agent should think and act* in different situations.
+
+**Real-world analogy:** When a detective solves a case, they don't make up a completely new method each time. They follow proven approaches: gather evidence, form a hypothesis, test it, revise. Agentic patterns are like detective methodologies — structured approaches to problem-solving that work reliably across many different cases.
+
+**Why patterns matter:**
+- Without patterns, agents tend to get stuck in loops, make random decisions, or forget what they're doing
+- Patterns give agents a structured way to make progress even on complex multi-step problems
+- Different patterns suit different types of tasks — choosing the right one matters
+
+**The main patterns at a glance:**
+
+| Pattern | In one sentence | Best for |
+|---------|-----------------|----------|
+| **ReAct** | Think → Act → Observe → Think → ... | Most tasks; the default starting point |
+| **Plan-and-Solve** | Make a full plan first, then execute | Complex tasks with many steps |
+| **Reflection** | Do it, then critique your own work | Tasks needing high accuracy |
+| **Supervisor** | One agent assigns work to specialist agents | Large tasks that benefit from parallelism |
+| **Debate** | Multiple agents argue and critique each other | High-stakes decisions needing diverse perspectives |
+
+---
+
 ## Single-Agent Patterns
 
 ### ReAct (Reason + Act)

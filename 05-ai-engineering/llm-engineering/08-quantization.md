@@ -4,6 +4,30 @@ Reducing model precision to optimize inference speed, memory, and cost — run l
 
 ---
 
+## The Big Picture
+
+**What is quantization, in plain English?**
+
+Every number in a neural network is stored with a certain level of precision. Full precision (FP32) stores each number with 32 bits — very accurate, very large. Quantization reduces how many bits are used to store each number: 16 bits (half as large), 8 bits (quarter), or even 4 bits (one-eighth). Less memory means you can run bigger models on smaller hardware — and it's often faster too.
+
+**Real-world analogy:** Imagine a recipe that calls for 2.4376 cups of flour. That's 32-bit precision — very exact. But "2.5 cups" (8-bit, roughly) works fine in practice; the bread still tastes good. And "2 cups" (4-bit) might be slightly different, but still edible. Quantization asks: "How much rounding can we do before the model's outputs noticeably degrade?" The answer is: a lot more than you'd expect.
+
+**The killer use case — running large models locally:**
+
+Without quantization, a 70B-parameter model requires ~140GB of VRAM (two $10,000 A100 GPUs). With 4-bit quantization, it fits on a single $2,500 consumer GPU (RTX 4090). This has democratized access to powerful models.
+
+**Memory savings at a glance:**
+
+| Model Size | FP16 (no quantization) | INT8 (8-bit) | INT4 (4-bit) |
+|------------|----------------------|--------------|--------------|
+| 7B params  | ~14 GB               | ~7 GB        | ~3.5 GB      |
+| 13B params | ~26 GB               | ~13 GB       | ~6.5 GB      |
+| 70B params | ~140 GB              | ~70 GB       | ~35 GB       |
+
+**Quality tradeoff:** 4-bit quantization typically loses less than 1-2% on standard benchmarks for models ≥7B. Smaller models are more sensitive to quantization precision loss.
+
+---
+
 ## Why Quantize
 
 LLMs are enormous. A 70B-parameter model in FP16 requires ~140GB of VRAM just to load the weights — that's two A100 80GB GPUs minimum, before accounting for KV-cache, activations, or batch processing. Quantization makes these models accessible.
@@ -71,6 +95,8 @@ llm = LLM(
 ---
 
 ## The Math Behind Quantization
+
+> **Plain English:** At the simplest level, quantization is just rounding. You have numbers like 2.4376, and you round them to 2.5 or 2 to save space. The math below formalizes this: how do you choose the best "grid" to round to, so you minimize the error introduced by rounding? The scale (Δ) controls how fine-grained the grid is.
 
 ### Uniform (Linear) Quantization
 
@@ -150,6 +176,8 @@ With group_size=128: Each group of 128 weights has its own scale
 
 ## Quantization Methods
 
+> **Plain English overview:** There are two main schools of thought for quantization: (1) Do it *after* training, without touching the training process (Post-Training Quantization / PTQ). (2) Build awareness of quantization *into* the training process (Quantization-Aware Training / QAT). PTQ is far more practical because you can apply it to any existing model without retraining.
+
 ### Post-Training Quantization (PTQ)
 
 Quantize a pre-trained model **after** training with no retraining needed. This is the most common approach.
@@ -157,6 +185,8 @@ Quantize a pre-trained model **after** training with no retraining needed. This 
 #### GPTQ (GPU-optimized)
 
 One-shot weight quantization using a small calibration dataset. Uses the **inverse Hessian** to determine which weights are most important and quantizes them with minimal error.
+
+> **Plain English:** GPTQ is smart rounding. Instead of just rounding every weight independently, it looks at how sensitive the model's outputs are to changes in each weight (using a bit of calculus called the Hessian). Weights the model is very sensitive to get rounded more carefully; less-important weights can be rounded more aggressively. The result: better quality at the same bit width compared to naive rounding. This takes 30 min to a few hours to run on a calibration dataset, but the resulting quantized model is ready to use.
 
 **How GPTQ works:**
 1. Select a small calibration dataset (128-256 samples)

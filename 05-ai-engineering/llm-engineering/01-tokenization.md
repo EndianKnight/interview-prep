@@ -4,9 +4,32 @@ Breaking text into tokens for LLMs — the first step in any language model pipe
 
 ---
 
+## The Big Picture
+
+**What is tokenization, in plain English?**
+
+LLMs don't read text the way humans do — they never actually see letters or words. Before any text reaches the model, it gets converted into a sequence of integers (numbers). Each integer represents a "token" — a chunk of text that could be a whole word, part of a word, or even a single character.
+
+**Real-world analogy:** Think of tokens like LEGO bricks. When you build something out of LEGO, you don't see the final sculpture — you see individual bricks snapping together. Tokenization is the process of breaking a sentence into its LEGO bricks (tokens) and giving each brick a catalog number. The AI only ever sees the catalog numbers, not the original text.
+
+**Why should you care?**
+
+- You pay API providers **per token**, not per word or per character — understanding tokenization directly affects your bill
+- Models have a **maximum token limit** (context window) — knowing how text tokenizes tells you how much fits
+- Some surprising behaviors — like why Claude can't count letters in "strawberry", or why math is hard for LLMs — are explained entirely by how tokenization works
+- Non-English languages often cost **2-10× more tokens** for the same meaning
+
+**Common misconceptions:**
+- "1 token = 1 word" — FALSE. Common English words are often 1 token, but many words split into 2-3 tokens. "unhappiness" → `["un", "happi", "ness"]` (3 tokens).
+- "Tokens are the same across all models" — FALSE. GPT-4 and LLaMA-3 use different tokenizers, so the same text produces different token counts and costs.
+
+---
+
 ## Why Tokenization Matters
 
 LLMs don't see text — they see sequences of integer token IDs. Tokenization is the bridge between human-readable text and the numerical representation the model processes.
+
+> **Plain English:** Imagine you're sending a message to someone who only understands numbers. You'd need a codebook that maps each word to a number. Tokenization is building and using that codebook — but instead of whole words, it maps chunks of text (subwords) to numbers, which gives a better balance between vocabulary size and coverage.
 
 Every aspect of LLM behavior is affected by tokenization:
 - **Cost** — API providers bill per token; efficient tokenization directly reduces cost
@@ -27,9 +50,13 @@ graph LR
 
 ## Tokenization Algorithms
 
+> **Plain English:** There are several strategies for deciding how to split text into tokens. They all try to answer the same question: "What's the best set of building blocks to represent all possible text?" The goal is a vocabulary of manageable size (32K–128K tokens) that covers common words as single tokens while still handling rare words by breaking them into familiar pieces.
+
 ### Byte Pair Encoding (BPE)
 
-The most widely used algorithm in modern LLMs. BPE starts with individual characters (or bytes) and iteratively merges the most frequent adjacent pair into a new token.
+The most widely used algorithm in modern LLMs (GPT-4, LLaMA, Claude all use it). BPE starts with individual characters (or bytes) and iteratively merges the most frequent adjacent pair into a new token.
+
+> **Plain English analogy:** Imagine you're writing a shorthand dictionary. You start by writing out every letter individually. Then you notice "th" appears constantly in English, so you create a shorthand symbol for "th". Then you notice "the" is even more common, so you create one for "the". You keep merging the most-common pairs until your dictionary is a useful size. BPE does exactly this, but on training text instead of your notes.
 
 **Training algorithm:**
 
@@ -522,6 +549,8 @@ print(encoded.tokens)
 ---
 
 ## Tokenization Pitfalls
+
+> **Plain English:** Tokenization causes some genuinely surprising behaviors that confuse even experienced developers. These aren't bugs — they're consequences of how the system works.
 
 ### The Glitch Token Problem
 

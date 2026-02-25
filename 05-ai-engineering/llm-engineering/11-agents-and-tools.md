@@ -4,6 +4,40 @@ Building autonomous AI agents — architectures, reasoning loops, memory, planni
 
 ---
 
+## The Big Picture
+
+**What is an AI agent, in plain English?**
+
+Most people's experience with LLMs is: you type a message, the model responds. Done. An **agent** is different: you give it a *goal*, and it figures out the steps to achieve that goal on its own — writing code, searching the web, reading files, running tests, correcting mistakes — until the goal is accomplished.
+
+**Real-world analogy:**
+- A **chatbot** is like calling a hotline and asking a question. You get an answer.
+- An **agent** is like hiring a capable intern and saying "research our top 10 competitors and write a report." They go off, spend an hour doing research, come back, and hand you a finished report — you didn't supervise every step.
+
+**The key difference — who's in the driver's seat:**
+- Chatbot: Human decides every next action ("now search for X", "now summarize Y")
+- Agent: The AI decides its own next actions, executes them, checks the results, and adapts
+
+**A concrete example:**
+> User: "Find all Python files in my repo that import 'requests' and check if they handle timeouts properly."
+
+A chatbot would say: "I can't access your files, but here's how you'd check..."
+
+An agent would:
+1. Use a tool to list all Python files in your repository
+2. Search each file for `import requests`
+3. Read the relevant files
+4. Check for timeout patterns in each requests call
+5. Write a summary of which files are missing timeout handling
+
+**What makes agents hard:**
+- They can take wrong paths and get stuck (need error recovery)
+- Long tasks burn a lot of tokens (costs add up)
+- They can cause real-world side effects (deleting files, sending emails)
+- Debugging an agent's reasoning is harder than debugging regular code
+
+---
+
 ## What Are AI Agents
 
 An AI agent is an LLM that can **reason, plan, and take actions** autonomously to achieve a goal. Unlike simple chatbots that respond to individual prompts, agents operate in a loop: observe, think, act, observe the result, and repeat.
@@ -29,6 +63,8 @@ graph TD
 ---
 
 ## Agent Loop Architecture
+
+> **Plain English:** The "agent loop" is the heartbeat of any agent. It's a simple cycle: look at the current state → decide what to do next → do it → look at the result → repeat. The agent keeps looping until it either completes the task or hits a maximum step limit. Without this loop, you just have a chatbot; with it, you have an agent that can work through multi-step problems autonomously.
 
 ### The Core Loop
 

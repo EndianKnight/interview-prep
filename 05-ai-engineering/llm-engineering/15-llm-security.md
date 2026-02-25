@@ -4,6 +4,51 @@ Threats, vulnerabilities, and defenses for LLM-powered applications — prompt i
 
 ---
 
+## The Big Picture
+
+**What is LLM security, in plain English?**
+
+LLMs process free-form natural language, which means the "input validation" problem that's relatively well-understood in traditional software (you know what format to expect) becomes fundamentally open-ended. Attackers can manipulate an LLM's behavior just by crafting specific text — no code execution required. This creates entirely new categories of vulnerabilities.
+
+**Real-world analogy:**
+- **Traditional software security:** Like a bank vault with combination locks. The attacker needs to know the right numbers.
+- **LLM security:** Like a bank vault guarded by a very persuadable human. The attacker just needs to say the right words to convince the guard to open it. The guard is smart and well-trained, but susceptible to clever social engineering.
+
+**The new attack surface LLMs create:**
+
+```
+Traditional App           LLM-Powered App
+─────────────────────     ─────────────────────────────────────
+Input: structured data    Input: arbitrary natural language
+Validation: schema check  Validation: model judgment (fallible)
+Attacker: needs code      Attacker: just needs words
+Attack: SQL injection     Attack: prompt injection
+Defense: parameterized    Defense: much harder (language is open)
+```
+
+**Why this matters for developers:**
+- If your app lets users type anything that reaches the LLM, you have an attack surface
+- If the LLM has access to tools (databases, APIs, email), a compromised model can cause real damage
+- If you store secrets in the system prompt, assume they can be extracted
+- These aren't theoretical — prompt injection attacks have been demonstrated on real production systems (Bing Chat, GPT plugins, etc.)
+
+**The OWASP LLM Top 10 (quick reference):**
+
+| Rank | Vulnerability | One-line explanation |
+|------|--------------|----------------------|
+| LLM01 | **Prompt Injection** | Attacker hijacks model behavior via crafted text |
+| LLM02 | **Insecure Output Handling** | Model output trusted and executed without validation |
+| LLM03 | **Training Data Poisoning** | Malicious data in training corrupts model behavior |
+| LLM04 | **Model Denial of Service** | Resource exhaustion via expensive queries |
+| LLM05 | **Supply Chain Vulnerabilities** | Compromised models/plugins in the pipeline |
+| LLM06 | **Sensitive Information Disclosure** | Model reveals confidential training data or system prompts |
+| LLM07 | **Insecure Plugin Design** | LLM plugins with excessive permissions |
+| LLM08 | **Excessive Agency** | LLM takes unintended actions with real-world consequences |
+| LLM09 | **Overreliance** | Treating model output as ground truth without verification |
+| LLM10 | **Model Theft** | Extracting model behavior/weights through repeated queries |
+
+---
+
 ## Why LLM Security Matters
 
 LLMs introduce a fundamentally new attack surface. Unlike traditional software where inputs follow strict schemas, LLMs process **natural language** — making input validation inherently difficult. Attackers can manipulate model behavior through carefully crafted text.
@@ -36,6 +81,10 @@ graph TD
 ---
 
 ## Prompt Injection
+
+> **Plain English:** Prompt injection is the LLM equivalent of SQL injection. In SQL injection, an attacker puts SQL commands inside a text field (like a username box) and tricks the database into executing them. In prompt injection, an attacker puts instructions inside user-controlled text (like a chat message, a document the model reads, or a webpage it visits) and tricks the LLM into following those instructions instead of the developer's instructions.
+>
+> The fundamental problem: LLMs treat all text as text — they can't cryptographically distinguish "developer instructions I should obey" from "user input I should just process." Sophisticated models are resistant but not immune.
 
 ### Direct Prompt Injection
 

@@ -4,6 +4,41 @@ Neural network architectures, training techniques, and the mathematical intuitio
 
 ---
 
+## The Big Picture
+
+**What is deep learning, in plain English?**
+
+Deep learning is a type of machine learning that uses **neural networks** — mathematical structures loosely inspired by how the brain works — with many layers stacked on top of each other. The "deep" in deep learning refers to these many layers.
+
+**Real-world analogy:** Imagine a factory assembly line for recognizing cat photos:
+- **Layer 1** detects simple edges and color patches (very raw)
+- **Layer 2** combines edges into shapes (curves, circles, pointy ears)
+- **Layer 3** combines shapes into parts (eyes, nose, ears)
+- **Layer 4** combines parts into objects ("cat face")
+
+Each layer builds on the previous one, learning increasingly abstract concepts. You never tell it what edges or shapes are — it discovers these representations automatically from data.
+
+**Why "deep" networks are powerful:**
+- More layers = model can represent more complex functions
+- Each layer learns features automatically — no manual feature engineering needed
+- The same framework (stacked layers + backprop) works for images, text, audio, video
+
+**The universal recipe for training a deep network:**
+1. Initialize weights randomly
+2. Pass a batch of data through (forward pass) → get predictions
+3. Calculate how wrong the predictions are (loss function)
+4. Work backwards through the network calculating how much each weight contributed to the error (backpropagation)
+5. Nudge every weight slightly in the direction that reduces error (gradient descent)
+6. Repeat millions of times
+
+**Key terms you'll see everywhere:**
+- **Parameters/weights** — the numbers the network learns (a 7B-param model has 7 billion of these)
+- **Epoch** — one full pass through the entire training dataset
+- **Batch** — a small subset of data processed together (typically 32-256 examples)
+- **Learning rate** — how big a step to take when updating weights (too big = overshoots; too small = too slow)
+
+---
+
 ## Neural Network Fundamentals
 
 ### Perceptron to MLP
@@ -136,6 +171,10 @@ loss = criterion_triplet(anchor_embed, positive_embed, negative_embed)
 
 Backprop computes gradients of the loss with respect to every parameter using the **chain rule** on the computational graph.
 
+> **Plain English:** Backpropagation is the algorithm that teaches the network what it got wrong and by how much. After a forward pass produces a wrong answer, backprop works backwards through the network, calculating "how much did each weight contribute to this error?" using calculus (the chain rule). Then each weight gets nudged slightly in the direction that would have reduced the error. It's like rewinding a disaster movie and figuring out which domino caused the chain reaction — then moving that domino slightly.
+>
+> The good news: in practice, you never implement backprop manually. PyTorch and TensorFlow do it for you automatically with `.backward()`.
+
 ```mermaid
 graph LR
     x["x"] --> z1["z1 = W1*x + b1"]
@@ -178,6 +217,8 @@ optimizer.step()             # Update parameters
 ### Vanishing and Exploding Gradients
 
 During backprop, gradients are **multiplied** through layers. In deep networks:
+
+> **Plain English:** When backpropagation flows through many layers, it's like a game of telephone — the signal can get too weak (vanish) or amplify out of control (explode). Vanishing gradients: early layers stop learning because their gradient signal is essentially zero by the time it reaches them. Exploding gradients: weights oscillate wildly because the gradient gets amplified at each layer. These problems plagued deep networks in the 1990s-2000s and are why ReLU, batch normalization, and skip connections (ResNet) were such important inventions.
 
 - **Vanishing gradients:** If gradients < 1 at each layer, they shrink exponentially toward zero. Deep layers learn, but early layers barely update. Common with sigmoid/tanh activations.
 - **Exploding gradients:** If gradients > 1 at each layer, they grow exponentially. Weights oscillate wildly, loss becomes NaN.
@@ -231,9 +272,13 @@ nn.init.xavier_normal_(layer.weight)
 
 ## Core Architectures
 
+> **Plain English:** Different types of data have different structure, and different neural network architectures exploit that structure. CNNs exploit the spatial structure of images. RNNs/LSTMs exploit the sequential structure of text and time series. Transformers (covered separately) exploit relationships between all positions simultaneously. Choosing the right architecture for your data type is critical.
+
 ### Convolutional Neural Networks (CNNs)
 
 CNNs exploit **spatial locality** and **translation invariance** through learned convolutional filters.
+
+> **Plain English:** A CNN learns "filters" — small patterns like "diagonal edge going right" or "red-green gradient." It slides each filter across the entire image looking for where that pattern appears. This is efficient because the same filter works anywhere in the image (a cat ear looks the same in the top-left or bottom-right corner). Early layers detect simple patterns; deeper layers combine them into complex features. By 2012, CNNs revolutionized image recognition by reducing error rates by 40% compared to hand-crafted methods.
 
 ```mermaid
 graph LR
@@ -307,6 +352,8 @@ class SimpleCNN(nn.Module):
 ### RNNs, LSTMs, and GRUs
 
 **Recurrent Neural Networks** process sequential data by maintaining a hidden state across time steps.
+
+> **Plain English:** When processing a sentence, you need memory — the word "bank" means something different depending on the words before it. RNNs handle this by passing a "memory state" from one word to the next. But vanilla RNNs have terrible long-term memory (early words get forgotten by the time you reach the end of a long sentence). LSTMs solve this with a more sophisticated memory system — think of it as a regular notepad (hidden state) plus a long-term whiteboard (cell state) with gating mechanisms that decide what to write down, what to erase, and what to output. Transformers (2017) largely replaced RNNs for NLP, but LSTMs are still useful for time-series data where sequence length is manageable.
 
 **Vanilla RNN:**
 
@@ -440,6 +487,8 @@ def vae_loss(x_recon, x, mu, logvar):
 
 Two networks compete: a **generator** creates fake data, and a **discriminator** tries to distinguish real from fake.
 
+> **Plain English:** GANs work like an art forger vs. an art detective. The forger (generator) tries to create fake paintings that fool the detective (discriminator). The detective tries to distinguish real paintings from fakes. Both get better at their job over time because they're constantly competing. Eventually the forger becomes so good that its fakes are indistinguishable from real art. GANs were the dominant image generation technique before diffusion models took over — they powered deepfakes, StyleGAN face generation, and image-to-image translation.
+
 ```mermaid
 graph LR
     Z["Random Noise z<br/>~ N(0, I)"] --> G["Generator G"]
@@ -513,9 +562,13 @@ for real_imgs in dataloader:
 
 ## Training Techniques
 
+> **Plain English:** These are practical tricks that make neural networks train faster, more reliably, and generalize better. They're not optional extras — modern networks would fail to train properly without most of them. Batch normalization, dropout, and good learning rate schedules are as important as the network architecture itself.
+
 ### Batch Normalization
 
 Normalizes activations within a mini-batch to have zero mean and unit variance, then applies a learnable scale and shift:
+
+> **Plain English:** Without normalization, values flowing through the network can become very large or very small, making training unstable. Batch norm is like a "reset to zero" at each layer — it standardizes the activations so each layer always receives inputs in a healthy range. Side effects: faster training, acts as a regularizer, allows higher learning rates. Think of it like a volume normalizer that ensures the signal level is always in a useful range regardless of what went before.
 
 $$\hat{x}_i = \frac{x_i - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}, \quad y_i = \gamma \hat{x}_i + \beta$$
 
@@ -695,6 +748,10 @@ train_transform = transforms.Compose([
 ## Transfer Learning
 
 Use a model pre-trained on a large dataset and adapt it to your task. This is the dominant paradigm in modern deep learning.
+
+> **Plain English:** Training a model from scratch on a small dataset almost always produces poor results — there's just not enough data to learn good representations. But a model pre-trained on millions of images has already learned to detect edges, textures, shapes, and objects. Transfer learning takes that knowledge and adapts it for your specific task. It's like hiring an expert photographer to take real estate photos, rather than training someone who's never held a camera.
+>
+> In practice: use someone else's pre-trained model → replace the last layer with one sized for your task → train on your data (either just the new layer, or the whole network at a very small learning rate). This works remarkably well even with only a few hundred examples.
 
 ```mermaid
 graph TD

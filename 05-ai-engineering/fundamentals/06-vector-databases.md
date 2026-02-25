@@ -4,6 +4,33 @@ Specialized databases for storing and querying high-dimensional vectors — the 
 
 ---
 
+## The Big Picture
+
+**What are vector databases, in plain English?**
+
+After converting your documents into embeddings (lists of ~1000 numbers each), you need a fast way to answer: "Given this query vector, which of my 10 million stored vectors is most similar?" A regular database can't do this efficiently — it would have to compare every document against the query, one by one.
+
+**Real-world analogy:** Imagine a library with 10 million books. A traditional library catalog lets you search by title, author, or ISBN (exact matches). A vector database lets you say "find me books that feel similar to Harry Potter" — it searches by semantic content rather than exact keywords.
+
+**The core problem:** Brute-force comparison (check every vector) is too slow at scale:
+- 10 million documents × 1536 dimensions × comparison cost = billions of operations per query
+- This would take seconds per query — unusable for real applications
+
+**The solution — Approximate Nearest Neighbor (ANN):** Instead of finding the *exact* nearest neighbor (slow), find an *approximate* nearest neighbor that's fast. In practice, ANN returns 95-99% of the true nearest neighbors at 100-1000× the speed. For most applications, this is more than accurate enough.
+
+**Where vector databases fit in your stack:**
+```
+User Query → Embedding Model → Query Vector
+                                    ↓
+              Vector DB ← Document Embeddings (pre-computed)
+                    ↓
+              Top-K Similar Documents
+                    ↓
+              LLM + Documents → Answer (RAG)
+```
+
+---
+
 ## Why Vector Databases
 
 Traditional databases index data by exact values (B-trees, hash indexes). They answer "find rows where `id = 42`" efficiently, but cannot answer "find the 10 most similar items to this query" when items are represented as 768-dimensional embedding vectors. A brute-force scan comparing the query against every vector is $O(n \cdot d)$ — unusable at scale.

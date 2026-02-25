@@ -4,6 +4,38 @@ LLMs that process and generate beyond text — images, audio, video, and cross-m
 
 ---
 
+## The Big Picture
+
+**What are multimodal models, in plain English?**
+
+Early language models could only handle text — you type words, they respond with words. **Multimodal models** break that limitation: they can understand and generate text, images, audio, and video. "Multi-modal" just means "multiple types of data" (modes).
+
+**Real-world analogy:** Think about how humans communicate. We don't just use words — we look at pictures, listen to sounds, watch videos. A truly capable AI assistant should be able to do the same: look at a photo of a broken machine and explain what's wrong, listen to audio and transcribe it, watch a video and summarize it, read a diagram and answer questions about it.
+
+**What each modality enables:**
+
+| Modality | Input examples | Output examples |
+|----------|---------------|-----------------|
+| **Text** | Questions, instructions | Answers, code, essays |
+| **Images** | Photos, screenshots, diagrams | Descriptions, analysis, extracted data |
+| **Audio** | Voice, music, sounds | Transcripts, translations, text summaries |
+| **Video** | Recordings, screen captures | Summaries, action descriptions, Q&A |
+
+**Real-world applications this unlocks:**
+- Upload a screenshot of an error and ask "what's wrong?" → model reads the screenshot
+- Take a photo of a food label and ask about nutritional content
+- Record a meeting and get a transcript + summary
+- Ask "what's in this chart?" about a PNG of a graph in a PDF
+- Build voice assistants that can both hear and respond in speech
+
+**Key models (as of 2024–2025):**
+- **GPT-4o** — text + images in, text out; native audio in/out
+- **Claude 3.5 Sonnet** — text + images in, text out (excellent at document/diagram understanding)
+- **Gemini 1.5 Pro** — text + images + audio + video in; up to 2M token context
+- **Whisper** — audio → text (open source, runs locally)
+
+---
+
 ## What Are Multimodal Models
 
 Multimodal models process **multiple types of input** (text, images, audio, video) and can often **generate** multiple modalities as output. They extend language models beyond text-only capabilities.

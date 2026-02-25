@@ -4,6 +4,30 @@ An open standard for connecting LLMs to external data sources and tools — Anth
 
 ---
 
+## The Big Picture
+
+**What is MCP, in plain English?**
+
+Before MCP, if you wanted to connect your AI assistant to GitHub, Slack, your database, and your file system, you'd need to write four separate, custom integrations — and repeat that work for every AI app that needed those same connections. **MCP** is a standard protocol that solves this once and for all: build the integration once as an MCP server, and any MCP-compatible AI app can use it.
+
+**Real-world analogy:** Think about phone chargers before USB-C. Every phone manufacturer had their own proprietary connector — iPhone had Lightning, Samsung had micro-USB, etc. When USB-C became the standard, you suddenly only needed one cable that worked with everything. MCP is USB-C for AI tool integrations.
+
+**The before/after:**
+
+| Before MCP | With MCP |
+|-----------|----------|
+| Each AI app builds its own GitHub integration | One GitHub MCP server, used by all AI apps |
+| Integration code is tightly coupled to the AI app | MCP server is reusable and app-agnostic |
+| Changing AI providers means rebuilding integrations | Switch AI providers; MCP servers still work |
+| Each developer reinvents the same integrations | Growing ecosystem of pre-built MCP servers |
+
+**Who should care:**
+- **App builders:** Instead of writing custom tool integrations, install community MCP servers
+- **Platform/tool owners:** Build one MCP server and every AI app automatically gets your integration
+- **Enterprises:** Standardize how AI accesses internal systems with one security model
+
+---
+
 ## What is MCP
 
 The **Model Context Protocol (MCP)** is an open standard created by Anthropic that defines how LLM applications connect to external data sources, tools, and services. Think of it as a **universal adapter** — instead of building custom integrations for every tool, you build one MCP server and any MCP-compatible client can use it.
@@ -67,6 +91,11 @@ graph LR
 | **Tools** | Model decides when to call | Actions and computations | `run_query`, `create_file` |
 | **Resources** | Application/user selects | Read-only data access | File contents, DB schemas |
 | **Prompts** | User selects | Reusable prompt templates | Code review template |
+
+> **Plain English breakdown of the three primitives:**
+> - **Tools** are things the AI can *do* — like calling a function in your code. The AI autonomously decides when to use them based on the conversation. Example: "search GitHub for issues tagged 'bug'"
+> - **Resources** are things the AI can *read* — like reading a file or database schema. Your application decides what to expose. Example: making the current project's README available
+> - **Prompts** are pre-written instruction templates that users can trigger. Example: a "code review" template that automatically sets up the right context for reviewing code
 
 ---
 

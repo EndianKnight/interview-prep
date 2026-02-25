@@ -4,6 +4,26 @@ Forcing LLMs to produce machine-parseable output — JSON, XML, function calls, 
 
 ---
 
+## The Big Picture
+
+**What is structured output, in plain English?**
+
+LLMs naturally produce free-form text — they write like humans. That's great for conversations, but most real applications need data in a predictable shape: a database row, a JSON object, a filled-in form. Structured output techniques force the model to produce data in an exact format your code can reliably parse and use.
+
+**Real-world analogy:** Imagine you're hiring a researcher to fill out a form for you. If you say "write me a report on Alice," you'll get a nicely written essay — but you can't easily extract her age and email into a spreadsheet. If you hand them a *form* with labeled fields ("Name: ___", "Age: ___", "Email: ___"), you get exactly the data you need in exactly the structure you need. Structured output is giving the LLM a form to fill in instead of a blank page.
+
+**Why does reliability matter so much?**
+
+Naive approaches (just ask the model to "respond in JSON") work ~80% of the time. In production, a 20% failure rate means 1 in 5 requests crash your application. Production systems need 99%+ reliability. The techniques in this guide get you there.
+
+**Quick-pick guide:**
+- Using OpenAI? → Use **Structured Outputs** (100% reliable, easiest)
+- Using Anthropic/Claude? → Use **tool use** to force a schema
+- Using a local model? → Use **Outlines** or **llama.cpp grammar mode**
+- Need multi-provider? → Use the **Instructor** library
+
+---
+
 ## Why Structured Output
 
 LLMs naturally produce free-form text, but production applications need **deterministically parseable output**. When an LLM response feeds into a pipeline — saving to a database, triggering API calls, updating a UI — you need guaranteed structure, not a string that "usually looks like JSON."
@@ -281,6 +301,8 @@ for partial_profile in profile_stream:
 ## Grammar-Guided Generation
 
 For local models, constrain generation at the token level using formal grammars.
+
+> **Plain English:** Instead of asking the model nicely to produce valid JSON and hoping it does, grammar-guided generation makes it *mathematically impossible* for the model to produce invalid output. At every single generation step, the system looks at what's been written so far, figures out which characters/tokens would still result in valid output, and blocks all other tokens from being generated. It's like a keyboard that literally won't let you type an invalid character — you can try all you want but the key does nothing.
 
 ### Outlines
 

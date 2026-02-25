@@ -4,6 +4,34 @@ Adapting pre-trained LLMs to specific tasks and domains — techniques, data pre
 
 ---
 
+## The Big Picture
+
+**What is fine-tuning, in plain English?**
+
+A pre-trained LLM (like GPT-4 or LLaMA) has learned from an enormous amount of general internet text. It knows a lot, but it doesn't know *your* domain deeply, and it might not follow *your* specific output format reliably. **Fine-tuning** is the process of taking that pre-trained model and training it further on your own specific examples — teaching it new behaviors, styles, or domain expertise.
+
+**Real-world analogy:** Think of the pre-trained model as a brilliant new hire fresh out of university. They know general principles. Fine-tuning is like their on-the-job training: you give them examples of the work you do, in the format you need, with the vocabulary you use. After enough examples, they "get it" — they respond like a specialist, not a generalist.
+
+**The crucial decision — Fine-tuning vs. RAG vs. Prompting:**
+
+Most engineers reach for fine-tuning too early. Here's when each approach is actually right:
+
+| Problem | Best solution | Why |
+|---------|---------------|-----|
+| Model doesn't know recent facts | RAG | Fine-tuning bakes in knowledge that goes stale |
+| Model doesn't know company data | RAG | Real-time retrieval keeps it current |
+| Model's output format is wrong | Prompting first, then fine-tuning | Try prompting examples first |
+| Model uses wrong tone/style consistently | Fine-tuning | Style is behavior, not knowledge |
+| Per-request cost is too high (too many few-shot examples) | Fine-tuning | Fine-tuned models need fewer prompt tokens |
+| Model produces consistently wrong domain terminology | Fine-tuning + RAG | Need both behavior change and knowledge |
+
+**The economics of fine-tuning:**
+- **Cost to fine-tune:** One-time training cost ($5–$500 depending on model and data size)
+- **Cost savings:** Fine-tuned models need shorter prompts (no in-context examples), reducing per-request token cost by 30–70%
+- **Break-even:** If you make >10,000 requests, fine-tuning usually pays for itself
+
+---
+
 ## Why Fine-Tune
 
 Fine-tuning modifies a pre-trained model's weights to improve performance on a specific task — teaching the model **new behavior** rather than just new knowledge (which RAG handles better).
@@ -47,6 +75,8 @@ Rarely used for LLMs due to cost. Used mainly for pre-training and continued pre
 ### LoRA (Low-Rank Adaptation)
 
 The most popular fine-tuning method. Instead of updating all weights, LoRA adds small **low-rank matrices** that are trained while the original weights are frozen.
+
+> **Plain English:** A 7B-parameter model has 7 billion numbers that define its behavior. Full fine-tuning would update all 7 billion — which requires enormous compute and memory. LoRA is a clever shortcut: instead of updating the full matrices, it trains tiny "adapter" matrices (typically 0.1–1% of the original size) that get added on top. The result: 90–95% of the quality of full fine-tuning at 1/100th the compute cost. It's like teaching someone new skills by adding notes in the margins of their existing knowledge, rather than rewriting their entire memory.
 
 ```
 Original weight matrix W (4096 × 4096):
@@ -160,6 +190,8 @@ model = get_peft_model(model, lora_config)
 ## Data Preparation
 
 Data quality is the most critical factor in fine-tuning success. "Garbage in, garbage out" applies strongly.
+
+> **Plain English:** Fine-tuning teaches the model by showing it many examples of "here's the input, here's the ideal output." The quality and relevance of those examples directly determines how good the fine-tuned model will be. A common mistake is gathering 10,000 mediocre examples when 500 excellent, carefully curated examples would produce a much better model. Think of it like teaching: a student learns more from 10 great worked examples than from 1,000 sloppy ones.
 
 ### Data Format
 

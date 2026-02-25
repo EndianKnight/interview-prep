@@ -4,6 +4,36 @@ Converting text, images, and audio into dense numerical vectors that capture sem
 
 ---
 
+## The Big Picture
+
+**What are embeddings, in plain English?**
+
+An embedding converts a word, sentence, image, or any piece of data into a list of numbers (a vector). The magic is in *how* those numbers are assigned — similar things get similar numbers, and the differences between numbers encode meaningful relationships.
+
+**Real-world analogy:** Imagine plotting countries on a map using only two numbers: latitude and longitude. Countries that are geographically similar (France, Belgium, Netherlands) end up close together. Countries far apart (Japan, Brazil) have very different coordinates. Embeddings do the same thing for meaning — words and sentences get "meaning coordinates" where closeness represents similar meaning.
+
+**The famous king-queen example:**
+```
+embedding("king") - embedding("man") + embedding("woman") ≈ embedding("queen")
+```
+This works! It means the embedding space encodes the concept of "royalty" and "gender" as geometric directions you can do arithmetic on. This kind of meaningful geometry emerges automatically from training on text.
+
+**Why embeddings matter so much:**
+- They're the universal interface between raw data and ML models — everything gets converted to vectors
+- Good embeddings capture relationships that raw data doesn't (TF-IDF doesn't know "cat" and "kitten" are related)
+- They're the foundation of RAG (retrieve by embedding similarity), semantic search, and recommendation systems
+- The quality of your embedding model directly determines the quality of your RAG system
+
+**Three generations of word embeddings:**
+
+| Generation | Examples | How they work | Limitation |
+|-----------|----------|---------------|-----------|
+| **Sparse** (1990s-2010s) | Bag-of-words, TF-IDF | Count word occurrences | No semantic meaning; "cat" and "kitten" are unrelated |
+| **Static dense** (2013-2018) | Word2Vec, GloVe | Each word gets one fixed vector | Same vector for "bank" in all contexts |
+| **Contextual** (2018-now) | BERT, sentence-transformers | Vector depends on surrounding context | More compute; "bank" gets different vectors in different sentences |
+
+---
+
 ## What Are Embeddings
 
 An **embedding** is a learned mapping from discrete or high-dimensional data (words, sentences, images) into a fixed-dimensional, continuous vector space where geometric relationships encode semantic relationships.
@@ -56,6 +86,8 @@ print(f"Dense dims: {dense.shape[1]}")
 ### Similarity Metrics
 
 Measuring how close two vectors are in embedding space is the core operation in retrieval, clustering, and classification.
+
+> **Plain English:** Once you have two vectors, you need to measure how similar they are. Cosine similarity is almost always the right choice for text embeddings — it measures the angle between two vectors, ignoring how long they are (magnitude). This is what you want: "I love dogs" and "I absolutely adore dogs" should be very similar regardless of sentence length or word choice.
 
 | Metric | Formula | Range | When to Use |
 |--------|---------|-------|-------------|

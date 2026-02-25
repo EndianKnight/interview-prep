@@ -4,6 +4,44 @@ Generative models that learn to denoise data — the foundation of modern image,
 
 ---
 
+## The Big Picture
+
+> **Plain English:** Diffusion models are the technology behind Stable Diffusion, DALL-E, Midjourney, and Sora. They generate images, videos, and audio from scratch by learning a surprisingly elegant trick: how to *undo* the process of adding noise to data.
+
+**The core idea — destruction and reconstruction:**
+
+Imagine taking a beautiful photograph and slowly covering it with TV static, one layer at a time, until you can't see the original at all — just noise. That's the **forward process**: a simple mathematical operation that gradually destroys the image over ~1,000 steps.
+
+Now imagine training a neural network to run that movie *backwards*: starting from pure noise, predict and remove a tiny bit of noise at each step, until a crisp image emerges. That's the **reverse process**, and that's what the model learns.
+
+```
+Forward process (destroy):    Clean Photo → Slightly Noisy → Very Noisy → Pure Static
+                                  x₀    →      x₁       →    x₅₀₀    →     x₁₀₀₀
+
+Reverse process (generate):   Pure Static → Less Noisy  → Almost Clear → New Image
+                                 x₁₀₀₀   →   x₉₉₉     →     x₁       →    x₀
+```
+
+**Why is this better than older approaches?**
+
+| Method | Analogy | Problem |
+|--------|---------|---------|
+| **GANs** (older) | Forger vs. detective — compete until indistinguishable | Training unstable, mode collapse (limited variety) |
+| **VAEs** (older) | Compress then decompress | Outputs often blurry |
+| **Diffusion** (current) | Learn to reverse destruction | Stable training, high quality, diverse outputs |
+
+**The three key components of Stable Diffusion (the most popular system):**
+
+1. **VAE** — compresses the image 8x into a smaller "latent" representation (diffusion happens here, not on full pixels — much cheaper)
+2. **U-Net / DiT** — the neural network that predicts how to denoise, guided by a text prompt via cross-attention
+3. **Text Encoder (CLIP/T5)** — converts your text prompt into numbers that guide the denoising
+
+**What makes this work in practice — Classifier-Free Guidance:**
+
+You run the denoiser twice: once with your prompt ("a cat on a beach"), once with no prompt at all. Then you amplify the *difference* between the two. This amplification is the "guidance scale" slider you've probably seen in image generators — higher values = more literal prompt-following but less variety.
+
+---
+
 ## Forward & Reverse Process
 
 The core idea: systematically destroy data by adding noise (forward process), then train a neural network to reverse the destruction (reverse process).
@@ -19,6 +57,8 @@ graph LR
 ```
 
 ### DDPM (Denoising Diffusion Probabilistic Models)
+
+> **Plain English:** DDPM is the original recipe. It defines the exact math for how to add noise step-by-step (forward) and how to train a neural network to remove it (reverse). The key insight is a mathematical shortcut: instead of stepping through all 1,000 noisy versions of an image during training, you can jump directly to any noise level in one formula. This makes training practical.
 
 The foundational paper (Ho et al., 2020) that made diffusion models practical.
 
@@ -91,6 +131,8 @@ def train_step(model, x_0, noise_scheduler):
 
 ## Key Architectures
 
+> **Plain English:** The "brain" doing the denoising is a neural network. Two main designs exist: U-Net (the original, CNN-based, looks like the letter U) and DiT (Diffusion Transformer, the newer approach that scales better). Think of U-Net as a specialist who zooms in on details before zooming back out; DiT is like a transformer (same family as ChatGPT) that sees the whole picture at once.
+
 ### U-Net (Original Backbone)
 
 The standard architecture for diffusion models. An encoder-decoder CNN with skip connections, augmented with attention layers and timestep conditioning.
@@ -143,6 +185,8 @@ graph TD
 
 ### Latent Diffusion (Stable Diffusion)
 
+> **Plain English:** Running diffusion directly on a 512×512 image means the neural network has to process ~786,000 numbers per image. Latent diffusion first uses a VAE (think of it as an image zipper) to compress the image 8x in each dimension, leaving just ~16,000 numbers. The diffusion model works in this compressed space, then the VAE unzips at the end. This is why Stable Diffusion can run on a consumer GPU — it's ~48x cheaper than pixel-space diffusion.
+
 Key insight: run the diffusion process in a compressed latent space rather than pixel space. This dramatically reduces compute.
 
 ```mermaid
@@ -165,6 +209,8 @@ graph LR
 **Why latent space?** A 512x512x3 image has ~786K values. The 64x64x4 latent has ~16K values — a **48x reduction** in the number of elements the diffusion model processes, with minimal perceptual loss thanks to the VAE.
 
 ### Classifier-Free Guidance (CFG)
+
+> **Plain English:** Imagine asking someone to draw a cat, then asking them to draw "anything at all," and amplifying the *difference* between the two drawings. CFG does exactly this. The model runs twice at inference: once following your prompt, once ignoring it. The guided result is: `(no-prompt output) + guidance_scale × (with-prompt output − no-prompt output)`. Higher guidance scale = the model "listens harder" to your prompt, but pushes toward the most stereotypical, saturated version of it.
 
 The single most important technique for controlling generation quality. Trains a single model that can be both conditional and unconditional by randomly dropping the conditioning during training.
 
@@ -201,6 +247,8 @@ def guided_sampling(model, x_t, t, text_embedding, guidance_scale=7.5):
 ---
 
 ## Samplers & Scheduling
+
+> **Plain English:** The original DDPM recipe requires 1,000 denoising steps to go from noise to image — too slow for practical use. Smarter "samplers" find shortcuts: instead of taking 1,000 tiny steps, they use calculus to take 20 big steps and arrive at nearly the same result. This is the difference between driving very slowly vs. taking the highway — same destination, much faster.
 
 ### Sampler Comparison
 
@@ -270,6 +318,8 @@ The noise schedule $\beta_t$ controls how quickly noise is added during the forw
 
 ## Conditioning
 
+> **Plain English:** "Conditioning" means giving the diffusion model extra information to guide *what* it generates. Text prompts, reference images, edge maps, and depth maps are all forms of conditioning. Without conditioning, the model generates random realistic images. With conditioning, it generates images that match your intent.
+
 ### Text-to-Image: CLIP Text Encoder + Cross-Attention
 
 The standard pipeline for injecting text prompts into the diffusion process.
@@ -301,6 +351,8 @@ Each spatial position in the latent attends to all text tokens, allowing the mod
 **Why T5?** CLIP's text encoder is trained on short image-caption pairs and struggles with complex compositional prompts. T5 is a full language model that better understands spatial relationships, counting, and attributes.
 
 ### ControlNet
+
+> **Plain English:** ControlNet lets you give the model a spatial blueprint — "put the person's arm exactly here." It works by making a trainable copy of part of the U-Net and connecting it via "zero convolution" layers (initially adding nothing). This clever initialization means the original model's quality is preserved while the copy gradually learns to follow the spatial guide. You can think of it as adding a GPS overlay to an artist who already knows how to draw.
 
 Adds spatial conditioning (edges, depth maps, pose skeletons) to a pretrained diffusion model **without retraining** the base model.
 
@@ -380,6 +432,8 @@ def img2img(model, scheduler, input_image, prompt_embedding, strength=0.75, num_
 
 ## Video & Audio Generation
 
+> **Plain English:** Generating video is image generation's harder sibling. It's not enough to generate each frame independently — adjacent frames need to be *consistent* (the cat can't teleport between frames). Video diffusion models add mechanisms to connect frames in time, so the model learns about motion and continuity, not just what things look like.
+
 ### Video Diffusion
 
 Video diffusion models extend image diffusion by adding **temporal attention layers** to handle the time dimension.
@@ -428,6 +482,8 @@ Diffusion models for audio typically operate on spectrograms (mel-spectrograms) 
 ---
 
 ## Inference Optimization
+
+> **Plain English:** Generating one image with the original DDPM sampler takes ~30 seconds. Production systems need images in under a second. Three levels of optimization: (1) smarter samplers that take fewer steps, (2) distilled models trained to skip steps entirely, and (3) systems-level tricks like half-precision math and compiled GPU kernels.
 
 Practical techniques for speeding up diffusion model inference in production.
 

@@ -4,6 +4,34 @@ Retrieval-Augmented Generation — grounding LLM outputs with external knowledge
 
 ---
 
+## The Big Picture
+
+**What is RAG, in plain English?**
+
+An LLM's knowledge is frozen at the moment it was trained. It can't know what happened after its training cutoff, and it doesn't know your company's private documents or your product's internal specs. **RAG** (Retrieval-Augmented Generation) solves this by giving the model a way to look things up before answering.
+
+**Real-world analogy:** Think of the difference between an open-book exam and a closed-book exam. In a closed-book exam, you can only use what's memorized — equivalent to a plain LLM. In an open-book exam, you can look things up in your notes and textbooks — equivalent to RAG. Open-book produces better, more accurate answers, especially for factual and specialized questions.
+
+**How it works in 3 steps:**
+
+1. **Build a searchable knowledge base** — take your documents (PDFs, wikis, emails, etc.), break them into small chunks, convert each chunk into a vector (a list of numbers that captures its meaning), and store them in a special database optimized for similarity search
+
+2. **When a user asks a question** — convert the question into the same kind of vector, find the most similar chunks in the database, and grab them
+
+3. **Generate a grounded answer** — pass the user's question AND the retrieved chunks to the LLM, letting it answer based on actual source material
+
+**When to use RAG vs alternatives:**
+
+| Situation | Solution |
+|-----------|----------|
+| Need up-to-date information | RAG (retrieval from live knowledge base) |
+| Need private/company knowledge | RAG |
+| Model keeps making things up | RAG (grounds answers in real sources) |
+| Need consistent output behavior/format | Fine-tuning |
+| Knowledge fits in the context window | Just put it in the prompt |
+
+---
+
 ## Why RAG
 
 LLMs have a fundamental limitation: their knowledge is frozen at training time. RAG solves this by **retrieving relevant information** from external sources and injecting it into the prompt before generation.
@@ -69,6 +97,8 @@ vectorstore = Chroma.from_documents(
 
 ### 2. Retrieval (Online)
 
+> **Plain English:** When a user asks a question, we convert it into a vector (the same kind of list of numbers the documents were converted to), then search the database for documents whose vectors are most "similar." Similarity here means the numbers point in the same direction in mathematical space — which corresponds to similar meaning in practice. The top results are the passages most likely to contain the answer.
+
 ```python
 # Basic similarity search
 results = vectorstore.similarity_search(
@@ -117,6 +147,8 @@ Answer (with citations):"""},
 ---
 
 ## Embedding Models
+
+> **Plain English:** An embedding model converts text into a list of numbers (a "vector") that captures the text's meaning. Similar texts get similar vectors. This is what enables "similarity search" — finding the documents most relevant to a question without needing to do keyword matching. Instead of searching for exact words, you're searching for semantic meaning. "How do I reset my password?" and "Forgot my login credentials" will produce similar vectors, even though they share no keywords.
 
 ### Comparison
 
@@ -202,9 +234,13 @@ LIMIT 5;
 
 ## Advanced Retrieval Strategies
 
+> **Plain English:** Basic RAG retrieves the most semantically similar chunks. But "most similar" doesn't always mean "most useful." These advanced strategies improve retrieval precision — each solving a different failure mode of naive similarity search.
+
 ### Hybrid Search (Dense + Sparse)
 
 Combine semantic (dense vector) and keyword (sparse/BM25) search:
+
+> **Plain English:** Vector (semantic) search is great at finding passages with *similar meaning*, even when the words are different. But it can miss exact technical terms like model names, error codes, or product numbers. Keyword search (BM25) is great at exact matches but misses synonyms and paraphrases. Hybrid search does both and combines the rankings — you get the best of both worlds.
 
 ```python
 from langchain.retrievers import EnsembleRetriever

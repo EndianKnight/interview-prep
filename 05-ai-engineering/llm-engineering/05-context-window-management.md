@@ -4,6 +4,42 @@ Strategies for working within and optimizing LLM context windows — chunking, s
 
 ---
 
+## The Big Picture
+
+**What is a context window, in plain English?**
+
+Every LLM has a hard limit on how much text it can process in one go — this is the **context window**. Everything the model "knows" during a conversation must fit inside this window: your instructions, the conversation history, any documents you've shared, and the response it's generating. Once you exceed the limit, the oldest content falls off — the model forgets it.
+
+**Real-world analogy:** Imagine hiring a brilliant consultant with one unusual quirk: they can only hold 384 pages of information in their head at any given time. You have a 2,000-page technical manual they need to answer questions about. You can't hand them the whole thing — you need smart strategies to give them the right 384 pages for each question. That's context window management.
+
+**The context window budget:**
+
+Think of it as a fixed budget you must allocate across competing needs:
+
+```
+┌─────────────────────────────────────────┐
+│ Total: 128,000 tokens                   │
+├─────────────────────────────────────────┤
+│ System prompt:          ~500 tokens     │
+│ Conversation history:   ~2,000 tokens   │
+│ Retrieved documents:    ~4,000 tokens   │
+│ Current user message:   ~200 tokens     │
+│ Reserved for output:    ~4,000 tokens   │
+├─────────────────────────────────────────┤
+│ Buffer/safety margin:   ~300 tokens     │
+│ Total used:             ~11,000 tokens  │
+│ Remaining available:    ~117,000 tokens │
+└─────────────────────────────────────────┘
+```
+
+**Why this matters:**
+- **Cost** — you pay per token, so every wasted token in the context costs money
+- **Quality** — research shows models pay less attention to content buried in the middle of long contexts (the "lost-in-the-middle" problem)
+- **Conversation length** — without management, long chat sessions eventually break
+- **Document Q&A** — most real documents are longer than any context window
+
+---
+
 ## Understanding Context Windows
 
 The context window is the maximum number of tokens an LLM can process in a single forward pass. Everything the model "knows" during a conversation must fit within this window — there's no persistent memory between API calls.
@@ -68,6 +104,8 @@ print(f"Available for content: {budget['available_for_content']:,} tokens (~{bud
 ## Chunking Strategies
 
 When documents exceed the context window, you need to chunk them.
+
+> **Plain English:** "Chunking" just means splitting a large document into smaller pieces. The key challenge is *how* to split — cutting in the wrong place can break a sentence mid-thought, losing meaning. The strategies below range from dumb-but-simple (fixed character count) to smart-and-complex (splitting at natural boundaries like paragraph breaks).
 
 ### Fixed-Size Chunking
 
@@ -481,6 +519,8 @@ class PersistentMemory:
 ## Lost-in-the-Middle Problem
 
 Research shows LLMs struggle to use information in the **middle** of long contexts — they attend most to the beginning and end.
+
+> **Plain English:** If you give a model a 50-page document and ask it a question, it pays the most attention to the first few pages and the last few pages. Information buried in the middle often gets ignored — even if it's the most relevant part. This is called the "lost-in-the-middle" problem, and it's been confirmed by multiple research papers. The fix is to be strategic about *where* you place important information in the prompt.
 
 ```
 Prompt position:    [Beginning ........ Middle ........ End]

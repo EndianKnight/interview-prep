@@ -4,6 +4,33 @@ The architecture behind modern AI — self-attention, multi-head attention, posi
 
 ---
 
+## The Big Picture
+
+**What are Transformers, in plain English?**
+
+Transformers are the neural network architecture behind essentially every modern AI system: GPT-4, Claude, Gemini, LLaMA, DALL-E, Whisper, AlphaFold. The key insight was **attention** — a mechanism that lets every position in a sequence look at every other position simultaneously to understand context.
+
+**Real-world analogy for attention:** Read this sentence: *"The trophy didn't fit in the suitcase because it was too big."*
+
+What does "it" refer to? The trophy. You know this because your brain automatically looked at "trophy," "suitcase," "too big" and worked out the relationship. You didn't read left-to-right linearly — you attended to the relevant words.
+
+Transformers do this mathematically. The attention mechanism lets each word ask "which other words in this sentence are relevant to understanding me?" and computes a weighted average over those relevant words' representations.
+
+**Why Transformers won over RNNs (what came before):**
+- **Parallelism:** RNNs process sequences left-to-right, one step at a time — can't be parallelized. Transformers process all positions simultaneously on GPUs — dramatically faster training.
+- **Long-range dependencies:** RNNs struggle to connect words far apart in a sentence. Transformers connect any two positions in a single step, regardless of distance.
+- **Scalability:** Transformers got dramatically better as they got bigger. "Scaling laws" showed that doubling parameters reliably improved performance.
+
+**The timeline that matters:**
+- 2017: "Attention Is All You Need" paper — Transformer architecture introduced for translation
+- 2018: BERT — bidirectional Transformer, pre-training + fine-tuning paradigm
+- 2018: GPT — unidirectional Transformer, next-token prediction pre-training
+- 2020: GPT-3 (175B parameters) — few-shot learning emergences
+- 2022: ChatGPT — RLHF fine-tuning makes models conversational
+- 2023-2024: GPT-4, Claude 3, Gemini — multimodal, extended context, stronger reasoning
+
+---
+
 ## Attention Mechanism
 
 ### Intuition
@@ -11,6 +38,20 @@ The architecture behind modern AI — self-attention, multi-head attention, posi
 Attention lets a model dynamically focus on the most relevant parts of the input when producing each element of the output. Instead of compressing an entire sequence into a single fixed-size vector (the bottleneck in RNN encoder-decoder models), attention computes a **weighted sum of values**, where the weights are determined by how well each key matches the query.
 
 Think of it like a database lookup: you have a **query** (what you are looking for), a set of **keys** (what is available), and corresponding **values** (the actual content). The output is a soft retrieval — a blend of all values weighted by query-key similarity.
+
+> **Concrete example:** Processing the word "bank" in "The river bank was muddy."
+> - The model computes a query for "bank": "what context should I look for?"
+> - It compares against keys for all other words: "river", "was", "muddy"
+> - "river" has high similarity (key matches query) → high attention weight
+> - "was" has low similarity → low attention weight
+> - The output for "bank" is a weighted blend of all value vectors, dominated by "river"
+> - Result: "bank" gets a representation that correctly captures the geographical meaning, not the financial one
+>
+> **The Q/K/V terminology:** Each word gets projected into three different vectors — Query (what am I looking for?), Key (what do I offer to others?), Value (what information do I actually contain?). The output is: `softmax(Q · K^T / √d) · V`.
+
+### Scaled Dot-Product Attention
+
+The core equation from "Attention Is All You Need" (Vaswani et al., 2017):
 
 ```mermaid
 graph LR
@@ -110,6 +151,8 @@ def create_causal_mask(seq_len):
 ## Multi-Head Attention
 
 Instead of performing a single attention function with full-dimensional Q, K, V, we project them into **h different subspaces**, run attention in parallel, concatenate, and project back.
+
+> **Plain English:** Single-head attention can only focus on one type of relationship at a time. Multi-head attention runs multiple attention mechanisms in parallel — each "head" learns to look for a different type of relationship. One head might learn to track subject-verb agreement, another might track co-reference ("it" → "trophy"), another might track positional relationships. The outputs are all concatenated at the end. In practice, GPT-3 uses 96 heads; LLaMA-3 8B uses 32 heads.
 
 $$\text{MultiHead}(Q, K, V) = \text{Concat}(head_1, \ldots, head_h) \cdot W^O$$
 

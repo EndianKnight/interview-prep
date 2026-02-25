@@ -4,6 +4,35 @@ Measuring LLM quality, building evaluation pipelines, red teaming, and responsib
 
 ---
 
+## The Big Picture
+
+**What is LLM evaluation, in plain English?**
+
+When you write traditional software, you test it: "Given this input, does it produce this output?" Pass/fail. With LLMs, it's much harder — there are many valid ways to answer most questions, responses are subjective, and you can't enumerate every possible input. Evaluation is the science and engineering of measuring *how good your LLM actually is*.
+
+**Real-world analogy:** Imagine you're hiring for a creative writing job. You can't just run automated tests like you would for a calculator. You'd review sample work, compare candidates against rubrics, get opinions from multiple reviewers, and test on edge cases. LLM evaluation is similar: you need rubrics, test cases, and often other LLMs or humans to judge quality.
+
+**Why evaluation is non-negotiable in production:**
+- You can't know if your model (or prompt) is working without measuring it
+- Prompts that work on your test cases may fail in production
+- Model providers silently update models — evaluations catch regressions
+- Safety issues (harmful outputs, bias, hallucinations) only become visible through systematic testing
+
+**The three evaluation questions every team should answer:**
+1. **Does it do the task correctly?** (accuracy, task success rate)
+2. **Does it do it safely?** (harmful content rate, bias metrics)
+3. **Does it do it cost-effectively?** (token usage, latency, refusal rate)
+
+**The hierarchy of evaluation methods (from cheapest to most reliable):**
+
+| Method | Cost | Speed | Reliability | When to use |
+|--------|------|-------|-------------|-------------|
+| Automated string metrics (BLEU, ROUGE) | Very low | Very fast | Low (for open-ended tasks) | Translations, summaries with reference answers |
+| LLM-as-judge | Low | Fast | Medium-high | Most production use cases |
+| Human evaluation | High | Slow | Highest | Final validation, benchmark creation |
+
+---
+
 ## Why Evaluation Is Hard
 
 LLM evaluation is fundamentally harder than traditional ML evaluation because:
@@ -58,6 +87,8 @@ results = rouge.compute(
 ### LLM-as-Judge
 
 Use a strong LLM to evaluate another model's output. This is the most practical approach for subjective quality evaluation.
+
+> **Plain English:** You're using one AI to grade another AI's homework. This sounds circular, but it works surprisingly well in practice: a strong evaluator model (like GPT-4o) can reliably score whether a response is accurate, helpful, and well-written — especially when given a good rubric. It's much faster and cheaper than human evaluation, and more consistent. The main risk is that the judge model can have its own biases (it might prefer longer answers, or grade its own-style writing more favorably).
 
 ```python
 JUDGE_PROMPT = """You are an expert evaluator. Rate the following response on a scale of 1-5 for each criterion.

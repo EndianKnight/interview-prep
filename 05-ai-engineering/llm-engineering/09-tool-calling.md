@@ -4,6 +4,30 @@ Enabling LLMs to invoke external functions and APIs — how tool calling works, 
 
 ---
 
+## The Big Picture
+
+**What is tool calling, in plain English?**
+
+An LLM on its own can only work with text it was trained on. It can't check today's weather, query your database, run Python code, send an email, or do any other "real-world" action. **Tool calling** (also called function calling) gives the LLM a way to request that your application run a specific function, and then incorporates the result into its response.
+
+**Real-world analogy:** Imagine a brilliant analyst who knows everything from books and papers, but is locked in a room with no phone, no computer, and no access to the outside world. If you want them to answer "What's the current stock price of Apple?", they literally can't — that information wasn't in their books. Tool calling is like giving them a phone with a list of specific phone numbers they can call: "Press 1 to check stock prices. Press 2 to query the database. Press 3 to send an email." They decide which number to call, what to say, and then incorporate the response into their answer.
+
+**How a tool call works step by step (layman version):**
+
+1. You tell the model: "You have access to these functions: `get_weather(city)`, `search_web(query)`, `send_email(to, subject, body)`"
+2. User asks: "What's the weather in Paris today?"
+3. Model responds (internally): "I need to call `get_weather('Paris')` to answer this"
+4. Your application receives that request and actually calls the weather API
+5. Your application sends the result back to the model: "Result: 22°C, partly cloudy"
+6. Model uses that result to write: "It's 22°C and partly cloudy in Paris right now."
+
+**Why this is a big deal:**
+- Transforms LLMs from "smart chatbots" to "autonomous actors" that can actually do things in the real world
+- Enables building agents that browse the web, manage files, query databases, book appointments, etc.
+- Every major LLM provider supports it: OpenAI, Anthropic, Google, Meta (LLaMA)
+
+---
+
 ## Why Tool Calling
 
 LLMs are fundamentally text-in, text-out systems. They can't browse the web, query databases, send emails, or perform calculations natively. **Tool calling** bridges this gap by letting the model request specific function executions.
@@ -216,6 +240,10 @@ for block in response.content:
 ---
 
 ## Tool Schema Design
+
+> **Plain English:** The schema is the "menu" you give the model — it tells the model what tools exist, what they do, and what information to pass when calling them. The quality of your schema directly determines how reliably the model calls your tools correctly. A vague description ("does stuff with users") leads to wrong tool calls. A precise description ("looks up a user account by email address and returns their subscription status") leads to correct tool calls every time.
+>
+> The model reads your schema to decide: (1) Should I call a tool right now? (2) Which tool? (3) What arguments? Better descriptions → better decisions.
 
 ### Good Schema Design
 
