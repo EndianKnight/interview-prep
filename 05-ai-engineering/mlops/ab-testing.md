@@ -22,13 +22,13 @@ Imagine you roll out a new recommendation model and conversion rate goes from 4.
 
 ```mermaid
 flowchart LR
-    A[Define Hypothesis] --> B[Calculate\nSample Size]
+    A[Define Hypothesis] --> B[Calculate<br/>Sample Size]
     B --> C[Split Traffic]
     C --> D[Collect Data]
-    D --> E{Analyze Results\np-value · CI}
+    D --> E{Analyze Results<br/>p-value · CI}
     E -->|p < α significant| F[Ship]
-    E -->|p ≥ α not significant| G[Roll Back\nor Extend]
-    F --> H[Post-experiment\nMonitor novelty decay\nlong-term metrics]
+    E -->|p ≥ α not significant| G[Roll Back<br/>or Extend]
+    F --> H[Post-experiment<br/>Monitor novelty decay<br/>long-term metrics]
     G --> H
 ```
 
@@ -226,14 +226,14 @@ print(get_variant("user_123", "exp_recommender_v2"))  # stable across calls
 flowchart TD
     subgraph IR["Incremental Rollout (safer)"]
         direction LR
-        IR1["Day 1: 1%\nMonitor errors & latency"] --> IR2["Day 3: 10%\nCheck primary metrics"]
-        IR2 --> IR3["Day 7: 50%\nRun until sample size reached"]
-        IR3 --> IR4{Ship or\nRoll Back}
+        IR1["Day 1: 1%<br/>Monitor errors & latency"] --> IR2["Day 3: 10%<br/>Check primary metrics"]
+        IR2 --> IR3["Day 7: 50%<br/>Run until sample size reached"]
+        IR3 --> IR4{Ship or<br/>Roll Back}
     end
 
     subgraph AB["50/50 Split (fastest to significance)"]
         direction LR
-        AB1["Control 50% | Treatment 50%\nRun until sample size reached"] --> AB2{Ship or\nRoll Back}
+        AB1["Control 50% | Treatment 50%<br/>Run until sample size reached"] --> AB2{Ship or<br/>Roll Back}
     end
 ```
 
@@ -457,14 +457,14 @@ print(f"Traffic allocation: {bandit.alpha + bandit.beta - 2}")
 
 ```mermaid
 flowchart TD
-    ER["Experiment Registry\nconfigs · rules · status"]
+    ER["Experiment Registry<br/>configs · rules · status"]
 
-    Req["Incoming Request"] --> AS["Assignment Service\nhash bucketing · eligibility rules"]
+    Req["Incoming Request"] --> AS["Assignment Service<br/>hash bucketing · eligibility rules"]
     ER --> AS
     AS --> VID["Variant ID"]
-    VID --> Models["Model A / Model B\nreal-time serving"]
-    AS --> Log["Logging / Event Bus\nKafka · Kinesis · BigQuery"]
-    Log --> Analysis["Analysis Service\nmetrics · p-values · dashboards · alerts"]
+    VID --> Models["Model A / Model B<br/>real-time serving"]
+    AS --> Log["Logging / Event Bus<br/>Kafka · Kinesis · BigQuery"]
+    Log --> Analysis["Analysis Service<br/>metrics · p-values · dashboards · alerts"]
 ```
 
 ### Analysis Automation

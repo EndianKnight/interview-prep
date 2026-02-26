@@ -30,20 +30,20 @@ Problem 2: Training-serving skew
 
 ```mermaid
 flowchart LR
-    Raw["Raw Data\nKafka · S3 · Warehouse"]
+    Raw["Raw Data<br/>Kafka · S3 · Warehouse"]
 
-    Raw --> Batch["Batch Jobs\nSpark / dbt"]
-    Raw --> Stream["Streaming Jobs\nFlink"]
+    Raw --> Batch["Batch Jobs<br/>Spark / dbt"]
+    Raw --> Stream["Streaming Jobs<br/>Flink"]
 
     subgraph FS["Feature Store"]
-        Batch --> Offline["Offline Store\nS3 · Warehouse"]
-        Batch --> Online["Online Store\nRedis · DynamoDB"]
+        Batch --> Offline["Offline Store<br/>S3 · Warehouse"]
+        Batch --> Online["Online Store<br/>Redis · DynamoDB"]
         Stream --> Online
-        Registry["Feature Registry\nmetadata · schema · lineage · owners"]
+        Registry["Feature Registry<br/>metadata · schema · lineage · owners"]
     end
 
-    Offline --> Training["Training\nhistorical features"]
-    Online --> Serving["Serving\nreal-time · low-latency"]
+    Offline --> Training["Training<br/>historical features"]
+    Online --> Serving["Serving<br/>real-time · low-latency"]
 ```
 
 ---
@@ -445,22 +445,22 @@ A common interview design problem. Here's a concrete reference architecture:
 
 ```mermaid
 flowchart TD
-    UA["User Action\nclick · purchase · view"] --> Kafka["Kafka\nuser-events topic"]
+    UA["User Action<br/>click · purchase · view"] --> Kafka["Kafka<br/>user-events topic"]
     ItemData["Item Catalog Updates"] --> SparkDaily
 
-    Kafka --> Flink["Flink Streaming Job\nclicks_last_5min · views_last_5min\nlatency ~2s"]
-    Kafka --> SparkHourly["Spark Batch Job hourly\npurchase_count_30d\navg_order_value_90d"]
-    SparkDaily["Spark Batch Job daily\nItem embeddings\nvia model inference"]
+    Kafka --> Flink["Flink Streaming Job<br/>clicks_last_5min · views_last_5min<br/>latency ~2s"]
+    Kafka --> SparkHourly["Spark Batch Job hourly<br/>purchase_count_30d<br/>avg_order_value_90d"]
+    SparkDaily["Spark Batch Job daily<br/>Item embeddings<br/>via model inference"]
 
-    Flink --> Redis["Online Store\nRedis"]
+    Flink --> Redis["Online Store<br/>Redis"]
     SparkHourly --> Redis
-    SparkHourly --> S3["Offline Store\nS3"]
+    SparkHourly --> S3["Offline Store<br/>S3"]
     SparkDaily --> Redis
     SparkDaily --> S3
 
     subgraph Serving["Serving  P99 < 10ms"]
-        Req["Request\nuser_id + candidate_item_ids"] --> Lookup["Redis Lookup\nuser features + item features\npipelined batch"]
-        Lookup --> OnDemand["On-demand Features\ncosine similarity cross-features"]
+        Req["Request<br/>user_id + candidate_item_ids"] --> Lookup["Redis Lookup<br/>user features + item features<br/>pipelined batch"]
+        Lookup --> OnDemand["On-demand Features<br/>cosine similarity cross-features"]
         OnDemand --> ModelInf["Model Inference"]
         ModelInf --> Ranked["Ranked List"]
     end

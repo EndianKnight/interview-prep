@@ -22,10 +22,10 @@ Without data versioning, you can't answer this question. With it, you can pin th
 
 ```mermaid
 flowchart LR
-    Code["Pinned Code Version\ngit commit hash"] --> ET
-    Data["Pinned Data Version\nDelta v42 · DVC hash"] --> ET
-    Config["Pinned Config\nhyperparams · features"] --> ET
-    ET["Experiment Tracker\nMLflow · W&B · DVC"] --> Run["Reproducible\nML Run"]
+    Code["Pinned Code Version<br/>git commit hash"] --> ET
+    Data["Pinned Data Version<br/>Delta v42 · DVC hash"] --> ET
+    Config["Pinned Config<br/>hyperparams · features"] --> ET
+    ET["Experiment Tracker<br/>MLflow · W&B · DVC"] --> Run["Reproducible<br/>ML Run"]
 ```
 
 **Approaches by scale:**
@@ -72,11 +72,11 @@ A DAG (directed acyclic graph) showing how data flows from raw sources through t
 
 ```mermaid
 flowchart TD
-    Raw["Raw Clickstream Logs\nS3"] --> Session["Sessionization\nSpark job v1.3.2"]
-    Session --> Features["User-level Aggregation Features\nversion: 2024-01-15"]
+    Raw["Raw Clickstream Logs<br/>S3"] --> Session["Sessionization<br/>Spark job v1.3.2"]
+    Session --> Features["User-level Aggregation Features<br/>version: 2024-01-15"]
     Features --> Train["Training Dataset v3.2"]
     Features --> Eval["Evaluation Dataset v1.1"]
-    Train --> Model["Model v7\naccuracy: 92.1%"]
+    Train --> Model["Model v7<br/>accuracy: 92.1%"]
     Eval --> Bench["Benchmark Report"]
 ```
 
