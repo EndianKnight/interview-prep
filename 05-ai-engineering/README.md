@@ -29,13 +29,13 @@ AI engineering interviews typically cover:
 
 | Topic | Guide |
 |-------|-------|
-| Training Pipelines | [training-pipelines.md](mlops/training-pipelines.md) |
-| Model Serving | [model-serving.md](mlops/model-serving.md) |
-| Feature Stores | [feature-stores.md](mlops/feature-stores.md) |
-| Monitoring | [monitoring.md](mlops/monitoring.md) |
-| A/B Testing | [ab-testing.md](mlops/ab-testing.md) |
-| Data Versioning | [data-versioning.md](mlops/data-versioning.md) |
-| GPU Infrastructure & Cost Optimization | [gpu-infrastructure.md](mlops/gpu-infrastructure.md) |
+| Training Pipelines | [01-training-pipelines.md](mlops/01-training-pipelines.md) |
+| Model Serving | [02-model-serving.md](mlops/02-model-serving.md) |
+| Feature Stores | [03-feature-stores.md](mlops/03-feature-stores.md) |
+| Monitoring | [04-monitoring.md](mlops/04-monitoring.md) |
+| A/B Testing | [05-ab-testing.md](mlops/05-ab-testing.md) |
+| Data Versioning | [06-data-versioning.md](mlops/06-data-versioning.md) |
+| GPU Infrastructure & Cost Optimization | [07-gpu-infrastructure.md](mlops/07-gpu-infrastructure.md) |
 
 ## LLM Engineering
 
